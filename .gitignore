@@ -1,0 +1,5 @@
+/_build
+/venv
+.ipynb_checkpoints
+venv*
+jupyter_execute
