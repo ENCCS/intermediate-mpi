@@ -15,7 +15,7 @@ TODO Intro
    :maxdepth: 1
    :caption: The lesson
 
-   communicators-and-groups
+   communicators-groups
    derived-datatypes
    one-sided-pt1
    one-sided-pt2
@@ -29,7 +29,7 @@ TODO Intro
    :widths: auto
    :delim: ;
 
-   30 min ; :doc:`communicators-and-groups`
+   30 min ; :doc:`communicators-groups`
    30 min ; :doc:`derived-datatypes`
    30 min ; :doc:`one-sided-pt1`
    30 min ; :doc:`one-sided-pt2`
