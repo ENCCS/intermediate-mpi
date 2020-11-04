@@ -1,26 +1,33 @@
 INTERMEDIATE MPI
 ================
 
-Intro
+TODO Intro
 
 
 
 .. prereq::
 
-   prerequisites
+   TODO What to prepare before the workshop?
 
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: The lesson
 
 
 .. csv-table::
    :widths: auto
    :delim: ;
 
-   20 min ; :doc:`filename`
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: The lesson
+   30 min ; :doc:`communicators-and-groups`
+   30 min ; :doc:`derived-datatypes`
+   30 min ; :doc:`one-sided-pt1`
+   30 min ; :doc:`one-sided-pt2`
+   30 min ; :doc:`collective-communication-pt1`
+   30 min ; :doc:`collective-communication-pt2`
+   30 min ; :doc:`mpi-and-threads-pt1`
+   30 min ; :doc:`mpi-and-threads-pt2`
 
 
 .. toctree::
@@ -37,7 +44,7 @@ Intro
 Who is the course for?
 ----------------------
 
-
+TODO
 
 
 
@@ -45,7 +52,7 @@ About the course
 ----------------
 
 
-
+TODO
 
 
 
@@ -53,7 +60,7 @@ See also
 --------
 
 
-
+TODO
 
 
 Credits
