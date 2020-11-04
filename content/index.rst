@@ -12,6 +12,7 @@ TODO Intro
 
 
 .. toctree::
+   :hidden:
    :maxdepth: 1
    :caption: The lesson
 
