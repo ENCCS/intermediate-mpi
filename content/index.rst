@@ -54,9 +54,22 @@ TODO Intro
 Who is the course for?
 ----------------------
 
-TODO
+This course is for students, researchers and programmers who already
+know the basics of MPI and want to learn more advanced MPI topics. To
+derive benefit from this material you should have attended
+introductory MPI training and preferably used basic MPI functionality
+in some code projects.  Specifically, this lesson assumes that
+participants have some prior experience with or knowledge of the
+following topics:
 
+ - General concepts: distributed memory parallelism, MPI process model
+ - Communicators
+ - Point-to-point communication
+ - Non-blocking communication
+ - Collective communication
+ - MPI datatypes
 
+ 
 
 About the course
 ----------------
