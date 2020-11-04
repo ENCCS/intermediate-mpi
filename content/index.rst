@@ -15,12 +15,21 @@ TODO Intro
    :maxdepth: 1
    :caption: The lesson
 
+   communicators-groups
+   derived-datatypes
+   one-sided-pt1
+   one-sided-pt2
+   collective-communication-pt1
+   collective-communication-pt2
+   mpi-and-threads-pt1
+   mpi-and-threads-pt2
+
 
 .. csv-table::
    :widths: auto
    :delim: ;
 
-   30 min ; :doc:`communicators-and-groups`
+   30 min ; :doc:`communicators-groups`
    30 min ; :doc:`derived-datatypes`
    30 min ; :doc:`one-sided-pt1`
    30 min ; :doc:`one-sided-pt2`
