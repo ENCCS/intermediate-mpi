@@ -45,6 +45,7 @@ TODO Intro
    :caption: Reference
 
    quick-reference
+   bibliography
    guide
 
 

@@ -3,11 +3,15 @@ Derived datatypes
 
 .. questions::
 
-   - TODO
+   - How can you reduce the number of messages sent and received?
+   - How can you use your own derived datatypes as content of messages?
 
 .. objectives::
 
-   - TODO
+   - Understand how MPI handles datatypes and the :term:`typemap` concept.
+   - Learn to send and receive composite messages with |term-MPI_Pack| and |term-MPI_Unpack|
+   - Learn how to represent your own derived datatypes as MPI messages with |term-MPI_Type_create_struct| and |term-MPI_Type_commit|
+   - Learn how to represent homogeneous collections as MPI messages. |term-MPI_Type_contiguous|, |term-MPI_Type_vector|, |term-MPI_Type_indexed|
 
 
 .. figure:: img/ENCCS.jpg
@@ -23,26 +27,14 @@ how this is implemented.  See the links at the to right of the page.
 
 
 
-This is a section
------------------
+Representation of datatypes in MPI
+----------------------------------
 
-This is text.
+- Typemaps
+- Type signature
+- Lower bounds, upper bounds, extents
 
-A code block with preceeding paragraph::
-
-  import multiprocessing
-
-* A bullet list
-
-* Bullet list
-
-  * Sub-list::
-
-      code block (note indention)
-
-  .. note::
-
-     directive within a list (note indention)
+:cite:`Gropp2014-qf`
 
 
 Exercise: the general topic

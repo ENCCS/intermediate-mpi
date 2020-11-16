@@ -3,3 +3,5 @@
 .ipynb_checkpoints
 venv*
 jupyter_execute
+/content/.auctex-auto/
+/content/__pycache__/

@@ -7,13 +7,8 @@ Communicators and groups
 
 .. objectives::
 
-   - TODO
-
-
-.. figure:: img/ENCCS.jpg
-   :class: with-border
-
-   This is the caption.
+   - Learn the difference between :term:`intracommunicator` and :term:`intercommunicator`.
+   - Learn how to create communicators by splitting with |term-MPI_Comm_split|.
 
 
 Topic introduction here
