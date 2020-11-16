@@ -18,6 +18,16 @@ Quick Reference
    synchronization
       The necessary coordination of remote memory accesses. It can be *active* or *passive*.
 
+   typemap
+      Abstraction used to represent a datatypes in MPI. It is an associative
+      array (map) with datatypes, as understood by MPI, as *keys* and
+      displacements, in bytes, as *values*. The displacements are computed
+      relative to the buffer the datatype describes.
+
+      .. math::
+
+         \textrm{Typemap} = \{ \textrm{Datatype}_{0}: \textrm{Displacement}_{0}, \ldots, \textrm{Datatype}_{n-1}: \textrm{Displacement}_{n-1} \}
+
 MPI functions
 ^^^^^^^^^^^^^
 
@@ -34,6 +44,96 @@ MPI functions
                             MPI_Comm *newcomm)
 
       |MPI_Comm_split-implementors_docs|
+
+   ``MPI_Pack``
+       Pack data in a message. The message is in contiguous memory.
+
+       .. code-block:: c
+
+          int MPI_Pack(const void *inbuf,
+                       int incount,
+                       MPI_Datatype datatype,
+                       void *outbuf,
+                       int outsize,
+                       int *position,
+                       MPI_Comm comm)
+
+       |MPI_Pack-implementors_docs|
+
+   ``MPI_Unpack``
+       Unpack a message to data in contiguous memory.
+
+       .. code-block:: c
+
+          int MPI_Unpack(const void *inbuf,
+                         int insize,
+                         int *position,
+                         void *outbuf,
+                         int outcount,
+                         MPI_Datatype datatype,
+                         MPI_Comm comm)
+
+       |MPI_Unpack-implementors_docs|
+
+   ``MPI_Type_create_struct``
+       Foo
+       This function replaces the *deprecated* ``MPI_Type_struct``.
+
+       .. code-block:: c
+
+          int MPI_Type_create_struct(int count,
+                                     const int array_of_block_lengths[],
+                                     const MPI_Aint array_of_displacements[],
+                                     const MPI_Datatype array_of_types[],
+                                     MPI_Datatype *newtype)
+
+       |MPI_Type_create_struct-implementors_docs|
+
+   ``MPI_Type_commit``
+       Foo
+
+       .. code-block:: c
+
+          int MPI_Type_commit(MPI_Datatype *datatype)
+
+       |MPI_Type_commit-implementors_docs|
+
+   ``MPI_Type_contiguous``
+       Foo
+
+       .. code-block:: c
+
+          int MPI_Type_contiguous(int count,
+                                  MPI_Datatype oldtype,
+                                  MPI_Datatype *newtype)
+
+       |MPI_Type_contiguous-implementors_docs|
+
+   ``MPI_Type_vector``
+       Foo
+
+       .. code-block:: c
+
+          int MPI_Type_vector(int count,
+                              int blocklength,
+                              int stride,
+                              MPI_Datatype oldtype,
+                              MPI_Datatype *newtype)
+
+       |MPI_Type_vector-implementors_docs|
+
+   ``MPI_Type_indexed``
+       Foo
+
+       .. code-block:: c
+
+          int MPI_Type_indexed(int count,
+                               const int array_of_blocklengths[],
+                               const int array_of_displacements[],
+                               MPI_Datatype oldtype,
+                               MPI_Datatype *newtype)
+
+       |MPI_Type_indexed-implementors_docs|
 
    ``MPI_Get``
        Load data from a remote memory window.
