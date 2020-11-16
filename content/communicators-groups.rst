@@ -7,7 +7,7 @@ Communicators and groups
 
 .. objectives::
 
-   - TODO
+   - Learn how to create communicators by splitting with |term-MPI_Comm_split|
 
 
 .. figure:: img/ENCCS.jpg
