@@ -3,17 +3,15 @@ One-sided communication 1
 
 .. questions::
 
-   - TODO
+   - How can we optimize communication?
 
 .. objectives::
 
-   - TODO
-
-
-.. figure:: img/ENCCS.jpg
-   :class: with-border
-
-   This is the caption.
+   - Learn about functions for remote-memory access (RMA)
+   - RMA: |term-MPI_Get|, |term-MPI_Put|, |term-MPI_Accumulate|
+   - Windows: |term-MPI_Win_create|, |term-MPI_Win_allocate|, |term-MPI_Win_allocate_shared|, |term-MPI_Win_create_dynamic|
+   - Active synchronization: |term-MPI_Win_fence|, |term-MPI_Win_post|, |term-MPI_Win_start|, |term-MPI_Win_complete|, |term-MPI_Win_wait|
+   - Passive synchronization: |term-MPI_Win_lock|, |term-MPI_win_unlock|
 
 
 Topic introduction here

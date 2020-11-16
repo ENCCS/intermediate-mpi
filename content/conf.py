@@ -10,10 +10,11 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
 
+from custom import rst_epilog
 
 # -- Project information -----------------------------------------------------
 
@@ -90,37 +91,5 @@ html_context = {'display_github': True,
 #    #'sphinx': ('https://www.sphinx-doc.org/', None),
 #    }
 
-
-# add the MPI function to reference in the glossary here. This skullduggery is
-# necessary to get consistent monospace formatting of the function
-MPI_functions = [
-    "MPI_Comm_split",
-]
-
-abbr_and_term = """
-.. |{function}| replace:: ``{function}``
-.. |term-{function}| raw:: html
-
-   <a class="reference internal" href="quick-reference.html#term-{function}"><span class="xref std std-term"><code class="docutils literal notranslate">{function}</code></span></a>
-"""
-
-impls = """
-.. |{function}-implementors_docs| raw:: html
-
-   <p>Documentation from implementors:</p>
-   <blockquote>
-   <div><ul class="simple">
-   <li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/{function}.html">MPICH</a></p></li>
-   <li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/{function}.3.php">OpenMPI</a></p></li>
-   </ul>
-   </div></blockquote>
-"""
-
-# abbreviations and terms for the glossary
-glossary_helper = "\n".join([abbr_and_term.format(function=f) for f in MPI_functions])
-
-# documentation string from implementors
-implementors_docs = "\n".join([impls.format(function=f) for f in MPI_functions])
-
-# include all customisation in the rst_epilog, so it's available everywhere
-rst_epilog = glossary_helper + implementors_docs
+# the epilog
+rst_epilog = rst_epilog()
