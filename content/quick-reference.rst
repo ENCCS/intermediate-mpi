@@ -3,6 +3,9 @@ Quick Reference
 
 .. glossary::
 
+   alignment
+   data alignment
+      See also `Wikipedia <https://en.wikipedia.org/wiki/Data_structure_alignment>`_.
 
    intracommunicator
       Foo
@@ -44,6 +47,27 @@ MPI functions
                             MPI_Comm *newcomm)
 
       |MPI_Comm_split-implementors_docs|
+
+   ``MPI_Type_get_extent``
+       Foo
+
+       .. code-block:: c
+
+          int MPI_Type_get_extent(MPI_Datatype type,
+                                  MPI_Aint *lb,
+                                  MPI_Aint *extent)
+
+       |MPI_Type_get_extent-implementors_docs|
+
+   ``MPI_Type_size``
+       Foo
+
+       .. code-block:: c
+
+          int MPI_Type_get_size(MPI_Datatype type,
+                                int *size)
+
+       |MPI_Type_size-implementors_docs|
 
    ``MPI_Pack``
        Pack data in a message. The message is in contiguous memory.

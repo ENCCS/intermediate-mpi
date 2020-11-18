@@ -1,14 +1,17 @@
 INTERMEDIATE MPI
 ================
 
-TODO Intro
+.. todo::
+
+   Write intro
 
 
 
 .. prereq::
 
-   TODO What to prepare before the workshop?
+   .. todo::
 
+      Write this section: what to prepare before the workshop?
 
 
 .. toctree::

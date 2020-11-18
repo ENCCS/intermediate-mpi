@@ -33,8 +33,15 @@ Representation of datatypes in MPI
 - Typemaps
 - Type signature
 - Lower bounds, upper bounds, extents
+- Difference between *size* and *extent* of a datatype.
+- Introduce |term-MPI_Type_get_extent| and |term-MPI_Type_size|
 
 :cite:`Gropp2014-qf`
+
+.. todo::
+
+   - Draw diagram showing how to calculate the extent from a typemap.
+   - Type-along showing how to get extent and size of basis datatypes.
 
 
 Exercise: the general topic

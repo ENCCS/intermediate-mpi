@@ -40,6 +40,7 @@ extensions = [
     "sphinx_rtd_theme_ext_color_contrast",
     #'sphinx.ext.intersphinx',
     "sphinxcontrib.bibtex",
+    "sphinx.ext.todo",
 ]
 
 # Settings for myst_nb:
@@ -91,6 +92,8 @@ html_context = {
     "github_version": github_version,
     "conf_py_path": conf_py_path,
 }
+
+todo_include_todos = True
 
 # Intersphinx mapping.  For example, with this you can use
 # :py:mod:`multiprocessing` to link straight to the Python docs of that module.

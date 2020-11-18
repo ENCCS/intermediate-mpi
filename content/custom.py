@@ -8,6 +8,8 @@ lesson_comms = [
 ]
 # derived datatypes
 lesson_dd = [
+    "MPI_Type_get_extent",
+    "MPI_Type_size",
     "MPI_Pack",
     "MPI_Unpack",
     "MPI_Type_create_struct",
