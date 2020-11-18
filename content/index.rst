@@ -31,6 +31,7 @@ INTERMEDIATE MPI
 
 .. csv-table::
    :widths: auto
+   :align: left
    :delim: ;
 
    30 min ; :doc:`communicators-groups`
@@ -41,7 +42,6 @@ INTERMEDIATE MPI
    30 min ; :doc:`collective-communication-pt2`
    30 min ; :doc:`mpi-and-threads-pt1`
    30 min ; :doc:`mpi-and-threads-pt2`
-
 
 .. toctree::
    :maxdepth: 1
