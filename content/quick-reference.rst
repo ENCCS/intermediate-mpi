@@ -159,6 +159,21 @@ MPI functions
 
        |MPI_Type_indexed-implementors_docs|
 
+   ``MPI_Type_create_hvector``
+       foo
+
+       |MPI_Type_create_hvector-implementors_docs|
+
+   ``MPI_Type_create_hindexed``
+       foo
+
+       |MPI_Type_create_hindexed-implementors_docs|
+
+   ``MPI_Type_free``
+       foo
+
+       |MPI_Type_free-implementors_docs|
+
    ``MPI_Get``
        Load data from a remote memory window.
 
