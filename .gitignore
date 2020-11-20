@@ -5,3 +5,4 @@ venv*
 jupyter_execute
 /content/.auctex-auto/
 /content/__pycache__/
+/.ccls-cache/

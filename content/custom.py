@@ -2,19 +2,34 @@
 
 # add the MPI function to reference in the glossary here. This skullduggery is
 # necessary to get consistent monospace formatting of the function
+#
 # Communicators and groups
 lesson_comms = [
     "MPI_Comm_split",
+    "MPI_Comm_create",
+    "MPI_Comm_free",
+    "MPI_Comm_rank",
+    "MPI_Comm_size",
+    "MPI_Comm_group",
+    "MPI_Group_free",
+    "MPI_Cart_create",
 ]
 # derived datatypes
 lesson_dd = [
+    "MPI_Type_get_extent",
+    "MPI_Type_size",
     "MPI_Pack",
     "MPI_Unpack",
-    "MPI_Type_create_struct",
-    "MPI_Type_commit",
     "MPI_Type_contiguous",
     "MPI_Type_vector",
     "MPI_Type_indexed",
+    "MPI_Type_create_hvector",
+    "MPI_Type_create_hindexed",
+    "MPI_Type_create_struct",
+    "MPI_Type_commit",
+    "MPI_Type_free",
+    "MPI_Op_create",
+    "MPI_Op_free",
 ]
 # remote memory access
 lesson_rma = [
@@ -34,7 +49,9 @@ lesson_rma = [
     "MPI_Win_unlock",
 ]
 # collectives
-lesson_coll = []
+lesson_coll = [
+    "MPI_Allgatherv",
+]
 # threads
 lesson_threads = []
 
@@ -51,12 +68,12 @@ impls = """
 .. |{function}-implementors_docs| raw:: html
 
    <p>Documentation from implementors:</p>
-   <blockquote>
-   <div><ul class="simple">
+   <div>
+   <ul class="simple">
    <li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/{function}.html">MPICH</a></p></li>
    <li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/{function}.3.php">OpenMPI</a></p></li>
    </ul>
-   </div></blockquote>
+   </div>
 """
 
 

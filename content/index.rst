@@ -1,14 +1,17 @@
 INTERMEDIATE MPI
 ================
 
-TODO Intro
+.. todo::
+
+   Write intro
 
 
 
 .. prereq::
 
-   TODO What to prepare before the workshop?
+   .. todo::
 
+      Write this section: what to prepare before the workshop?
 
 
 .. toctree::
@@ -28,6 +31,7 @@ TODO Intro
 
 .. csv-table::
    :widths: auto
+   :align: left
    :delim: ;
 
    30 min ; :doc:`communicators-groups`
@@ -38,7 +42,6 @@ TODO Intro
    30 min ; :doc:`collective-communication-pt2`
    30 min ; :doc:`mpi-and-threads-pt1`
    30 min ; :doc:`mpi-and-threads-pt2`
-
 
 .. toctree::
    :maxdepth: 1
