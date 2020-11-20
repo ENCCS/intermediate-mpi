@@ -1,0 +1,13 @@
+
+/* override colors in sphinx_lesson.css with the schemes here: https://personal.sron.nl/~pault/#sec:qualitative */
+
+/* instructor-note */
+.rst-content .instructor-note {
+    background: #DDDDDD;
+}
+.rst-content .instructor-note > .admonition-title {
+    background: #BBBBBB;
+}
+.rst-content .instructor-note > .admonition-title::before {
+    content: "";
+}

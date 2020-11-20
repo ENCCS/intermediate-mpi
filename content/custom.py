@@ -61,7 +61,7 @@ abbr_and_term = """
 .. |{function}| replace:: ``{function}``
 .. |term-{function}| raw:: html
 
-   <a class="reference internal" href="quick-reference.html#term-{function}"><span class="xref std std-term"><code class="docutils literal notranslate">{function}</code></span></a>
+   <a class="reference internal" href="../quick-reference/#term-{function}"><span class="xref std std-term"><code class="docutils literal notranslate">{function}</code></span></a>
 """
 
 impls = """
