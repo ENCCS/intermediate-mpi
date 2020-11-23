@@ -18,32 +18,33 @@ You really want to browse this page alongside the source of it, to see
 how this is implemented.  See the links at the to right of the page.
 
 
-.. challenge:: Calling |term-MPI_Put| and |term-MPI_Get|
+.. challenge:: What kind of operations are being carried out?
 
-   1. What kind of remote memory operation is being carried out?
-
-      .. figure:: img/E02-mpi_put.svg
+   1. .. figure:: img/E02-mpi_put.svg
 
       A. Process 1 calls |term-MPI_Put| with process 0 as target.
       B. Process 1 calls |term-MPI_Send| with process 0 as receiver.
       C. Process 0 calls |term-MPI_Get| with process 1 as target.
       D. Process 1 calls |term-MPI_Get| with  process 0 as target.
 
-   1. What kind of remote memory operation is being carried out?
-
-      .. figure:: img/E02-mpi_get.svg
+   2. .. figure:: img/E02-mpi_get.svg
 
       A. Process 1 calls |term-MPI_Put| with process 0 as target.
       B. Process 1 calls |term-MPI_Recv| with process 0 as sender.
       C. Process 0 calls |term-MPI_Get| with process 1 as target.
       D. Process 1 calls |term-MPI_Get| with  process 0 as target.
 
+   3. .. figure:: img/send-receive_step2.svg
+
 
 .. solution::
 
-   1. A is the correct answer. Process 1 initiates the one-sided memory access
-      in order to copy the contents of its local memory to the remote memory
+   1. **A** is the correct answer. Process 1 initiates the one-sided memory access,
+      in order to *put* (*store*) the contents of its local memory to the remote memory
       window opened on process 0.
+   2. **D** is the correct answer. Process 1 initiates the one-sided memory
+      access in order to *get* (*load*) the contents of the remote memory window on
+      process 0 to its local memory.
 
 
 See also
