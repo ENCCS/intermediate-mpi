@@ -50,6 +50,21 @@ lesson_rma = [
 ]
 # collectives
 lesson_coll = [
+    "MPI_Send",
+    "MPI_Ssend",
+    "MPI_Rsend",
+    "MPI_Bsend",
+    "MPI_Isend",
+    "MPI_Issend",
+    "MPI_Irsend",
+    "MPI_Ibsend",
+    "MPI_Send_init",
+    "MPI_Ssend_init",
+    "MPI_Rsend_init",
+    "MPI_Bsend_init",
+    "MPI_Buffer_attach",
+    "MPI_Buffer_detach",
+    "MPI_Recv",
     "MPI_Allgatherv",
 ]
 # threads
