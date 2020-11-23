@@ -111,11 +111,10 @@ Attribution license (CC-BY-4.0)
 <https://creativecommons.org/licenses/by/4.0/>`_. The following is a
 human-readable summary of (and not a substitute for) the `full legal text of the
 CC-BY-4.0 license <https://creativecommons.org/licenses/by/4.0/legalcode>`_.
-
 You are free:
 
-- to **Share** - copy and redistribute the material in any medium or format
-- to **Adapt** - remix, transform, and build upon the material for any purpose,
+- to **share** - copy and redistribute the material in any medium or format
+- to **adapt** - remix, transform, and build upon the material for any purpose,
   even commercially.
 
 The licensor cannot revoke these freedoms as long as you follow these license terms:
@@ -142,6 +141,4 @@ Software
 
 Except where otherwise noted, the example programs and other software provided
 by ENCCS are made available under the `OSI <http://opensource.org/>`_-approved
-`MIT license <http://opensource.org/licenses/mit-license.html>`_:
-
-.. literalinclude:: code/LICENSE
+`MIT license <http://opensource.org/licenses/mit-license.html>`_.
