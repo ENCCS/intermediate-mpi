@@ -54,7 +54,7 @@ Visual glossary
 
 .. todo::
 
-   Explain the graphical conventions for ``MPI_Send``, ``MPI_Recv``, ``MPI_Get``, and ``MPI_Put``.
+   Explain the graphical conventions for ``MPI_Send``, ``MPI_Recv``, ``MPI_Get``, ``MPI_Put`` etc
 
 MPI functions
 ^^^^^^^^^^^^^

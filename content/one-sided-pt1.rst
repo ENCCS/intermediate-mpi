@@ -12,10 +12,85 @@ One-sided communication: basic concepts
    - Windows: |term-MPI_Win_create|, |term-MPI_Win_allocate|, |term-MPI_Win_allocate_shared|, |term-MPI_Win_create_dynamic|
 
 
-Topic introduction here
+You are already familiar with the |term-MPI_Send|/|term-MPI_Recv| communication
+pattern in MPI. This pattern is also called **two-sided communication**: the two
+processes implicitly *synchronize* with each other.
+It is like calling up someone: you wait for the other person to pick up to actually deliver your message.
 
-You really want to browse this page alongside the source of it, to see
-how this is implemented.  See the links at the to right of the page.
+.. figure:: img/send-recv_step2.svg
+   :align: center
+
+   Two-sided communication between two sloths. Both of them are **active**
+   participants in the communication: the |term-MPI_Send| has to be matched by
+   an |term-MPI_Recv|.
+
+However, this is not always the most optimal pattern for transferring data. MPI
+offers routines to perform *remote memory access* (:term:`RMA`), also known as
+*one-sided communication*, where processes can access data on other processes,
+as long as it is made available in special *memory windows*.
+
+Proceeding with our telecommunications analogy: one-sided communication
+resembles an email. Your message will sit in your friend's inbox, but you are
+immediately free to do other things after hitting the send button!
+
+.. discussion::
+
+   - What could be problematic with one-sided communication?
+   - What would be the advantages of using one-sided communication?
+   - What would be the disadvantages?
+
+
+How does it work?
+-----------------
+
+Let us look at the following figure, what routines are available in MPI for process 0 communicate a variable in its local memory to process 1?
+
+.. figure:: img/sample-image.png
+   :align: center
+
+   Steve, the sloth on the left, would like to send Alice, the sloth on the
+   right, the data in its ``Y`` variable. This data is stored in Steve's local
+   memory, depicted as a yellow box.
+
+It is foundational to MPI that every interaction between processes be
+*explicit*, so a simple assignment will not do.
+First, we must make a portion of memory on the *target process*, process 1
+in this case, visible for process 0 to manipulate.
+We call this a **window** and we will represent it as a blue diamond.
+
+.. figure:: img/sample-image.png
+   :align: center
+
+   We call collective routines, provided by MPI, to open a **memory window** on
+   each process in the communicator. Both the target and origin processes will
+   expose a portion of their memory through their respective windows.
+
+Once a *window* into the memory of process 1 is open, process 0 can access it and manipulate
+it. Process 0 can **put** (store) data in its local memory into the memory window of process
+1, using |term-MPI_Put|:
+
+.. figure:: img/sample-image.png
+   :align: center
+
+   The **origin process** (left sloth) puts data in the memory window of the
+   **target process** (right sloth).
+
+In this example, process 0 is the origin process: it participates actively in
+the communication by calling the :term:`RMA` routine |term-MPI_Put|.  Process 1
+in the target process.
+
+Conversely, process 0 might have populated its memory window with some data: any other process in the communicator can now **get** (load) this data.
+
+.. figure:: img/sample-image.png
+   :align: center
+
+   The **origin process** (right sloth) gets data in the memory window of the
+   **target process** (left sloth).
+
+In this scenario, process 1 is the origin process: it participates actively in the
+communication by calling the :term:`RMA` routine |term-MPI_Get|.  Process 0 in
+the target process.
+
 
 
 .. challenge:: What kind of operations are being carried out?
