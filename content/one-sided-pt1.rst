@@ -45,7 +45,7 @@ How does it work?
 
 Let us look at the following figure, what routines are available in MPI for process 0 communicate a variable in its local memory to process 1?
 
-.. figure:: img/sample-image.png
+.. figure:: img/steve-alice_step0.svg
    :align: center
 
    Steve, the sloth on the left, would like to send Alice, the sloth on the
@@ -58,7 +58,7 @@ First, we must make a portion of memory on the *target process*, process 1
 in this case, visible for process 0 to manipulate.
 We call this a **window** and we will represent it as a blue diamond.
 
-.. figure:: img/sample-image.png
+.. figure:: img/steve-alice_step1.svg
    :align: center
 
    We call collective routines, provided by MPI, to open a **memory window** on
@@ -69,27 +69,33 @@ Once a *window* into the memory of process 1 is open, process 0 can access it an
 it. Process 0 can **put** (store) data in its local memory into the memory window of process
 1, using |term-MPI_Put|:
 
-.. figure:: img/sample-image.png
+.. figure:: img/steve-alice_step2.svg
    :align: center
 
    The **origin process** (left sloth) puts data in the memory window of the
    **target process** (right sloth).
+   The |term-MPI_Put| routine is represented with a red line whose arrowhead touches the
+   origin process of the call.
 
 In this example, process 0 is the origin process: it participates actively in
 the communication by calling the :term:`RMA` routine |term-MPI_Put|.  Process 1
 in the target process.
 
-Conversely, process 0 might have populated its memory window with some data: any other process in the communicator can now **get** (load) this data.
+Conversely, process 0 might have populated its memory window with some data: any
+other process in the communicator can now **get** (load) this data, using |term-MPI_Get|:
 
-.. figure:: img/sample-image.png
+.. figure:: img/steve-alice_step3.svg
    :align: center
 
    The **origin process** (right sloth) gets data in the memory window of the
    **target process** (left sloth).
+   The |term-MPI_Get| routine is represented with a blue line whose arrowhead touches the
+   origin process.
 
 In this scenario, process 1 is the origin process: it participates actively in the
 communication by calling the :term:`RMA` routine |term-MPI_Get|.  Process 0 in
 the target process.
+
 
 
 
@@ -143,11 +149,11 @@ the target process.
    #. **A** is the correct answer. Process 1 initiates the one-sided memory access,
       in order to *put* (*store*) the contents of its local memory to the remote memory
       window opened on process 0.
+   #. **C** is the correct answer. This is the standard, blocking two-sided
+      communication pattern in MPI.
    #. **D** is the correct answer. Process 1 initiates the one-sided memory
       access in order to *get* (*load*) the contents of the remote memory window on
       process 0 to its local memory.
-   #. **C** is the correct answer. This is the standard, blocking two-sided
-      communication pattern in MPI.
    #. Both **B** and **D** are valid answers. The figure depicts a memory
       operation *within* process 0, which does not involve communication with
       any other process and thus pertains the programming language and not MPI.
