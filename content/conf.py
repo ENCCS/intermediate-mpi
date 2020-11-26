@@ -106,6 +106,9 @@ todo_include_todos = True
 # the epilog
 rst_epilog = f"""
 {MPI_glossary()}
+
+.. role:: red
+.. role:: blue
 """
 
 def setup(app):

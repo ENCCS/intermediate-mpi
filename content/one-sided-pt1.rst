@@ -40,8 +40,8 @@ immediately free to do other things after hitting the send button!
    - What would be the disadvantages?
 
 
-How does it work?
------------------
+At a glance: how does it work?
+------------------------------
 
 Let us look at the following figure, what routines are available in MPI for process 0 communicate a variable in its local memory to process 1?
 
@@ -93,10 +93,28 @@ other process in the communicator can now **get** (load) this data, using |term-
    origin process.
 
 In this scenario, process 1 is the origin process: it participates actively in the
-communication by calling the :term:`RMA` routine |term-MPI_Get|.  Process 0 in
+communication by calling the :term:`RMA` routine |term-MPI_Get|.  Process 0 is
 the target process.
 
 
+.. discussion::
+
+   - What could be problematic with one-sided communication?
+   - What would be the advantages of using one-sided communication?
+   - What would be the disadvantages?
+
+
+.. callout:: Graphical conventions
+
+   We have introduced these graphical conventions:
+
+   - A memory window is a blue diamond.
+   - A call to |term-MPI_Get| is a :blue:`blue` line whose arrowhead touches the origin
+     process.
+   - A call to |term-MPI_Put| is a :red:`red` line whose arrowhead touches the origin
+     process.
+   - For both routines, the direction of the arrowhead shows from which memory
+     window the data moves.
 
 
 .. challenge:: What kind of operations are being carried out?
@@ -160,7 +178,7 @@ the target process.
    #. **D** is the correct answer. This is the standard, blocking two-sided
       communication pattern in MPI: it does not matter whether the message stems
       from memory local to process 0 or its remotely accessible window.
-   #. **C** is the correct answer. Different processes can only interact with
+   #. **B** is the correct answer. Different processes can only interact with
       explicit two-sided communication or by first publishing to their remotely
       accessible window.
 
