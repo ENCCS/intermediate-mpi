@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-11-28T15:39:28.277Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36" etag="HtKmwfv8jr-cIhOgckHs" version="13.10.3" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2020-11-28T15:40:06.126Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36" etag="6zXcg2pmSJ6WX_vQMwDt" version="13.10.3" type="github" pages="3">
   <diagram id="rAH2tptxaiKPJn4yS_jS" name="RMA_quizzes">
     <mxGraphModel dx="1008" dy="858" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -794,12 +794,9 @@
             <mxPoint x="463.13" y="1000" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="d8iHjLAdYKt4m6tKlK3r-1" value="" style="rhombus;whiteSpace=wrap;html=1;fillColor=#CCFFFF;strokeColor=none;shadow=0;" vertex="1" parent="yW9WNk3nDwDyZxoL2B6o-1">
-          <mxGeometry x="530.25" y="970" width="59.5" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="d8iHjLAdYKt4m6tKlK3r-2" value="" style="endArrow=openAsync;html=1;strokeWidth=1;endFill=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="yW9WNk3nDwDyZxoL2B6o-1" source="d8iHjLAdYKt4m6tKlK3r-1">
+        <mxCell id="d8iHjLAdYKt4m6tKlK3r-2" value="" style="endArrow=openAsync;html=1;strokeWidth=1;endFill=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="yW9WNk3nDwDyZxoL2B6o-1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="559.5" y="960" as="sourcePoint" />
+            <mxPoint x="560" y="970" as="sourcePoint" />
             <mxPoint x="559.7500000000001" y="920" as="targetPoint" />
           </mxGeometry>
         </mxCell>
