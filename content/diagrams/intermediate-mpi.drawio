@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-11-28T15:16:05.356Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36" etag="Lo-8v03JgNIrT31rmIcm" version="13.10.3" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2020-11-28T15:16:25.558Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36" etag="EsoEu10qHShg_7ThgpOZ" version="13.10.3" type="github" pages="3">
   <diagram id="rAH2tptxaiKPJn4yS_jS" name="RMA_quizzes">
     <mxGraphModel dx="1008" dy="858" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -741,7 +741,7 @@
           <mxGeometry x="-20" y="1020" width="40" height="20" as="geometry" />
         </mxCell>
         <mxCell id="M4HL8TLtDiVU4CHrfNCj-7" value="One-sided or local" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="yW9WNk3nDwDyZxoL2B6o-1">
-          <mxGeometry x="-57.5" y="950" width="115" height="20" as="geometry" />
+          <mxGeometry x="-45" y="950" width="90" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
