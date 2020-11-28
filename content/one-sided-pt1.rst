@@ -1,3 +1,6 @@
+.. _one-sided-1:
+
+
 One-sided communication: basic concepts
 =======================================
 
@@ -43,7 +46,8 @@ immediately free to do other things after hitting the send button!
 At a glance: how does it work?
 ------------------------------
 
-Let us look at the following figure, what routines are available in MPI for process 0 communicate a variable in its local memory to process 1?
+Let us look at the following figure, what routines are available in MPI for
+process 0 communicate a variable in its local memory to process 1?
 
 .. figure:: img/steve-alice_step0.svg
    :align: center
@@ -95,13 +99,6 @@ other process in the communicator can now **get** (load) this data, using |term-
 In this scenario, process 1 is the origin process: it participates actively in the
 communication by calling the :term:`RMA` routine |term-MPI_Get|.  Process 0 is
 the target process.
-
-
-.. discussion::
-
-   - What could be problematic with one-sided communication?
-   - What would be the advantages of using one-sided communication?
-   - What would be the disadvantages?
 
 
 .. callout:: Graphical conventions
@@ -181,6 +178,82 @@ the target process.
    #. **B** is the correct answer. Different processes can only interact with
       explicit two-sided communication or by first publishing to their remotely
       accessible window.
+
+
+RMA anatomy
+-----------
+
+One-sided communication in MPI is achieved in three steps, which map onto three sets of functions:
+
+Windows
+  Make memory available on each process for remote memory accesses. We use
+  *memory windows*, which are objects of type ``MPI_Win`` providing handles to
+  remotely-accessible memory.  MPI provides 4 **collective** routines for the
+  creation of memory windows:
+
+  - |term-MPI_Win_allocate| allocates memory and creates the window object.
+  - |term-MPI_Win_create| creates a window from already allocated memory.
+  - |term-MPI_Win_allocate_shared| creates a window from already allocated MPI shared memory.
+  - |term-MPI_Win_create_dynamic| creates a window from allocated memory, but
+    the window-memory pairing is deferred.
+
+  A handle of type ``MPI_Win`` manages memory made available for remote
+  operations on *all ranks* in the communicator.
+  Memory windows must be explicitly freed after use with |term-MPI_Win_free|.
+
+Load/store
+
+  Load/store/transform data in remote windows. We can identify an *origin* and a
+  *target* process. At variance with two-sided communication, the origin process
+  fully specifies the data transfer: where the data comes from and where it is
+  going to. There are three main groups of MPI routines for this purpose:
+
+  - **Put** |term-MPI_Put| and ``MPI_Rput``
+  - **Get** |term-MPI_Get| and ``MPI_Rget``
+  - **Accumulate** |term-MPI_Accumulate|, ``MPI_Raccumulate`` and variations thereof.
+
+Synchronization
+  Ensure that the data is available for remote memory accesses. The load/store
+  routines are *nonblocking* and the programmer must take care that subsequent
+  accesses are *safe* and *sound*.  Synchronization can be achieved in two
+  styles:
+
+  - **Active** if both origin and target processes play a role.
+  - **Passive** if the origin process orchestrates data transfer and synchronization.
+
+  There are three sets of routines currently available in MPI:
+
+  - |term-MPI_Win_fence| this is an example of **active target** synchronization.
+  - |term-MPI_Win_start|, |term-MPI_Win_complete|, |term-MPI_Win_post|, |term-MPI_Win_wait| another example of **active target** synchronization.
+  - |term-MPI_Win_lock|, |term-MPI_Win_unlock| which enables **passive target** synchronization.
+
+  We will discuss synchronization further in the next episode :ref:`one-sided-2`.
+
+
+.. figure:: img/RMA_timeline-coarse.svg
+   :align: center
+
+   We call collective routines, provided by MPI, to open a **memory window** on
+   each process in the communicator. Both the target and origin processes will
+   expose a portion of their memory through their respective windows.
+
+
+Example
+^^^^^^^
+
+.. instructor-note:: Type-along
+
+   Type along showing two processes talking with RMA.
+
+.. discussion::
+
+   - How could this be achieved with two-sided communication? We will revisit
+     this example when talking about non-blocking communication.
+
+Window creation
+---------------
+
+The
 
 
 See also

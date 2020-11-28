@@ -1,3 +1,6 @@
+.. _one-sided-2:
+
+
 One-side communication: synchronization
 =======================================
 
@@ -17,6 +20,14 @@ Topic introduction here
 You really want to browse this page alongside the source of it, to see
 how this is implemented.  See the links at the to right of the page.
 
+Epochs
+------
+
+Active synchronization
+----------------------
+
+Passive synchronization
+-----------------------
 
 
 See also

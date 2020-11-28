@@ -1,3 +1,6 @@
+.. _comms-groups:
+
+
 Communicators and groups
 ========================
 

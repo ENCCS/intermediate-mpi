@@ -1,3 +1,6 @@
+.. _derived-datatypes:
+
+
 Derived datatypes
 =================
 
