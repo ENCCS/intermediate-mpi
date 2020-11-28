@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-11-28T15:45:23.131Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36" etag="jKKp8WjAJgxqb0eJCP3Q" version="13.10.3" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2020-11-28T15:47:46.481Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36" etag="OWf5L06ZxKULD8YTxyK9" version="13.10.3" type="github" pages="3">
   <diagram id="rAH2tptxaiKPJn4yS_jS" name="RMA_quizzes">
     <mxGraphModel dx="1008" dy="858" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -812,6 +812,18 @@
               <mxPoint x="370" y="890" />
             </Array>
           </mxGeometry>
+        </mxCell>
+        <mxCell id="d8iHjLAdYKt4m6tKlK3r-9" value="&lt;b&gt;Synchronization&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=-45;" vertex="1" parent="yW9WNk3nDwDyZxoL2B6o-1">
+          <mxGeometry x="225" y="810" width="124.5" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="d8iHjLAdYKt4m6tKlK3r-10" value="&lt;b&gt;Synchronization&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=-45;" vertex="1" parent="yW9WNk3nDwDyZxoL2B6o-1">
+          <mxGeometry x="301" y="810" width="124.5" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="d8iHjLAdYKt4m6tKlK3r-11" value="&lt;b&gt;Synchronization&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=-45;" vertex="1" parent="yW9WNk3nDwDyZxoL2B6o-1">
+          <mxGeometry x="385.75" y="810" width="124.5" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="d8iHjLAdYKt4m6tKlK3r-12" value="&lt;b&gt;Synchronization&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=-45;" vertex="1" parent="yW9WNk3nDwDyZxoL2B6o-1">
+          <mxGeometry x="385.75" y="1020" width="124.5" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
