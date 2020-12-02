@@ -13,7 +13,7 @@ possible but will not be covered here due to the risk of various
 conflicts (or worse).
 
 These instructions are based on installing compilers and MPI via the
-`conda` package and environment manager, as it provides a convenient
+``conda`` package and environment manager, as it provides a convenient
 way to install binary packages in an isolated software environment.
 
 Operating systems
@@ -38,17 +38,17 @@ Begin by installing Miniconda:
    for your operating system:
 
      - for MacOS and Linux, choose the bash installer
-     - on Windows, open a Linux-WSL terminal and type: `wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh`.
+     - on Windows, open a Linux-WSL terminal and type: ``wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh``.
 
-   If wget is not a recognised command, first install it by `sudo apt-get install wget` (provide the password you chose when installing WSL).
-2. In a terminal, run the installer with `bash Miniconda3-latest-<operating-system>-x86_64.sh`
+   If wget is not a recognised command, first install it by ``sudo apt-get install wget`` (provide the password you chose when installing WSL).
+2. In a terminal, run the installer with ``bash Miniconda3-latest-<operating-system>-x86_64.sh``
    (replace with correct name of installer)
 3. Agree to the terms of conditions, specify the installation directory (the default is
    usually fine), and answer "yes" to the questions "Do you wish the installer to
    initialize Miniconda3 by running conda init?"
 
 You now have miniconda and conda installed. Make sure that it works by
-typing `which conda` and see that it points to where you installed
+typing ``which conda`` and see that it points to where you installed
 miniconda (you may have to open a new terminal first).
 
 We recommend that you create an isolated conda environment (this is
@@ -87,8 +87,7 @@ To compile an MPI code `hello_mpi.c`, you should now be able to do::
   (mpi) $ mpirun -n 2 hello_mpi.x
   
 To compile with OpenMP support for hybrid MPI+OpenMP codes, you need
-to add the `-fopenmp` flag and possibly explicitly link to the relevant library
-installed by `conda`::
+to add the ``-fopenmp`` flag and link to the `libomp` library::
 
   (mpi) $ mpicc -o hello_omp_mpi.x hello_omp_mpi.c -L/path/to/miniconda3/envs/mpi/lib -lomp
   (mpi) $ export OMP_NUM_THREADS=2
