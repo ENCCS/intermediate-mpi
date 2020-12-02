@@ -94,7 +94,7 @@ To compile an MPI code `hello_mpi.c`, you should now be able to do::
 To compile with OpenMP support for hybrid MPI+OpenMP codes, you need
 to add the ``-fopenmp`` flag and link to the `libomp` library::
 
-  (mpi) $ mpicc -o hello_omp_mpi.x hello_omp_mpi.c -L/path/to/miniconda3/envs/mpi/lib -lomp
+  (mpi) $ mpicc -fopenmp -o hello_omp_mpi.x hello_omp_mpi.c -lomp
   (mpi) $ export OMP_NUM_THREADS=2
   (mpi) $ mpirun -n 2 hello_omp_mpi.x
-  
+
