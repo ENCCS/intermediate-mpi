@@ -3,25 +3,33 @@ Collective communication 1
 
 .. questions::
 
-   - TODO
+   - How can all ranks of my program collaborate with messages?
+   - How does collective messaging diff from point-to-point?
 
 .. objectives::
 
-   - TODO
+   - Know the different kinds of collective message operations
+   - Understand the terminology used in MPI about collective messages
 
 
-.. figure:: img/ENCCS.jpg
-   :class: with-border
+Introduction
+------------
 
-   This is the caption.
+Parallel programs often need to collaborate:
+
+* To ensure that all ranks have reached a certain point (barrier)
+* To share data with all ranks (broadcast)
+* To compute based on data from all ranks (reduce)
+* To rearrange data across ranks for subsequent computation (scatter, gather)
+
+Barrier
+-------
+
+An ``MPI_Barrier`` call ensures that all ranks arrive at the call before
+any of them proceeds past it.
 
 
-Topic introduction here
-
-You really want to browse this page alongside the source of it, to see
-how this is implemented.  See the links at the to right of the page.
-
-
+`Man page <https://www.open-mpi.org/doc/v4.0/man3/MPI_Barrier.3.php>`_ for MPI_Barrier.
 
 This is a section
 -----------------
@@ -45,6 +53,12 @@ A code block with preceeding paragraph::
      directive within a list (note indention)
 
 
+.. figure:: img/ENCCS.jpg
+   :class: with-border
+
+   This is the caption.
+
+ 
 Exercise: the general topic
 ---------------------------
 
