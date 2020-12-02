@@ -81,6 +81,11 @@ The following commands should give version numbers::
    (mpi) $ mpicc --version
    (mpi) $ mpirun --version  
 
+With OpenMPI you can also try the ``-showme`` flag to see what the ``mpicc``
+compiler wrapper does under the hood::
+
+   (mpi) $ mpicc -showme
+
 To compile an MPI code `hello_mpi.c`, you should now be able to do::
 
   (mpi) $ mpicc -o hello_mpi.x hello_mpi.c
