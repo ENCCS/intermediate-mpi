@@ -11,8 +11,18 @@ INTERMEDIATE MPI
 
    .. todo::
 
-      Write this section: what to prepare before the workshop?
-
+      Before attending this workshop, please make sure that you have access
+      to a computer with a C compiler and an MPI library installed. If you
+      have access to a supercomputer (e.g. a `SNIC system <https://supr.snic.se/>`__)
+      with a compute allocation you can use that during the workshop. Any questions
+      on how to use a particular HPC resource should be directed to the appropriate
+      support desk.  
+      You can also use your own computer for this workshop, provided that it has
+      compilers and an MPI library installed. If you do not already have these
+      installed, we recommend that you set up an isolated software environment
+      using `conda`. For Windows computers we recommend to use the Windows
+      Subsystem for Linux (WSL). Detailed instructions can be found 
+      on the :doc:`setup` page.
 
 .. toctree::
    :hidden:
