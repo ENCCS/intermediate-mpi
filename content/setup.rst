@@ -92,9 +92,10 @@ To compile an MPI code `hello_mpi.c`, you should now be able to do::
   (mpi) $ mpirun -n 2 hello_mpi.x
   
 To compile with OpenMP support for hybrid MPI+OpenMP codes, you need
-to add the ``-fopenmp`` flag and link to the `libomp` library::
+to add the ``-fopenmp`` flag::
 
-  (mpi) $ mpicc -fopenmp -o hello_omp_mpi.x hello_omp_mpi.c -lomp
+  (mpi) $ mpicc -fopenmp -o hello_omp_mpi.x hello_omp_mpi.c
   (mpi) $ export OMP_NUM_THREADS=2
   (mpi) $ mpirun -n 2 hello_omp_mpi.x
 
+You *might* also need to explicitly link against the OpenMP runtime library.
