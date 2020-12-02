@@ -29,6 +29,31 @@ An ``MPI_Barrier`` call ensures that all ranks arrive at the call before
 any of them proceeds past it.
 
 
+.. figure:: img/MPI_Barrier.svg
+   :align: center
+
+   All ranks in the communicator reach the barrier before any continue past it
+
+``MPI_Barrier`` is `blocking` and introduces `collective
+synchronization` into the program. This can be useful to allow rank to
+wait for an external event (e.g. files being written by another
+program) before entering the barrier, rather than have all ranks
+checking.
+
+When debugging problems in other MPI communication, adding calls to
+``MPI_Barrier`` can be useful. However, if a barrier is necessary for
+your program to function correctly, then it is very likely that your
+program has a bug!
+
+Call signature
+^^^^^^^^^^^^^^
+
+    int MPI_Barrier(MPI_Comm comm)
+
+It takes one argument, the communicator over which the barrier
+operates.  All ranks within that communicator must call it or the
+program will hang waiting for them to do so.
+
 `Man page <https://www.open-mpi.org/doc/v4.0/man3/MPI_Barrier.3.php>`_ for MPI_Barrier.
 
 This is a section
