@@ -29,6 +29,7 @@ INTERMEDIATE MPI
    :maxdepth: 1
    :caption: The lesson
 
+   setup
    communicators-groups
    derived-datatypes
    one-sided-pt1

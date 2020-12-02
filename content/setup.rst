@@ -1,5 +1,5 @@
-Workshop setup
-==============
+Installation
+============
 
 In order to follow this workshop, you will need access to compilers
 and MPI libraries. You can either use a cluster or set things up on
