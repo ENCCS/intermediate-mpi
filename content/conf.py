@@ -75,7 +75,7 @@ html_title = project
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # HTML context:
 from os.path import dirname, realpath, basename
@@ -102,7 +102,7 @@ todo_include_todos = True
 #    }
 
 # Our own customisation
-from custom import MPI_glossary, SignatureDirective
+from custom import MPI_glossary, DIRECTIVES
 
 
 # the epilog
@@ -113,7 +113,8 @@ rst_epilog = f"""
 .. role:: blue
 """
 
+
 def setup(app):
-  for obj in [SignatureDirective]:
-    app.add_directive(obj.cssname(), obj)
-  app.add_css_file("overrides.css")
+    for obj in DIRECTIVES:
+        app.add_directive(obj.cssname(), obj)
+    app.add_css_file("overrides.css")

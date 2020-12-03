@@ -46,6 +46,17 @@
     content: "🖥";
 }
 
+/* parameters */
+.rst-content .parameters {
+    background: rgba(217, 240, 211, 0.0);
+}
+.rst-content .parameters > .admonition-title {
+    background: rgba(172, 211, 158, 0.5);
+}
+.rst-content .parameters > .admonition-title::before {
+    content: "🖥";
+}
+
 /* Colors and text decoration.
  * For example, :black:`text in black` or :blink:`text blinking` in rST.
  */

@@ -120,3 +120,10 @@ from sphinx_lesson.directives import _BaseCRDirective
 class SignatureDirective(_BaseCRDirective):
     # FIXME figure out how to keep the dropdown menu, but show its content by default
     extra_classes = ["toggle-shown"]
+
+
+class ParametersDirective(_BaseCRDirective):
+    extra_classes = ["dropdown"]
+
+
+DIRECTIVES = [SignatureDirective, ParametersDirective]

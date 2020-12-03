@@ -233,13 +233,16 @@ Synchronization
 .. figure:: img/RMA_timeline-coarse.svg
    :align: center
 
-   We call collective routines, provided by MPI, to open a **memory window** on
-   each process in the communicator. Both the target and origin processes will
-   expose a portion of their memory through their respective windows.
+   The timeline of window creation, calls to RMA routines, and synchronization
+   in an application which uses MPI one-sided communication.
+   The creation of ``MPI_Win`` objects in each process in the communicator
+   allows the execution of RMA routines. Each access to the window must be
+   synchronized: to ensure safety and correctness of the application.
+   Note that **any** interaction with the memory window **must** be protected by
+   calls to synchronization routines: even local load/store and/or two-sided
+   communication.
+   The events in between synchronization calls are said to happen in *epochs*.
 
-
-Example
-^^^^^^^
 
 .. instructor-note:: Type-along
 
@@ -253,7 +256,232 @@ Example
 Window creation
 ---------------
 
-The
+The creation of ``MPI_Win`` objects is a collective operation: each process in
+the communicator will reserve the specified memory for remote memory accesses.
+
+.. signature:: |term-MPI_Win_allocate|
+
+   Use this function to *allocate* memory and *create* a window object out of it.
+
+   .. code-block:: c
+
+      int MPI_Win_allocate(MPI_Aint size,
+                           int disp_unit,
+                           MPI_Info info,
+                           MPI_Comm comm,
+                           void *baseptr,
+                           MPI_Win *win)
+
+  We can expose an array of 10 ``double``-s for RMA with:
+
+  .. literalinclude:: code/snippets/allocate.c
+     :language: c
+     :lines: 6-15
+     :dedent: 2
+
+.. parameters::
+
+   ``size``
+       Size in bytes.
+   ``disp_unit``
+       Displacement units. If ``disp_unit = 1``, then displacements are computed
+       in bytes. The use of displacement units can help with code readability
+       and is essential for correctness on heterogeneous systems, where the
+       sizes of the basis types might differ between processes.  See also
+       :ref:`derived-datatypes`.
+   ``info``
+       An info object, which can be used to provide optimization hints to the
+       MPI implementation. Using ``MPI_INFO_NULL`` is always correct.
+   ``comm``
+       The (intra)communicator.
+   ``baseptr``
+       The base pointer.
+   ``win``
+       The window object.
+
+
+.. signature:: |term-MPI_Win_create|
+
+   With this routine you can tell MPI what memory to expose as
+   window. The memory must be already allocated and contiguous, since it will be
+   specified in input as **base address plus size in bytes**.
+
+   .. code-block:: c
+
+      int MPI_Win_create(void *base,
+                         MPI_Aint size,
+                         int disp_unit,
+                         MPI_Info info,
+                         MPI_Comm comm,
+                         MPI_Win *win)
+
+   What if the memory is not allocated? We advise to use |term-MPI_Alloc_mem|:
+
+   .. literalinclude:: code/snippets/alloc_mem+win_create.c
+      :language: c
+      :lines: 6-21
+      :dedent: 2
+
+   You must explicitly call |term-MPI_Free_mem| to deallocate memory obtained
+   with |term-MPI_Alloc_mem|.
+
+.. parameters::
+
+   ``base``
+       The base pointer.
+   ``size``
+       Size in bytes.
+   ``disp_unit``
+       Displacement units. If ``disp_unit = 1``, then displacements are computed
+       in bytes. The use of displacement units can help with code readability
+       and is essential for correctness on heterogeneous systems, where the
+       sizes of the basis types might differ between processes.  See also
+       :ref:`derived-datatypes`.
+   ``info``
+       An info object, which can be used to provide optimization hints to the
+       MPI implementation. Using ``MPI_INFO_NULL`` is always correct.
+   ``comm``
+       The (intra)communicator.
+   ``win``
+       The window object.
+
+.. note::
+
+   - With the term *memory window* or simply *window* we refer to the memory,
+     local to each process, reserved for remote memory accesses. A *window
+     object* is instead the collection of windows of all processes in the
+     communicator and it has type ``MPI_Win``.
+   - The memory window is usually a single array: the size of the window object
+     then coincides with the size of the array.  If the base type of the array
+     is a simple type, then the displacement unit is the size of that type,
+     *e.g.* ``double`` and ``sizeof(double)``.  You should use a displacement
+     unit of 1 otherwise.
+
+
+
+RMA operations
+--------------
+
+.. signature:: |term-MPI_Put|
+
+   Store data from the **origin** process to the memory window of the **target**
+   process.
+   The origin process is the *source*, while the target process is the
+   *destination*.
+
+   .. code-block:: c
+
+      int MPI_Put(const void *origin_addr,
+                  int origin_count,
+                  MPI_Datatype origin_datatype,
+                  int target_rank,
+                  MPI_Aint target_disp,
+                  int target_count,
+                  MPI_Datatype target_datatype,
+                  MPI_Win win)
+
+
+.. signature:: |term-MPI_Get|
+
+   Load data from the memory window of the **target** process to the **origin**
+   process.
+   The origin process is the *destination*, while the target process is the
+   *source*.
+
+   .. code-block:: c
+
+      int MPI_Get(void *origin_addr,
+                  int origin_count,
+                  MPI_Datatype origin_datatype,
+                  int target_rank,
+                  MPI_Aint target_disp,
+                  int target_count,
+                  MPI_Datatype target_datatype,
+                  MPI_Win win)
+
+.. parameters::
+
+   Both |term-MPI_Put| and |term-MPI_Get| are *nonblocking*: they are completed
+   by a call to synchronization routines.
+   The two functions have the same argument list. Similarly to |term-MPI_Send|
+   and |term-MPI_Recv|, the data is specified by the triplet of address, count,
+   and datatype.
+   For the data at the *origin* process this is: ``origin_addr``,
+   ``origin_count``, ``origin_datatype``.
+   On the *target* process, we describe the buffer in terms of displacement,
+   count, and datatype: ``target_disp``, ``target_count``, ``target_datatype``.
+   The address of the buffer on the target process is computed using the base
+   address and displacement unit of the ``MPI_Win`` object:
+
+   .. code-block:: c
+
+      target_addr = win_base_addr + target_disp * disp_unit
+
+   With |term-MPI_Put|, the ``origin`` triplet specifies the **local send
+   buffer**; while with |term-MPI_Get| it specifies the **local receive
+   buffer**.
+   The ``target_rank`` parameter is, as the name suggests, the rank of the
+   target process in the communicator.
+
+.. signature:: |term-MPI_Accumulate|
+
+   Store data from the **origin** process to the memory window of the **target**
+   process *and* combine it using one the predefined MPI reduction operations.
+
+   .. code-block:: c
+
+      int MPI_Accumulate(const void *origin_addr,
+                         int origin_count,
+                         MPI_Datatype origin_datatype,
+                         int target_rank,
+                         MPI_Aint target_disp,
+                         int target_count,
+                         MPI_Datatype target_datatype,
+                         MPI_Op op,
+                         MPI_Win win)
+
+   The argument list to |term-MPI_Accumulate| is the same as for |term-MPI_Put|,
+   with the addition of the ``op`` parameter with type ``MPI_Op``, which
+   specifies which reduction operation to execute on the target process.
+   This routine is **elementwise atomic**: accesses from multiple processes will
+   be serialized in some order and no race conditions can thus occur.  You still
+   need to exercise care though: reductions are only deterministic if the
+   operation is *associative* and *commutative* for the given datatype.  For
+   example, ``MPI_SUM`` and ``MPI_PROD`` are *neither* associative *nor*
+   commutative for floating point numbers!
+
+Other routines for RMA operations are:
+
+Request-based variants
+   These routines return a handle of type ``MPI_Request`` and synchronization
+   can be achieved with ``MPI_Wait``.
+
+     - ``MPI_Rget``
+     - ``MPI_Rput``
+     - ``MPI_Raccumulate``
+     - ``MPI_Rget_accumulate``
+
+Specialized accumulation variants
+   These functions perform specialized accumulations, but are conceptually
+   similar to |term-MPI_Accumulate|.
+
+     - ``MPI_Get_accumulate``
+     - ``MPI_Fetch_and_op``
+     - ``MPI_Compare_and_swap``
+
+
+.. challenge:: Describe the operations depicted.
+
+   #. question
+
+      A. Option
+      B. Option
+      C. Option
+      D. Option
+
+.. solution::
+
+   #. solution
 
 
 See also
