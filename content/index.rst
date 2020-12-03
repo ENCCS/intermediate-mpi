@@ -35,6 +35,8 @@ INTERMEDIATE MPI
    collective-communication-pt1
    collective-communication-pt2
    collective-communication-pt3
+   non-blocking-communication-pt1
+   non-blocking-communication-pt2
    mpi-and-threads-pt1
    mpi-and-threads-pt2
 
@@ -51,6 +53,8 @@ INTERMEDIATE MPI
    35 min ; :doc:`collective-communication-pt1`
    35 min ; :doc:`collective-communication-pt2`
    35 min ; :doc:`collective-communication-pt3`
+   30 min ; :doc:`non-blocking-communication-pt1`
+   30 min ; :doc:`non-blocking-communication-pt2`
    30 min ; :doc:`mpi-and-threads-pt1`
    30 min ; :doc:`mpi-and-threads-pt2`
 
