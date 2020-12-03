@@ -15,8 +15,6 @@ import sys
 
 sys.path.insert(0, os.path.abspath("."))
 
-from custom import MPI_glossary
-
 # -- Project information -----------------------------------------------------
 
 project = "Intermediate MPI"
@@ -103,6 +101,10 @@ todo_include_todos = True
 #    #'sphinx': ('https://www.sphinx-doc.org/', None),
 #    }
 
+# Our own customisation
+from custom import MPI_glossary, SignatureDirective
+
+
 # the epilog
 rst_epilog = f"""
 {MPI_glossary()}
@@ -112,4 +114,6 @@ rst_epilog = f"""
 """
 
 def setup(app):
+  for obj in [SignatureDirective]:
+    app.add_directive(obj.cssname(), obj)
   app.add_css_file("overrides.css")

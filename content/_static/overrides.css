@@ -1,4 +1,3 @@
-
 /* override colors in sphinx_lesson.css with the schemes here: https://personal.sron.nl/~pault/#sec:qualitative */
 
 /* instructor-note */
@@ -34,6 +33,17 @@
 }
 .rst-content .discussion > .admonition-title {
     background: rgba(194, 165, 207, 0.5);
+}
+
+/* signature */
+.rst-content .signature {
+    background: rgba(217, 240, 211, 0.3);
+}
+.rst-content .signature > .admonition-title {
+    background: rgba(172, 211, 158, 0.5);
+}
+.rst-content .signature > .admonition-title::before {
+    content: "🖥";
 }
 
 /* Colors and text decoration.

@@ -49,9 +49,15 @@ lesson_rma = [
     "MPI_Win_wait",
     "MPI_Win_lock",
     "MPI_Win_unlock",
+    "MPI_Alloc_mem",
+    "MPI_Free_mem",
 ]
 # collectives
 lesson_coll = [
+    "MPI_Allgatherv",
+]
+# p2p
+p2p = [
     "MPI_Send",
     "MPI_Ssend",
     "MPI_Rsend",
@@ -67,12 +73,13 @@ lesson_coll = [
     "MPI_Buffer_attach",
     "MPI_Buffer_detach",
     "MPI_Recv",
-    "MPI_Allgatherv",
 ]
 # threads
 lesson_threads = []
 
-MPI_functions = lesson_comms + lesson_dd + lesson_rma + lesson_coll + lesson_threads
+MPI_functions = (
+    lesson_comms + lesson_dd + lesson_rma + lesson_coll + lesson_threads + p2p
+)
 
 abbr_and_term = """
 .. |{function}| replace:: ``{function}``
@@ -105,3 +112,11 @@ def MPI_glossary():
 
     # include all customisation in the rst_epilog, so it's available everywhere
     return glossary_helper + implementors_docs
+
+
+from sphinx_lesson.directives import _BaseCRDirective
+
+
+class SignatureDirective(_BaseCRDirective):
+    # FIXME figure out how to keep the dropdown menu, but show its content by default
+    extra_classes = ["toggle-shown"]
