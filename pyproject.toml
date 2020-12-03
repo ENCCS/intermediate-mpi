@@ -1,0 +1,20 @@
+[build-system]
+build-backend = 'setuptools.build_meta'
+requires = [
+    'setuptools >= 43.0.0',
+]
+
+[tool.poetry]
+name = "intermediate-mpi"
+version = "1.0"
+description = "intermediate-mpi"
+authors = ["Roberto Di Remigio <roberto.diremigio@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+Sphinx = "*"
+sphinx_rtd_theme = "*"
+sphinx_book_theme = "*"
+sphinx-lesson = "^0.8.3"
+sphinxcontrib-bibtex  = "*"
+black = "*"

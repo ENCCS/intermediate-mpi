@@ -15,11 +15,6 @@ One-sided communication: synchronization
    - Passive synchronization: |term-MPI_Win_lock|, |term-MPI_win_unlock|
 
 
-Topic introduction here
-
-You really want to browse this page alongside the source of it, to see
-how this is implemented.  See the links at the to right of the page.
-
 Epochs
 ------
 

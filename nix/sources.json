@@ -1,0 +1,38 @@
+{
+  "niv": {
+  "branch": "master",
+  "description": "Easy dependency management for Nix projects",
+  "homepage": "https://github.com/nmattia/niv",
+  "owner": "nmattia",
+  "repo": "niv",
+  "rev": "20c899271f288d33114760bc298838575fc6c7f9",
+  "sha256": "07zswk6dhlydihl9g6skmy52grjvqpra8r98f2dmbgwzc1yhjhxq",
+  "type": "tarball",
+  "url": "https://github.com/nmattia/niv/archive/20c899271f288d33114760bc298838575fc6c7f9.tar.gz",
+  "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+  },
+  "nixpkgs": {
+  "branch": "nixpkgs-unstable",
+  "description": "Nix Packages collection",
+  "homepage": "",
+  "owner": "NixOS",
+  "repo": "nixpkgs",
+  "rev": "0da76dab4c2acce5ebf404c400d38ad95c52b152",
+  "sha256": "1lj3h4hg3cnxl3avbg9089wd8c82i6sxhdyxfy99l950i78j0gfg",
+  "type": "tarball",
+  "url": "https://github.com/NixOS/nixpkgs/archive/0da76dab4c2acce5ebf404c400d38ad95c52b152.tar.gz",
+  "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+  },
+  "poetry2nix": {
+  "branch": "1.13.0",
+  "description": "Convert poetry projects to nix automagically [maintainer=@adisbladis] ",
+  "homepage": "",
+  "owner": "nix-community",
+  "repo": "poetry2nix",
+  "rev": "2acbe722a8846f6a2d11ca1f64d1ba46f62095c2",
+  "sha256": "1lqzlkn1wxfdq4dvc7b3113b2xj5pjdhnw7qf4540dvh8c01k8dg",
+  "type": "tarball",
+  "url": "https://github.com/nix-community/poetry2nix/archive/2acbe722a8846f6a2d11ca1f64d1ba46f62095c2.tar.gz",
+  "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+  }
+  }
