@@ -15,6 +15,14 @@ One-sided communication: synchronization
    - Passive synchronization: |term-MPI_Win_lock|, |term-MPI_win_unlock|
 
 
+.. figure:: img/send-recv_step2.svg
+   :align: center
+
+   Two-sided communication between two sloths. Both of them are **active**
+   participants in the communication: the |term-MPI_Send| has to be matched by
+   an |term-MPI_Recv|.
+
+
 Epochs
 ------
 

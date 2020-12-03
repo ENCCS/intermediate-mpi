@@ -1,5 +1,0 @@
-* Inbox
-** [2020-11-12 Thu 11:50] General ideas
-- Draw diagrams with a consistent mapping between graphical elements and meaning.
-- First present the ideas, then present the function signatures.
-- Quizzes along the way.
