@@ -71,6 +71,7 @@ implementation of MPI::
 If you prefer MPICH over OpenMPI (or you experience problems with OpenMPI), you can
 instead do::
 
+  (mpi) $ conda install -c conda-forge compilers  
   (mpi) $ conda install -c conda-forge mpich
 
 **Please also verify the installation.**
