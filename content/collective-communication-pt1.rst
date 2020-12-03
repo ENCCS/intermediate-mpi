@@ -122,14 +122,32 @@ Code-along exercise: broadcast
 
 TODO
 
-.. challenge:: 1.1 Broadcast
+.. challenge:: 1.1 Use a broadcast
 
-   1. Notice the exercise set has both an ID and
-      number ``SampleLesson-1`` and description of what it contains.
+   1. Download the :download:`source code
+   <code/collective-communication-broadcast.c>`. Open
+   ``collective-communication-broadcast.c`` and read through it. Try
+   to compile with::
+
+        mpicc -g -Wall -std=c11 collective-communication-broadcast.c -o collective-communication-broadcast
+
+   2. When you have the code compiling, try to run with::
+
+        mpiexec -np 2 ./collective-communication-broadcast
+
+   3. Use clues from the compiler and the comments in the code to
+      change the code so it compiles and runs. Try to get all ranks to
+      report success :-)
 
 .. solution::
 
-   * Solution here.
+   * One correct call is::
+
+         MPI_Bcast(values_to_broadcast, 2, MPI_INT, rank_of_root, comm);
+
+   * There are other calls that work correctly. Is yours better or worse
+     than this one? Why?
+   * Download a :download:`working solution <code/collective-communication-broadcast-solution.c>`
 
 
 Scatter
