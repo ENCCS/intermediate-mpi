@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-12-03T15:56:24.615Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36" etag="3yJmGZBPzJo8Yvr11QW7" version="13.10.4" type="github" pages="4">
+<mxfile host="app.diagrams.net" modified="2020-12-03T21:19:02.908Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36" etag="jljlb4oo9KWkWpMt_4hY" version="13.10.4" type="github" pages="5">
   <diagram id="rAH2tptxaiKPJn4yS_jS" name="RMA_quizzes">
     <mxGraphModel dx="729" dy="858" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -1224,6 +1224,14 @@
         <mxCell id="gdrheSOECUSbHDC3lM_4-1" value="&lt;font face=&quot;Fira Code&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Fira+Code&quot;&gt;&lt;b&gt;MPI_Put&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontFamily=Helvetica;opacity=50;" vertex="1" parent="TDbVUfvA1KXwcp24JmvW-1">
           <mxGeometry x="310" y="561" width="40" height="20" as="geometry" />
         </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="u13WH6lC_1j6l7F1CWNH" name="sync quiz">
+    <mxGraphModel dx="729" dy="858" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="xdeUgsJuUdyjhPYB_x0x-0" />
+        <mxCell id="xdeUgsJuUdyjhPYB_x0x-1" parent="xdeUgsJuUdyjhPYB_x0x-0" />
       </root>
     </mxGraphModel>
   </diagram>
