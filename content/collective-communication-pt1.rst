@@ -60,9 +60,6 @@ When debugging problems in other MPI communication, adding calls to
 your program to function correctly, that may suggest your
 program has a bug!
 
-Call signature
-~~~~~~~~~~~~~~
-
 Call signature::
 
   int MPI_Barrier(MPI_Comm comm)
@@ -117,17 +114,69 @@ Link to `Specification of MPI_Bcast <https://www.mpi-forum.org/docs/mpi-3.1/mpi3
    used for point-to-point communication; all ranks in the communicator
    must participate with valid buffers and consistent counts and types.
 
-Code-along exercise: broadcast
-------------------------------
+Reduce
+------
 
-TODO
+An ``MPI_Reduce`` call combines data from all ranks using an operation
+and returns values to a single rank.
 
-.. challenge:: 1.1 Use a broadcast
+.. figure:: img/MPI_Reduce.svg
+   :align: center
+
+   After the call, the root rank has a value computed by combining a
+   value from each other rank in the communicator with an operation.
+
+``MPI_Reduce`` is `blocking` and introduces `collective
+synchronization` into the program.
+
+There are several kinds of pre-defined operation, including arithmetic
+and logical operations. A full list of operations is available in the
+linked documentation.
+
+This is useful to allow one rank to compute based on values from all
+other ranks in the communicator. For example, the maximum value found
+over all ranks (and even the rank upon which it was found) can be
+returned to the root rank. Often one simply wants a sum, and for that
+``MPI_SUM`` is provided. 
+
+Call signature::
+
+  int MPI_Reduce(const void *sendbuf, void *recvbuf, int count,
+                 MPI_Datatype datatype, MPI_Op op,
+                 int root, MPI_Comm comm)
+
+Link to `MPI_Reduce man page <https://www.open-mpi.org/doc/v4.0/man3/MPI_Reduce.3.php>`_
+
+Link to `Specification of MPI_Reduce <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node111.htm#Node111>`_
+
+.. note::
+
+   All ranks must supply the same value for ``root``, which specifies
+   the rank of the process within that communicator that receives the
+   values send from each process.
+
+   ``sendbuf``, ``count`` and ``datatype`` describe the buffer on
+   **each** process from which the data is sent. Only a buffer large
+   enough to contain the data sent by that process is needed.
+
+   ``recvbuf``, ``count`` and ``datatype`` describe the buffer on the
+   **root** process in which the combined data is received. Other
+   ranks do not need to allocate a receive buffer, and may pass any
+   values to the call.
+
+   All ranks in the communicator must participate with valid send
+   buffers and consistent counts and types.
+
+
+Code-along exercise: broadcast and reduce
+-----------------------------------------
+
+.. challenge:: 1.1 Use a broadcast and observe the results with reduce
 
    1. Download the :download:`source code
-   <code/collective-communication-broadcast.c>`. Open
-   ``collective-communication-broadcast.c`` and read through it. Try
-   to compile with::
+      <code/collective-communication-broadcast.c>`. Open
+      ``collective-communication-broadcast.c`` and read through it. Try
+      to compile with::
 
         mpicc -g -Wall -std=c11 collective-communication-broadcast.c -o collective-communication-broadcast
 
@@ -244,7 +293,7 @@ Link to `Specification of MPI_Gather <https://www.mpi-forum.org/docs/mpi-3.1/mpi
    not need to allocate a receive buffer, and may pass any values to
    the call.
 
-   All ranks in the communicator must participate with valid receive
+   All ranks in the communicator must participate with valid send
    buffers and consistent counts and types.
 
  
