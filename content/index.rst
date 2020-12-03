@@ -25,6 +25,7 @@ INTERMEDIATE MPI
    one-sided-pt2
    collective-communication-pt1
    collective-communication-pt2
+   collective-communication-pt3
    mpi-and-threads-pt1
    mpi-and-threads-pt2
 
@@ -38,8 +39,9 @@ INTERMEDIATE MPI
    30 min ; :doc:`derived-datatypes`
    30 min ; :doc:`one-sided-pt1`
    30 min ; :doc:`one-sided-pt2`
-   30 min ; :doc:`collective-communication-pt1`
-   30 min ; :doc:`collective-communication-pt2`
+   35 min ; :doc:`collective-communication-pt1`
+   35 min ; :doc:`collective-communication-pt2`
+   35 min ; :doc:`collective-communication-pt3`
    30 min ; :doc:`mpi-and-threads-pt1`
    30 min ; :doc:`mpi-and-threads-pt2`
 
