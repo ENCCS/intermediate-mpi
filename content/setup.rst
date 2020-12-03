@@ -38,9 +38,8 @@ Begin by installing Miniconda:
    for your operating system:
 
      - for MacOS and Linux, choose the bash installer
-     - on Windows, open a Linux-WSL terminal and type: ``wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh``.
-
-   If wget is not a recognised command, first install it by ``sudo apt-get install wget`` (provide the password you chose when installing WSL).
+     - on Windows, open a Linux-WSL terminal and type: ``wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh``.  
+       If wget is not a recognised command, first install it by ``sudo apt-get install wget`` (provide the password you chose when installing WSL).
 2. In a terminal, run the installer with ``bash Miniconda3-latest-<operating-system>-x86_64.sh``
    (replace with correct name of installer)
 3. Agree to the terms of conditions, specify the installation directory (the default is
@@ -72,6 +71,7 @@ implementation of MPI::
 If you prefer MPICH over OpenMPI (or you experience problems with OpenMPI), you can
 instead do::
 
+  (mpi) $ conda install -c conda-forge compilers  
   (mpi) $ conda install -c conda-forge mpich
 
 **Please also verify the installation.**
