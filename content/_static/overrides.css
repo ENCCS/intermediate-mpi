@@ -43,7 +43,7 @@
     background: rgba(172, 211, 158, 0.5);
 }
 .rst-content .signature > .admonition-title::before {
-    content: "🖥";
+    content: "\01F527";
 }
 
 /* parameters */
@@ -54,7 +54,7 @@
     background: rgba(172, 211, 158, 0.5);
 }
 .rst-content .parameters > .admonition-title::before {
-    content: "🖥";
+    content: "\01F4BB";
 }
 
 /* Colors and text decoration.
