@@ -1,8 +1,8 @@
 .. _one-sided-2:
 
 
-One-side communication: synchronization
-=======================================
+One-sided communication: synchronization
+========================================
 
 .. questions::
 
