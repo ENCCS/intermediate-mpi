@@ -202,7 +202,6 @@ Windows
   Memory windows must be explicitly freed after use with |term-MPI_Win_free|.
 
 Load/store
-
   Load/store/transform data in remote windows. We can identify an *origin* and a
   *target* process. At variance with two-sided communication, the origin process
   fully specifies the data transfer: where the data comes from and where it is
