@@ -236,8 +236,10 @@ Link to `Specification of MPI_Scatter <https://www.mpi-forum.org/docs/mpi-3.1/mp
    sent to all other ranks.
 
    ``sendbuf``, ``sendcount`` and ``sendtype`` describe the buffer on
-   the **root** process from which the data comes. Other ranks do not need
-   to allocate a send buffer, and may pass any values to the call.
+   the **root** process from which the data comes. ``sendcount``
+   describes the extent of the buffer sent to each other rank, not the
+   extent of the whole buffer! Other ranks do not need to allocate a
+   send buffer, and may pass any values to the call.
 
    ``recvbuf``, ``recvcount`` and ``recvtype`` describe the buffer on
    **each** process to which the data is sent. Only a buffer large
@@ -289,48 +291,51 @@ Link to `Specification of MPI_Gather <https://www.mpi-forum.org/docs/mpi-3.1/mpi
    enough to contain the data sent by that process is needed.
 
    ``recvbuf``, ``recvcount`` and ``recvtype`` describe the buffer on
-   the **root** process in which the data is received. Other ranks do
-   not need to allocate a receive buffer, and may pass any values to
-   the call.
+   the **root** process in which the data is received. ``revcount``
+   describes the extent of the buffer received from each rank, not the
+   extent of the whole buffer! Other ranks do not need to allocate a
+   receive buffer, and may pass any values to the call.
 
    All ranks in the communicator must participate with valid send
    buffers and consistent counts and types.
 
  
-Exercise: scatter and gather
-----------------------------
+Code-along exercise: scatter and gather
+---------------------------------------
 
-TODO
+.. challenge:: 2.1 Use a scatter and gather
 
-.. challenge:: 2.1 Scatter
+   1. Download the :download:`source code
+      <code/collective-communication-scatter-and-gather.c>`. Open
+      ``collective-communication-scatter-and-gather.c`` and read
+      through it. It's similar to the broadcast code we saw
+      earlier. Try to compile with::
 
-   2. Notice the exercise set has both an ID and
-      number ``SampleLesson-2`` and description of what it contains.
+        mpicc -g -Wall -std=c11 collective-communication-scatter-and-gather.c -o collective-communication-scatter-and-gather
 
-.. solution::
+   2. When you have the code compiling, try to run with::
 
-   * Solution here.
+        mpiexec -np 4 ./collective-communication-scatter-and-gather
 
-
-.. challenge:: 2.2 Gather
-
-   3. Similarly, each exercise has a quick description title ``Create
-      a lesson`` in bold.  These titles are useful so that helpers
-      (and learners...) can quickly understand what the point is.
-
-.. solution::
-
-   * Solution to that one.
-
-.. challenge:: 2.3 Scatter and gather
-
-   4. Similarly, each exercise has a quick description title ``Create
-      a lesson`` in bold.  These titles are useful so that helpers
-      (and learners...) can quickly understand what the point is.
+   3. Use clues from the compiler and the comments in the code to
+      change the code so it compiles and runs. Try to get all ranks to
+      report success :-)
 
 .. solution::
 
-   * Solution to that one.
+   * One correct pair of calls is::
+
+         MPI_Scatter(values_to_scatter, 1, MPI_FLOAT,
+                     &scattered_value, 1, MPI_FLOAT,
+                     rank_of_scatter_root, comm);
+         /* ... */
+         MPI_Gather(&result, 1, MPI_FLOAT,
+                    gathered_values, 1, MPI_FLOAT,
+                    rank_of_gather_root, comm);
+
+   * What happened if you mistakenly used 4 for the scatter send count or
+     the gather receive count. Why?
+   * Download a :download:`working solution <code/collective-communication-scatter-and-gather-solution.c>`
 
 
 All-gather
