@@ -1,10 +1,19 @@
 INTERMEDIATE MPI
 ================
 
-.. todo::
+The Message Passing Interface (MPI) is the de facto standard for
+distributed memory parallelism in high performance computing
+(HPC). MPI is the dominant programming model for modern day
+supercomputers and will continue to be critical in enabling
+researchers to scale up their HPC workloads to forthcoming
+pre-exascale and exascale systems.
 
-   Write intro
-
+This training material targets programmers who already have experience
+with basic MPI and are ready to take the next step to more advanced
+usage. Topics covered include communicators and groups, derived
+datatypes, one-sided communication, collective communication and
+hybrid MPI-threading approaches. :ref:`See below <learner-personas>`
+for recommended prerequisite knowledge.
 
 
 .. prereq::
@@ -34,6 +43,9 @@ INTERMEDIATE MPI
    one-sided-pt2
    collective-communication-pt1
    collective-communication-pt2
+   collective-communication-pt3
+   non-blocking-communication-pt1
+   non-blocking-communication-pt2
    mpi-and-threads-pt1
    mpi-and-threads-pt2
 
@@ -47,8 +59,11 @@ INTERMEDIATE MPI
    30 min ; :doc:`derived-datatypes`
    30 min ; :doc:`one-sided-pt1`
    30 min ; :doc:`one-sided-pt2`
-   30 min ; :doc:`collective-communication-pt1`
-   30 min ; :doc:`collective-communication-pt2`
+   35 min ; :doc:`collective-communication-pt1`
+   35 min ; :doc:`collective-communication-pt2`
+   35 min ; :doc:`collective-communication-pt3`
+   30 min ; :doc:`non-blocking-communication-pt1`
+   30 min ; :doc:`non-blocking-communication-pt2`
    30 min ; :doc:`mpi-and-threads-pt1`
    30 min ; :doc:`mpi-and-threads-pt2`
 
