@@ -21,24 +21,6 @@ Topic introduction here
 You really want to browse this page alongside the source of it, to see
 how this is implemented.  See the links at the to right of the page.
 
-.. table:: Point-to-point communication functions
-   :widths: auto
-
-   +------------------------+------------------------+------------------+-------------------+-----------------------+
-   |                                                 |                    Communication                             |
-   +                                                 +------------------+-------------------+-----------------------+
-   |                                                 | Blocking         | Nonblocking       | Persistent            |
-   +========================+========================+==================+===================+=======================+
-   |                        | **Standard**           | |term-MPI_Send|  | |term-MPI_Isend|  | |term-MPI_Send_init|  |
-   +                        +------------------------+------------------+-------------------+-----------------------+
-   | **Mode**               | **Synchronous**        | |term-MPI_Ssend| | |term-MPI_Issend| | |term-MPI_Ssend_init| |
-   +                        +------------------------+------------------+-------------------+-----------------------+
-   |                        | **Ready**              | |term-MPI_Rsend| | |term-MPI_Irsend| | |term-MPI_Rsend_init| |
-   +                        +------------------------+------------------+-------------------+-----------------------+
-   |                        | **Buffered**           | |term-MPI_Bsend| | |term-MPI_Ibsend| | |term-MPI_Bsend_init| |
-   +------------------------+------------------------+------------------+-------------------+-----------------------+
-
-
 This is a section
 -----------------
 
