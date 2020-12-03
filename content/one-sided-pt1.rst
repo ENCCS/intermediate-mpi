@@ -470,18 +470,36 @@ Specialized accumulation variants
      - ``MPI_Compare_and_swap``
 
 
-.. challenge:: Describe the operations depicted.
+.. challenge:: Describe the sequence MPI calls connecting the before and after schemes.
 
-   #. question
+   #. .. figure:: img/E02-win_allocate.svg
 
-      A. Option
-      B. Option
-      C. Option
-      D. Option
+      A. Window creation with |term-MPI_Win_allocate|.
+      B. Window creation with |term-MPI_Win_create| followed by |term-MPI_Alloc_mem|.
+      C. Dynamic window creation with |term-MPI_Win_create_dynamic|.
+      D. Memory allocation with |term-MPI_Alloc_mem| followed by window creation |term-MPI_Win_create|.
+
+   #. .. figure:: img/E02-win_create_put.svg
+
+      A. Window creation with |term-MPI_Win_allocate| and |term-MPI_Get| from *origin process 2* to *target process 1*.
+      B. Window creation with |term-MPI_Win_create_dynamic| and |term-MPI_Put| from *origin process 1* to *target process 2*.
+      C. Window creation with |term-MPI_Win_create| and |term-MPI_Get| from *origin process 1* to *target process 2*.
+      D. Window creation with |term-MPI_Win_create| and |term-MPI_Put| from *origin process 2* to *target process 1*.
 
 .. solution::
 
-   #. solution
+   #. Both options **A** and **D** are correct. With option **A**, we let MPI
+      allocate memory on each process *and* create a ``MPI_Win`` window object.
+      With option **C**, the memory allocation and window object creation are
+      decoupled and managed by the programmer. If you have the choice, option **A**
+      should be preferred: the MPI library might be able to better optimize window
+      creation.
+   #. Option **D** is correct. The memory is already allocated on each process,
+      maybe through use of |term-MPI_Alloc_mem|, and the window can be created
+      with a call to |term-MPI_Win_create|. The subsequent data movement is a
+      remote *store* operation. The call |term-MPI_Put| is issued by process 2,
+      the *origin* process, to store its ``C`` variable to the memory window of
+      process 1, the *target* process.
 
 
 See also
