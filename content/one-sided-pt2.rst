@@ -176,6 +176,10 @@ while opening and closing of access epochs on origin processes is enabled by:
    Exposure and access epochs must pertain to *matching* process groups.  The
    programmer has to explicitly manage the pairing of exposure and access epochs
    in this model: all communications partners should be known.
+   With the Post/Start/Complete/Wait calls, MPI lets you implement active target
+   communication with *weak synchronization*: the call to |term-MPI_Win_start|
+   is not required to happen chronologically before the call to
+   |term-MPI_Win_post|.
 
 
 .. signature:: |term-MPI_Win_post|
@@ -289,7 +293,7 @@ with:
 
 - |term-MPI_Alloc_mem|,
 - |term-MPI_Win_allocate|,
-- |term-MPI_Win_attach|.
+- ``MPI_Win_attach``.
 
 
 
@@ -338,6 +342,7 @@ with:
        The window object.
 
 
+.. todo:: FINISH UP THE QUIZ
 
 .. challenge:: How could synchronization be performed?
 

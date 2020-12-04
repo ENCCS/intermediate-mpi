@@ -152,11 +152,11 @@ links for more information.
    +========================+========================+==================+===================+
    |                        | **Standard**           | |term-MPI_Send|  | |term-MPI_Isend|  |
    +                        +------------------------+------------------+-------------------+
-   | **Mode**               | **Synchronous**        | |term-MPI_Ssend| | |term-MPI_Issend| |
+   | **Mode**               | **Synchronous**        | |term-MPI_Ssend| | ``MPI_Issend``    |
    +                        +------------------------+------------------+-------------------+
-   |                        | **Ready**              | |term-MPI_Rsend| | |term-MPI_Irsend| |
+   |                        | **Ready**              | ``MPI_Rsend``    | ``MPI_Irsend``    |
    +                        +------------------------+------------------+-------------------+
-   |                        | **Buffered**           | |term-MPI_Bsend| | |term-MPI_Ibsend| |
+   |                        | **Buffered**           | ``MPI_Bsend``    | ``MPI_Ibsend``    |
    +------------------------+------------------------+------------------+-------------------+
 
 
