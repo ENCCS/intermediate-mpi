@@ -51,6 +51,8 @@ lesson_rma = [
     ["MPI_Win_wait", 281],
     ["MPI_Win_lock", 282],
     ["MPI_Win_unlock", 282],
+    ["MPI_Win_free", 265],
+    ["MPI_Win_test", 281],
 ]
 # collectives
 lesson_coll = [
@@ -91,9 +93,20 @@ lesson_non_blocking = [
     ["MPI_Testany", 66],
     ["MPI_Testsome", 66],
     ["MPI_Testall", 66],
+    ["MPI_Ibsend", 63],
+    ["MPI_Irsend", 63],
+    ["MPI_Issend", 63],
 ]
 # threads
 lesson_threads = []
+# functions mentioned in passing in the lesson
+other = [
+    ["MPI_Recv", 50],
+    ["MPI_Alloc_mem", 216],
+    ["MPI_Free_mem", 216],
+    ["MPI_Bsend", 57],
+    ["MPI_Rsend", 57],
+]
 
 MPI_functions = (
     lesson_comms
@@ -102,6 +115,7 @@ MPI_functions = (
     + lesson_coll
     + lesson_threads
     + lesson_non_blocking
+    + other
 )
 
 abbr_and_term = """
@@ -154,7 +168,7 @@ impls_2 = """
 def MPI_glossary():
     # abbreviations and terms for the glossary
     glossary_helper = "\n".join(
-        [abbr_and_term.format(function=function) for function, id in MPI_functions]
+        [abbr_and_term.format(function=function) for function, _ in MPI_functions]
     )
 
     # documentation string from implementors
@@ -174,7 +188,6 @@ from sphinx_lesson.directives import _BaseCRDirective
 
 
 class SignatureDirective(_BaseCRDirective):
-    # FIXME figure out how to keep the dropdown menu, but show its content by default
     extra_classes = ["toggle-shown", "dropdown"]
 
 
