@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-12-04T13:07:16.175Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36" etag="5945EYWmuTS0gQ_TYMrq" version="13.10.4" type="github" pages="5">
+<mxfile host="app.diagrams.net" modified="2020-12-04T13:08:23.273Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36" etag="Rm1iat6X8Y8fFzLNxOVl" version="13.10.4" type="github" pages="5">
   <diagram id="rAH2tptxaiKPJn4yS_jS" name="RMA_quizzes">
     <mxGraphModel dx="729" dy="858" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -511,7 +511,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="hPHTWcqf-nY2GvK_lWOI" name="RMA_basics">
-    <mxGraphModel dx="729" dy="858" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="713" dy="858" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="yW9WNk3nDwDyZxoL2B6o-0" />
         <mxCell id="yW9WNk3nDwDyZxoL2B6o-1" parent="yW9WNk3nDwDyZxoL2B6o-0" />
@@ -1228,7 +1228,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="u13WH6lC_1j6l7F1CWNH" name="sync quiz">
-    <mxGraphModel dx="357" dy="429" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="713" dy="858" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="xdeUgsJuUdyjhPYB_x0x-0" />
         <mxCell id="xdeUgsJuUdyjhPYB_x0x-1" parent="xdeUgsJuUdyjhPYB_x0x-0" />
@@ -1739,6 +1739,12 @@
         </mxCell>
         <mxCell id="eDwEyj34h9PHNRTURvai-224" value="&lt;font face=&quot;Fira Code&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Fira+Code&quot;&gt;&lt;b&gt;MPI_Get&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontFamily=Helvetica;opacity=50;" vertex="1" parent="xdeUgsJuUdyjhPYB_x0x-1">
           <mxGeometry x="775.75" y="730" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="xqNsZV0-9Ksc71706VKy-2" value="" style="endArrow=classic;html=1;strokeWidth=2;" edge="1" parent="xdeUgsJuUdyjhPYB_x0x-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="460" as="sourcePoint" />
+            <mxPoint x="500" y="840" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
