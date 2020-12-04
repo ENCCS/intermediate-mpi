@@ -1,9 +1,21 @@
-<mxfile host="app.diagrams.net" modified="2020-12-04T12:52:12.495Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36" etag="5v_O2Sm4kVBiZ_oxIjfq" version="13.9.7" type="github">
+<mxfile host="app.diagrams.net" modified="2020-12-04T12:53:39.878Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36" etag="AYEswsrWuZi9LFPAj3vC" version="13.9.7" type="github">
   <diagram id="5Cmo91NUEk2H3ckEnoAz" name="Page-1">
     <mxGraphModel dx="800" dy="1141" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="xFg7o4CnwHjb39-5lcCD-5" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="xFg7o4CnwHjb39-5lcCD-3" target="lO88fd5yi4aPhk9MZSfZ-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="370" y="600" as="sourcePoint" />
+            <mxPoint x="420" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xFg7o4CnwHjb39-5lcCD-6" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="lO88fd5yi4aPhk9MZSfZ-2" target="xFg7o4CnwHjb39-5lcCD-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="370" y="600" as="sourcePoint" />
+            <mxPoint x="420" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="lO88fd5yi4aPhk9MZSfZ-1" value="Local computation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
           <mxGeometry x="160" y="120" width="80" height="80" as="geometry" />
         </mxCell>
@@ -51,18 +63,6 @@
         </mxCell>
         <mxCell id="xFg7o4CnwHjb39-5lcCD-4" value="Blocking receive of halo data" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" vertex="1" parent="1">
           <mxGeometry x="520" y="360" width="80" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="xFg7o4CnwHjb39-5lcCD-5" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="xFg7o4CnwHjb39-5lcCD-3" target="lO88fd5yi4aPhk9MZSfZ-3">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="370" y="600" as="sourcePoint" />
-            <mxPoint x="420" y="550" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="xFg7o4CnwHjb39-5lcCD-6" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="lO88fd5yi4aPhk9MZSfZ-2" target="xFg7o4CnwHjb39-5lcCD-4">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="370" y="600" as="sourcePoint" />
-            <mxPoint x="420" y="550" as="targetPoint" />
-          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
