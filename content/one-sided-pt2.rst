@@ -108,24 +108,26 @@ communicator underlying the window object.
 .. figure:: img/E03-fence.svg
    :align: center
 
-   The origin process issues both synchronization and data movement calls. The
-   target also issues synchronization calls, hence the name active target
-   communication.  Synchronization on origin and target starts the *access
-   epoch* on the target's memory windows. Once the origin process has completed
-   its RMA operations, the programmer must take care to synchronize once more,
-   thus closing the access epoch.
+   You can enclose RMA communication within calls to |term-MPI_Win_fence|. This
+   is a collective operation on the window object: on the origin process, it
+   opens (closes) the *access* epoch; on the target process, it opens (closes)
+   the *exposure* epoch.
+
 
 RMA communication calls are surrounded by |term-MPI_Win_fence| calls.  This
-collective operation opens *and* closes an access epoch at an origin process
-and an exposure epoch at a target process. There is thus a one-to-one
-correspondence between the duration of access and exposure epochs.
+collective operation opens *and* closes an access epoch at an origin process and
+an exposure epoch at a target process.  Calls to |term-MPI_Win_fence| act
+similarly to barriers: the MPI implementation will synchronize the sequence of
+RMA calls occurring between two fences.
 
-Calls to |term-MPI_Win_fence| act similarly to barriers: the MPI implementation
-will synchronize the sequence of RMA calls occurring between two fences.
+During an exposure epoch:
+
+- You should *not* perform local accesses to the memory window.
+- Only one remote process can issue |term-MPI_Put|.
+- There can be mutiple |term-MPI_Accumulate| function calls.
+
 
 .. signature:: |term-MPI_Win_fence|
-
-   Use this function to *allocate* memory and *create* a window object out of it.
 
    .. code-block:: c
 
@@ -146,14 +148,13 @@ Post/Start/Complete/Wait
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 The use of |term-MPI_Win_fence| can pose constraints on RMA communication and,
-since it's a collective operation, incur performance penalties.  Imagine, for
-example, that you created a window object in a communicator with ``N``
+since it's a collective operation, might incur performance penalties.  Imagine,
+for example, that you created a window object in a communicator with :math:`N`
 processes, but that only pairs of processes do RMA operations. Fencing these
 operations will force the *whole* communicator to synchronize, even though in
 reality only the interacting pairs should do so.
 
 MPI enables you to have more fine-grained control than fences over synchronization.
-
 Exposure epochs on target processes can be opened and closed with:
 
 - |term-MPI_Win_post|,
@@ -169,18 +170,20 @@ while opening and closing of access epochs on origin processes is enabled by:
    :align: center
 
    Any process can issue a call to |term-MPI_Win_post| to initiate an exposure
-   epoch for a specific group of processes.  For this group of processes, the
-   access epoch starts with a call to |term-MPI_Win_start| and end with a call
-   to |term-MPI_Win_complete|.
-
-   You should note that the programmer has to explicitly manage the pairing of
-   exposure and access epochs in this model: all communications partners should be
-   known.
+   epoch for a specific group of processes.  The access epoch starts with a call
+   to |term-MPI_Win_start| and end with a call to |term-MPI_Win_complete|.
+   The exposure epoch is closed with |term-MPI_Win_wait| (or |term-MPI_Win_test|).
+   Exposure and access epochs must pertain to *matching* process groups.  The
+   programmer has to explicitly manage the pairing of exposure and access epochs
+   in this model: all communications partners should be known.
 
 
 .. signature:: |term-MPI_Win_post|
 
-   Use this function to *allocate* memory and *create* a window object out of it.
+   Start an *exposure* epoch for the memory window on the local calling process.
+   Only the processes in the given group should originate RMA calls.
+   Each process in the origin group has to issue a matching |term-MPI_Win_start|
+   call.
 
    .. code-block:: c
 
@@ -188,17 +191,24 @@ while opening and closing of access epochs on origin processes is enabled by:
                        int assert,
                        MPI_Win win)
 
-  We can expose an array of 10 ``double``-s for RMA with:
 
 .. parameters::
 
+   ``group``
+       The group of **origin** processes in this exposure epoch.
    ``assert``
-       Size in bytes.
+       Use this argument to provide optimization *hints* to the MPI library.
+       Setting this argument to ``0`` is always correct.
    ``win``
        The window object.
 
 
 .. signature:: |term-MPI_Win_start|
+
+   Start an *access* epoch for the given window object. Only the processes in
+   the given group can be targeted by RMA calls.
+   Each process in the origin group has to issue a matching |term-MPI_Win_post|
+   call.
 
    .. code-block:: c
 
@@ -207,7 +217,20 @@ while opening and closing of access epochs on origin processes is enabled by:
                         MPI_Win win)
 
 
+.. parameters::
+
+   ``group``
+       The group of **target** processes in this access epoch.
+   ``assert``
+       Use this argument to provide optimization *hints* to the MPI library.
+       Setting this argument to ``0`` is always correct.
+   ``win``
+       The window object.
+
+
 .. signature:: |term-MPI_Win_complete|
+
+   Calling this function, we can end the access epoch.
 
    .. code-block:: c
 
@@ -216,6 +239,8 @@ while opening and closing of access epochs on origin processes is enabled by:
 
 .. signature:: |term-MPI_Win_wait|
 
+   This function finalizes the exposure epoch.
+
    .. code-block:: c
 
       int MPI_Win_wait(MPI_Win win)
@@ -223,29 +248,59 @@ while opening and closing of access epochs on origin processes is enabled by:
 
 .. signature:: |term-MPI_Win_test|
 
+   Nonblocking version of |term-MPI_Win_wait|. The output parameter ``flag``
+   will be set to true if a call to |term-MPI_Win_wait| would return, thus
+   finalizing the exposure epoch.
+
    .. code-block:: c
 
       int MPI_Win_test(MPI_Win win,
                        int *flag)
 
 
+.. parameters::
+
+   ``win``
+       The window object.
+   ``flag``
+       Whether the exposure epoch has ended.
+
+
 Passive target communication
 ----------------------------
 
-In passive target communication, data momevement and synchronization are both
-orchestrated by the origin process alone. This communication paradigm is
-conceptually close to the shared memory model: the memory managed by the window
-object is globally accessible to all process in the communicator.  Passive
-target communication is achieved through |term-MPI_Win_lock| and
-|term-MPI_Win_unlock|, which delimit the access epochs.
-There are no exposure epochs in passive target communication.
+This communication paradigm is conceptually close to the shared memory model:
+the memory managed by the window object is globally accessible to all process in
+the communicator. This is also called a "billboard" model.
 
 
 .. figure:: img/E03-passive_target_communication.svg
    :align: center
 
+   In passive target communication, data movement and synchronization are
+   orchestrated by the origin process alone. The programmer will use
+   |term-MPI_Win_lock| and |term-MPI_Win_unlock| to achieve passive target
+   communication.  Calls to these functions delimit the access epochs. There are
+   no exposure epochs in passive target communication.
+
+Passive target communication can pose challenges for program portability and
+should only be used when the memory managed by window object has been allocated
+with:
+
+- |term-MPI_Alloc_mem|,
+- |term-MPI_Win_allocate|,
+- |term-MPI_Win_attach|.
+
+
 
 .. signature:: |term-MPI_Win_lock|
+
+   This function starts an RMA access epoch by locking access to the memory
+   window on the given rank.
+   We can have exclusive access to the memory window on ``rank`` by using a
+   ``MPI_LOCK_EXCLUSIVE`` lock. With ``MPI_LOCK_SHARED`` multiple processes can
+   access the rank's memory window: this is unsafe in combination with multiple
+   |term-MPI_Put| calls.
 
    .. code-block:: c
 
@@ -254,6 +309,19 @@ There are no exposure epochs in passive target communication.
                        int assert,
                        MPI_Win win)
 
+
+.. parameters::
+
+   ``lock_type``
+       Which lock to apply. Can be either ``MPI_LOCK_EXCLUSIVE`` or ``MPI_LOCK_SHARED``.
+   ``rank``
+       The rank whose memory window should be locked.
+   ``assert``
+       Use this argument to provide optimization *hints* to the MPI library.
+       Setting this argument to ``0`` is always correct.
+   ``win``
+       The window object.
+
 .. signature:: |term-MPI_Win_unlock|
 
    .. code-block:: c
@@ -261,6 +329,13 @@ There are no exposure epochs in passive target communication.
       int MPI_Win_unlock(int rank,
                          MPI_Win win)
 
+
+.. parameters::
+
+   ``rank``
+       The rank whose memory window should be unlocked.
+   ``win``
+       The window object.
 
 
 
