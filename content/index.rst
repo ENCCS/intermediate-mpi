@@ -94,7 +94,6 @@ following topics (but no expertise is required):
  - Communicators
  - Point-to-point communication
  - Non-blocking point-to-point communication
- - Collective communication
  - MPI datatypes
 
 These pre-requisites are taught in courses such as `PDC's Introduction to MPI
