@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-12-04T07:37:38.256Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36" etag="iq6GVRjivSme1pMuyZOM" version="13.9.7" type="github">
+<mxfile host="app.diagrams.net" modified="2020-12-04T07:43:41.047Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36" etag="EozRxQBZ-XYlWREX6qhH" version="13.9.7" type="github">
   <diagram id="HZfbI1szdyYGrwidaAlg" name="Page-1">
     <mxGraphModel dx="800" dy="1141" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -110,7 +110,7 @@
           <mxGeometry x="600" y="200" width="40" height="40" as="geometry" />
         </mxCell>
         <mxCell id="8Pho85jAipTzLvh0HM8t-39" value="5-point stencil" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="560" y="110" width="120" height="20" as="geometry" />
+          <mxGeometry x="560" y="130" width="120" height="20" as="geometry" />
         </mxCell>
         <mxCell id="8Pho85jAipTzLvh0HM8t-104" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="120" y="280" width="40" height="40" as="geometry" />
@@ -214,8 +214,8 @@
         <mxCell id="AraD1zHQAb1P3GsZQ02e-24" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="400" y="440" width="40" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="AraD1zHQAb1P3GsZQ02e-25" value="8x8 grid" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="200" y="110" width="160" height="20" as="geometry" />
+        <mxCell id="AraD1zHQAb1P3GsZQ02e-25" value="8x8 problem grid" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="200" y="130" width="160" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
