@@ -6,4 +6,10 @@ collective-communication-allgather
 collective-communication-allgather-solution
 collective-communication-alltoall
 collective-communication-alltoall-solution
+non-blocking-communication-deadlock
+non-blocking-communication-deadlock-solution
+non-blocking-communication-overlap
+non-blocking-communication-overlap-solution
+non-blocking-communication-ireduce
+non-blocking-communication-ireduce-solution
 *~

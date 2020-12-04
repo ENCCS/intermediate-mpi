@@ -55,6 +55,27 @@ lesson_rma = [
 # collectives
 lesson_coll = [
     [ "MPI_Allgatherv", 107],
+    [ "MPI_Ireduce", 134],
+]
+# non-blocking
+lesson_non_blocking = [
+    [ "MPI_Send", 47],
+    [ "MPI_Rsend", 57],
+    [ "MPI_Bsend", 57],
+    [ "MPI_Ssend", 57],
+    [ "MPI_Isend", 63],
+    [ "MPI_Issend", 63],
+    [ "MPI_Irsend", 63],
+    [ "MPI_Ibsend", 63],
+    [ "MPI_Irecv", 63],
+    [ "MPI_Wait", 64],
+    [ "MPI_Waitany", 66],
+    [ "MPI_Waitsome", 66],
+    [ "MPI_Waitall", 66],
+    [ "MPI_Test", 64],
+    [ "MPI_Testany", 66],
+    [ "MPI_Testsome", 66],
+    [ "MPI_Testall", 66],
 ]
 # non-blocking
 lesson_non_blocking = [
@@ -103,6 +124,24 @@ standard = """
    <li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node{id}.htm#Node{id}.html">MPI standard 3.1</a></p></li>
    </ul>
    </div>"""
+
+impls_2 = """
+.. |{function}-implementors_docs| raw:: html
+
+   <p>Documentation from implementors:</p>
+   <div>
+   <ul class="simple">
+   <li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/{function}.html">MPICH</a></p></li>
+   <li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/{function}.3.php">OpenMPI</a></p></li>
+   </ul>
+   </div>
+   <p>Documentation in the standard:</p>
+   <div>
+   <ul class="simple">
+   <li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node{id}.htm#Node{id}.html">MPI standard 3.1</a></p></li>
+   </ul>
+   </div>
+"""
 
 
 def MPI_glossary():
