@@ -1,5 +1,5 @@
-Non-blocking communication 1
-============================
+Non-blocking point-to-point
+===========================
 
 .. questions::
 
