@@ -114,10 +114,115 @@ that can participate in the overlapped region.
 The user is responsible for not using the memory area until after the
 message request has been waited upon.
 
-Non-blocking MPI calls
-----------------------
+Non-blocking MPI send calls
+---------------------------
 
-|term-MPI_Isend|
+An ``MPI_Isend`` is creates a send request and returns a request
+object. It may or may not have sent the message, or buffered it. The
+caller is responsible for not changing the buffer until after waiting
+upon the resulting request object.
+
+Call signature:
+
+.. code-block:: c
+
+    int MPI_Isend(const void* buf, int count, MPI_Datatype datatype,
+                  int dest, int tag, MPI_Comm comm, MPI_Request *request)
+
+.. note::
+
+    ``buf``, ``count`` and ``datatype`` describe the buffer to be sent
+    to ``dest`` rank of ``comm`` using tag ``tag``. The ``request`` object
+    that is returned must be used to wait on the communication later.
+
+Other calls exist for other sending modes, including buffered,
+synchronous, and ready-mode sends.
+
+
+Non-blocking MPI receive call
+-----------------------------
+
+An ``MPI_Irecv`` creates a receive request and returns a request
+object.  The caller is responsible for not changing the buffer until
+after waiting upon the resulting request object.
+
+Call signature:
+
+.. code-block:: c
+
+    int MPI_Irecv(void* buf, int count, MPI_Datatype datatype,
+                  int source, int tag, MPI_Comm comm, MPI_Request *request)
+
+
+.. note::
+
+    ``buf``, ``count`` and ``datatype`` describe the buffer to be
+    received from ``source`` rank of ``comm`` using tag ``tag``. The
+    ``request`` object that is returned must be used to wait on the
+    communication later.
+
+An ``MPI_Irecv`` can be used to match any kind of send, regardless of
+sending mode or blocking status.
+
+Waiting for non-blocking call completion
+----------------------------------------
+
+An ``MPI_Wait`` call waits for completion of the operation that
+created the request object passed to it. For a send, the semantics of
+the sending mode have been restored (not necessarily that the message
+has been received). For a receive, the buffer is now valid for use,
+however the send has not necessarily completed (though obviously has
+been initiated).
+
+Call signature:
+
+.. code-block:: c
+
+    int MPI_Wait(MPI_Request *request, MPI_Status *status)
+
+
+.. note::
+
+    ``request`` describes the operation to be waited upon. ``status``
+    returns the status of that operation. If the status is not needed,
+    pass ``MPI_STATUS_IGNORE``.
+
+It can be efficient to wait on any one, some, or all of a set of
+operations before returning. MPI provides ``MPI_Waitany``,
+``MPI_Waitsome``, and ``MPI_Waitall`` for these use cases. For example,
+waiting for any request to complete may allow the caller to continue
+with related computation while waiting for other requests to complete.
+
+
+Testing for non-blocking call completion
+----------------------------------------
+
+An ``MPI_Test`` call returns immediately whether a corresponding
+``MPI_Wait`` would return immediately. completes the operation that
+created the request object passed to it. For a send, the semantics of
+the sending mode have been restored (not necessarily that the message
+has been received). For a receive, the buffer is now valid for use,
+however the send has not necessarily completed (though obviously has
+been initiated).
+
+Call signature:
+
+.. code-block:: c
+
+    int MPI_Wait(MPI_Request *request, MPI_Status *status)
+
+
+.. note::
+
+    ``request`` describes the operation to be waited upon. ``status``
+    returns the status of that operation. If the status is not needed,
+    pass ``MPI_STATUS_IGNORE``.
+
+It can be efficient to wait on any one, some, or all of a set of
+operations before returning. MPI provides |term-MPI_Waitany|,
+``MPI_Waitsome``, and ``MPI_Waitall`` for these use cases. For example,
+waiting for any request to complete may allow the caller to continue
+with related computation while waiting for other requests to complete.
 
 
 Code-along exercise: non-blocking stencil application

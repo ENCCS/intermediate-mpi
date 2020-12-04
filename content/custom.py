@@ -113,7 +113,7 @@ impls_2 = """
 def MPI_glossary():
     # abbreviations and terms for the glossary
     glossary_helper = "\n".join(
-        [abbr_and_term.format(function=f) for f in MPI_functions]
+        [abbr_and_term.format(function=f) for f in MPI_functions + MPI_functions_2]
     )
 
     # documentation string from implementors
