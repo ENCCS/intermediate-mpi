@@ -54,6 +54,8 @@ lesson_coll = [
 ]
 # non-blocking
 lesson_non_blocking = [
+    [ "MPI_Send", 47],
+    [ "MPI_Ssend", 57],
     [ "MPI_Isend", 63],
     [ "MPI_Irecv", 63],
     [ "MPI_Wait", 64],

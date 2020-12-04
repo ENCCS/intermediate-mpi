@@ -117,7 +117,7 @@ message request has been waited upon.
 Non-blocking MPI send calls
 ---------------------------
 
-An ``MPI_Isend`` is creates a send request and returns a request
+An |term-MPI_Isend| is creates a send request and returns a request
 object. It may or may not have sent the message, or buffered it. The
 caller is responsible for not changing the buffer until after waiting
 upon the resulting request object.
@@ -142,7 +142,7 @@ synchronous, and ready-mode sends.
 Non-blocking MPI receive call
 -----------------------------
 
-An ``MPI_Irecv`` creates a receive request and returns a request
+An |term-MPI_Irecv| creates a receive request and returns a request
 object.  The caller is responsible for not changing the buffer until
 after waiting upon the resulting request object.
 
@@ -161,13 +161,13 @@ Call signature:
     ``request`` object that is returned must be used to wait on the
     communication later.
 
-An ``MPI_Irecv`` can be used to match any kind of send, regardless of
+An |term-MPI_Irecv| can be used to match any kind of send, regardless of
 sending mode or blocking status.
 
 Waiting for non-blocking call completion
 ----------------------------------------
 
-An ``MPI_Wait`` call waits for completion of the operation that
+An |term-MPI_Wait| call waits for completion of the operation that
 created the request object passed to it. For a send, the semantics of
 the sending mode have been restored (not necessarily that the message
 has been received). For a receive, the buffer is now valid for use,
@@ -188,8 +188,8 @@ Call signature:
     pass ``MPI_STATUS_IGNORE``.
 
 It can be efficient to wait on any one, some, or all of a set of
-operations before returning. MPI provides ``MPI_Waitany``,
-``MPI_Waitsome``, and ``MPI_Waitall`` for these use cases. For example,
+operations before returning. MPI provides |term-MPI_Waitany|,
+|term-MPI_Waitsome|, and |term-MPI_Waitall| for these use cases. For example,
 waiting for any request to complete may allow the caller to continue
 with related computation while waiting for other requests to complete.
 
@@ -220,7 +220,7 @@ Call signature:
 
 It can be efficient to wait on any one, some, or all of a set of
 operations before returning. MPI provides |term-MPI_Waitany|,
-``MPI_Waitsome``, and ``MPI_Waitall`` for these use cases. For example,
+|term-MPI_Waitsome|, and |term-MPI_Waitall| for these use cases. For example,
 waiting for any request to complete may allow the caller to continue
 with related computation while waiting for other requests to complete.
 
@@ -243,13 +243,13 @@ Code-along exercise: non-blocking stencil application
 
    3. The communication may block. If it does, you will have to kill
       the process to continue, e.g. with ``Ctrl-C``. If it doesn't,
-      follow the first challenge to use a call to ``MPI_Ssend``
+      follow the first challenge to use a call to |term-MPI_Ssend|
       to make it block.
 
    4. Try to fix the code so that one process sends before receiving
       and the other process does the opposite. Now it will work even
-      if the runtime chooses to implement ``MPI_Send`` like
-      ``MPI_Ssend``.
+      if the runtime chooses to implement |term-MPI_Send| like
+      |term-MPI_Ssend|.
 
 .. solution::
 
