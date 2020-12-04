@@ -40,6 +40,7 @@ See also
 
 * TODO
 * TODO
+* Chapter 6 of the **Using Advanced MPI** by William Gropp *et al.* :cite:`Gropp2014-dz`
 
 
 

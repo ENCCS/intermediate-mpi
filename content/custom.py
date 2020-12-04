@@ -1,56 +1,60 @@
 # -*- coding: utf-8 -*-
 
 # add the MPI function to reference in the glossary here. This skullduggery is
-# necessary to get consistent monospace formatting of the function
+# necessary to get consistent monospace formatting of the function. Each list
+# entry should be a list of a string of the name of the MPI function and an
+# integer of the node number of the MPI standard document webpage, e.g.
+# 47 for https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node47.htm#Node47.
+# Use a negative node number if unknown or inapplicable.
 #
 # Communicators and groups
 lesson_comms = [
-    "MPI_Comm_split",
-    "MPI_Comm_create",
-    "MPI_Comm_free",
-    "MPI_Comm_rank",
-    "MPI_Comm_size",
-    "MPI_Comm_group",
-    "MPI_Group_free",
-    "MPI_Cart_create",
+    [ "MPI_Comm_split", 156],
+    [ "MPI_Comm_create", 156],
+    [ "MPI_Comm_free", 157],
+    [ "MPI_Comm_rank", 155],
+    [ "MPI_Comm_size", 155],
+    [ "MPI_Comm_group", 152],
+    [ "MPI_Group_free", 153],
+    [ "MPI_Cart_create", 192],
 ]
 # derived datatypes
 lesson_dd = [
-    "MPI_Type_get_extent",
-    "MPI_Type_size",
-    "MPI_Pack",
-    "MPI_Unpack",
-    "MPI_Type_contiguous",
-    "MPI_Type_vector",
-    "MPI_Type_indexed",
-    "MPI_Type_create_hvector",
-    "MPI_Type_create_hindexed",
-    "MPI_Type_create_struct",
-    "MPI_Type_commit",
-    "MPI_Type_free",
-    "MPI_Op_create",
-    "MPI_Op_free",
+    [ "MPI_Type_get_extent", 84],
+    [ "MPI_Type_size", 82],
+    [ "MPI_Pack", 92],
+    [ "MPI_Unpack", 92],
+    [ "MPI_Type_contiguous", 79],
+    [ "MPI_Type_vector", 79],
+    [ "MPI_Type_indexed", 79],
+    [ "MPI_Type_create_hvector", 79],
+    [ "MPI_Type_create_hindexed", 79],
+    [ "MPI_Type_create_struct", 79],
+    [ "MPI_Type_commit", 86],
+    [ "MPI_Type_free", 86],
+    [ "MPI_Op_create", 115],
+    [ "MPI_Op_free", 115],
 ]
 # remote memory access
 lesson_rma = [
-    "MPI_Get",
-    "MPI_Put",
-    "MPI_Accumulate",
-    "MPI_Win_create",
-    "MPI_Win_allocate",
-    "MPI_Win_allocate_shared",
-    "MPI_Win_create_dynamic",
-    "MPI_Win_fence",
-    "MPI_Win_post",
-    "MPI_Win_start",
-    "MPI_Win_complete",
-    "MPI_Win_wait",
-    "MPI_Win_lock",
-    "MPI_Win_unlock",
+    [ "MPI_Get", 270],
+    [ "MPI_Put", 269],
+    [ "MPI_Accumulate", 273],
+    [ "MPI_Win_create", 261],
+    [ "MPI_Win_allocate", 262],
+    [ "MPI_Win_allocate_shared", 263],
+    [ "MPI_Win_create_dynamic", 264],
+    [ "MPI_Win_fence", 280],
+    [ "MPI_Win_post", 281],
+    [ "MPI_Win_start", 281],
+    [ "MPI_Win_complete", 281],
+    [ "MPI_Win_wait", 281],
+    [ "MPI_Win_lock", 282],
+    [ "MPI_Win_unlock", 282],
 ]
 # collectives
 lesson_coll = [
-    "MPI_Allgatherv",
+    [ "MPI_Allgatherv", 107],
 ]
 # non-blocking
 lesson_non_blocking = [
@@ -66,13 +70,26 @@ lesson_non_blocking = [
     [ "MPI_Testany", 66],
     [ "MPI_Testsome", 66],
     [ "MPI_Testall", 66],
-#    [ "MPI_", ],
+]
+# non-blocking
+lesson_non_blocking = [
+    [ "MPI_Send", 47],
+    [ "MPI_Ssend", 57],
+    [ "MPI_Isend", 63],
+    [ "MPI_Irecv", 63],
+    [ "MPI_Wait", 64],
+    [ "MPI_Waitany", 66],
+    [ "MPI_Waitsome", 66],
+    [ "MPI_Waitall", 66],
+    [ "MPI_Test", 64],
+    [ "MPI_Testany", 66],
+    [ "MPI_Testsome", 66],
+    [ "MPI_Testall", 66],
 ]
 # threads
 lesson_threads = []
 
-MPI_functions = lesson_comms + lesson_dd + lesson_rma + lesson_coll + lesson_threads
-MPI_functions_2 = lesson_non_blocking
+MPI_functions = lesson_comms + lesson_dd + lesson_rma + lesson_coll + lesson_threads + lesson_non_blocking
 
 abbr_and_term = """
 .. |{function}| replace:: ``{function}``
@@ -81,17 +98,26 @@ abbr_and_term = """
    <a class="reference internal" href="../quick-reference/#term-{function}"><span class="xref std std-term"><code class="docutils literal notranslate">{function}</code></span></a>
 """
 
-impls = """
+header = """
 .. |{function}-implementors_docs| raw:: html
+"""
 
+impls = """
    <p>Documentation from implementors:</p>
    <div>
    <ul class="simple">
    <li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/{function}.html">MPICH</a></p></li>
    <li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/{function}.3.php">OpenMPI</a></p></li>
    </ul>
-   </div>
-"""
+   </div>"""
+
+standard = """
+   <p>Documentation in the standard:</p>
+   <div>
+   <ul class="simple">
+   <li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node{id}.htm#Node{id}.html">MPI standard 3.1</a></p></li>
+   </ul>
+   </div>"""
 
 impls_2 = """
 .. |{function}-implementors_docs| raw:: html
@@ -115,17 +141,17 @@ impls_2 = """
 def MPI_glossary():
     # abbreviations and terms for the glossary
     glossary_helper = "\n".join(
-        [abbr_and_term.format(function=f) for f in MPI_functions + MPI_functions_2]
-    )
-    glossary_helper += "\n"
-    glossary_helper += "\n".join(
-        [abbr_and_term.format(function=f) for f,id in MPI_functions_2]
+        [abbr_and_term.format(function=function) for function,id in MPI_functions]
     )
 
     # documentation string from implementors
-    implementors_docs = "\n".join([impls.format(function=f) for f in MPI_functions])
-    implementors_docs += "\n"
-    implementors_docs += "\n".join([impls_2.format(function=f,id=id) for f,id in MPI_functions_2])
+    implementors_docs = ""
+    for function,id in MPI_functions:
+        implementors_docs += header.format(function=function)
+        format_string=impls
+        if id >= 0:
+            format_string += standard
+        implementors_docs += format_string.format(function=function,id=id)
 
     # include all customisation in the rst_epilog, so it's available everywhere
     return glossary_helper + implementors_docs

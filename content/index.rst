@@ -1,10 +1,19 @@
 INTERMEDIATE MPI
 ================
 
-.. todo::
+The Message Passing Interface (MPI) is the de facto standard for
+distributed memory parallelism in high performance computing
+(HPC). MPI is the dominant programming model for modern day
+supercomputers and will continue to be critical in enabling
+researchers to scale up their HPC workloads to forthcoming
+pre-exascale and exascale systems.
 
-   Write intro
-
+This training material targets programmers who already have experience
+with basic MPI and are ready to take the next step to more advanced
+usage. Topics covered include communicators and groups, derived
+datatypes, one-sided communication, collective communication and
+hybrid MPI-threading approaches. :ref:`See below <learner-personas>`
+for recommended prerequisite knowledge.
 
 
 .. prereq::
