@@ -372,3 +372,114 @@ MPI functions
                              MPI_Win win)
 
        |MPI_Win_unlock-implementors_docs|
+
+   ``MPI_Isend``
+       Start a non-blocking send
+
+       .. code-block:: c
+
+          int MPI_Isend(const void* buf, int count, MPI_Datatype datatype,
+                        int dest, int tag, MPI_Comm comm, MPI_Request *request)
+
+       |MPI_Isend-implementors_docs|
+
+   ``MPI_Irecv``
+       Starts a non-blocking receive
+
+       .. code-block:: c
+
+          int MPI_Irecv(void* buf, int count, MPI_Datatype datatype,
+                       int source, int tag, MPI_Comm comm, MPI_Request *request)
+
+       |MPI_Irecv-implementors_docs|
+
+   ``MPI_Wait``
+       Return when the operation is complete
+
+       .. code-block:: c
+
+          int MPI_Wait(MPI_Request *request, MPI_Status *status)
+
+       |MPI_Wait-implementors_docs|
+
+   ``MPI_Waitany``
+       Waits until exactly one operation completes
+
+       .. code-block:: c
+
+          int MPI_Waitany(int count, MPI_Request array_of_requests[],
+                          int *index, MPI_Status *status)
+
+       |MPI_Waitany-implementors_docs|
+
+   ``MPI_Waitsome``
+       Waits until at least one operation completes
+
+       .. code-block:: c
+
+          int MPI_Waitsome(int incount, MPI_Request array_of_requests[], int *outcount,
+                           int array_of_indices[], MPI_Status array_of_statuses[])
+
+       |MPI_Waitsome-implementors_docs|
+
+   ``MPI_Waitall``
+       Waits until all operations complete
+
+       .. code-block:: c
+
+          int MPI_Waitall(int count, MPI_Request array_of_requests[],
+                          MPI_Status array_of_statuses[])
+
+       |MPI_Waitall-implementors_docs|
+
+   ``MPI_Test``
+       Return immediately whether the operation is complete
+
+       .. code-block:: c
+
+          int MPI_Test(MPI_Request *request, int *flag, MPI_Status *status)
+
+       |MPI_Test-implementors_docs|
+
+   ``MPI_Testany``
+       Returns immediately at most one operation has completed
+
+       .. code-block:: c
+
+          int MPI_Testany(int count, MPI_Request array_of_requests[],
+                          int *index, int *flag, MPI_Status *status)
+
+       |MPI_Testany-implementors_docs|
+
+   ``MPI_Testsome``
+       Like |term-MPI_Waitsome| but returns immediately
+
+       .. code-block:: c
+
+          int MPI_Testsome(int incount, MPI_Request array_of_requests[], int *outcount,
+                           int array_of_indices[], MPI_Status array_of_statuses[])
+
+       |MPI_Testsome-implementors_docs|
+
+   ``MPI_Testall``
+       Returns immediately whether all operations have completed
+
+       .. code-block:: c
+
+          int MPI_Testall(int count, MPI_Request array_of_requests[],
+                          int *flag, MPI_Status array_of_statuses[])
+
+       |MPI_Testall-implementors_docs|
+
+   ``MPI_Ireduce``
+       Non-blocking variant of TODO ``term-MPI_Reduce``
+
+       .. code-block:: c
+
+          int MPI_Ireduce(const void* sendbuf, void* recvbuf, int count,
+                          MPI_Datatype datatype, MPI_Op op, int root,
+                          MPI_Comm comm, MPI_Request *request)
+
+       |MPI_Ireduce-implementors_docs|
+
+.. TODO MPI_Send, MPI_Xsend, non-blocking forms

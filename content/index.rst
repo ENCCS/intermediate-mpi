@@ -62,7 +62,7 @@ for recommended prerequisite knowledge.
    35 min ; :doc:`collective-communication-pt1`
    35 min ; :doc:`collective-communication-pt2`
    35 min ; :doc:`collective-communication-pt3`
-   30 min ; :doc:`non-blocking-communication-pt1`
+   60 min ; :doc:`non-blocking-communication-pt1`
    30 min ; :doc:`non-blocking-communication-pt2`
    30 min ; :doc:`mpi-and-threads-pt1`
    30 min ; :doc:`mpi-and-threads-pt2`
@@ -94,7 +94,6 @@ following topics (but no expertise is required):
  - Communicators
  - Point-to-point communication
  - Non-blocking point-to-point communication
- - Collective communication
  - MPI datatypes
 
 These pre-requisites are taught in courses such as `PDC's Introduction to MPI
@@ -106,8 +105,15 @@ introduction to parallel programming using Message Passing with MPI
 About the course
 ----------------
 
-
-TODO
+This lesson material is developed by the `EuroCC National Competence
+Center Sweden (ENCCS) <https://enccs.se/>`__ and taught in ENCCS
+workshops. It is aimed at researchers and developers who already know
+the basics of MPI. Each lesson episode has clearly defined learning
+objectives and includes multiple exercises along with solutions, and
+is therefore also useful for self-learning. The lesson material is
+licensed under CC-BY-4.0 and can be used in any form (with appropriate
+credit) in other courses and workshops. Instructors who wish to teach
+this lesson can refer to the :doc:`guide` for practical advice.
 
 
 
