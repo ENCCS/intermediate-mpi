@@ -52,10 +52,25 @@ lesson_rma = [
 lesson_coll = [
     "MPI_Allgatherv",
 ]
+# non-blocking
+lesson_non_blocking = [
+    [ "MPI_Isend", 63],
+    [ "MPI_Irecv", 63],
+    [ "MPI_Wait", 64],
+    [ "MPI_Waitany", 66],
+    [ "MPI_Waitsome", 66],
+    [ "MPI_Waitall", 66],
+    [ "MPI_Test", 64],
+    [ "MPI_Testany", 66],
+    [ "MPI_Testsome", 66],
+    [ "MPI_Testall", 66],
+#    [ "MPI_", ],
+]
 # threads
 lesson_threads = []
 
 MPI_functions = lesson_comms + lesson_dd + lesson_rma + lesson_coll + lesson_threads
+MPI_functions_2 = lesson_non_blocking
 
 abbr_and_term = """
 .. |{function}| replace:: ``{function}``
@@ -76,6 +91,24 @@ impls = """
    </div>
 """
 
+impls_2 = """
+.. |{function}-implementors_docs| raw:: html
+
+   <p>Documentation from implementors:</p>
+   <div>
+   <ul class="simple">
+   <li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/{function}.html">MPICH</a></p></li>
+   <li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/{function}.3.php">OpenMPI</a></p></li>
+   </ul>
+   </div>
+   <p>Documentation in the standard:</p>
+   <div>
+   <ul class="simple">
+   <li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node{id}.htm#Node{id}.html">MPI standard 3.1</a></p></li>
+   </ul>
+   </div>
+"""
+
 
 def MPI_glossary():
     # abbreviations and terms for the glossary
@@ -85,6 +118,7 @@ def MPI_glossary():
 
     # documentation string from implementors
     implementors_docs = "\n".join([impls.format(function=f) for f in MPI_functions])
+    implementors_docs += "\n".join([impls_2.format(function=f,id=id) for f,id in MPI_functions_2])
 
     # include all customisation in the rst_epilog, so it's available everywhere
     return glossary_helper + implementors_docs

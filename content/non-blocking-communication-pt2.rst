@@ -10,24 +10,26 @@ Non-blocking communication 2
    - TODO
 
 
-Topic introduction here
+testsome waitany
 
-You really want to browse this page alongside the source of it, to see
-how this is implemented.  See the links at the to right of the page.
+Avoiding races
 
+matching blocking with non-blocking
+
+non-blocking collectives
 
 
 See also
 --------
 
 
-* The lecture covering MPI+OpenMP from EPCC is available `here <http://www.archer.ac.uk/training/course-material/2020/01/advMPI-imperial/Slides/L06-MPIandOpenMP.pdf>`_
-* Chapter 6 of the **Using Advanced MPI** by William Gropp *et al.* :cite:`Gropp2014-dz`
+* TODO
+* TODO
 
 
 
 .. keypoints::
 
-   - What the learner should take away
+   - TODO
    - point 2
    - ...
