@@ -20,7 +20,7 @@ pattern in MPI. This pattern is also called **two-sided communication**: the two
 processes implicitly *synchronize* with each other.
 It is like calling up someone: you wait for the other person to pick up to actually deliver your message.
 
-.. figure:: img/send-recv_step2.svg
+.. figure:: img/E02-send-recv_step2.svg
    :align: center
 
    Two-sided communication between two sloths. Both of them are **active**
@@ -49,7 +49,7 @@ At a glance: how does it work?
 Let us look at the following figure, what routines are available in MPI for
 process 0 communicate a variable in its local memory to process 1?
 
-.. figure:: img/steve-alice_step0.svg
+.. figure:: img/E02-steve-alice_step0.svg
    :align: center
 
    Steve, the sloth on the left, would like to send Alice, the sloth on the
@@ -62,7 +62,7 @@ First, we must make a portion of memory on the *target process*, process 1
 in this case, visible for process 0 to manipulate.
 We call this a **window** and we will represent it as a blue diamond.
 
-.. figure:: img/steve-alice_step1.svg
+.. figure:: img/E02-steve-alice_step1.svg
    :align: center
 
    We call collective routines, provided by MPI, to open a **memory window** on
@@ -73,7 +73,7 @@ Once a *window* into the memory of process 1 is open, process 0 can access it an
 it. Process 0 can **put** (store) data in its local memory into the memory window of process
 1, using |term-MPI_Put|:
 
-.. figure:: img/steve-alice_step2.svg
+.. figure:: img/E02-steve-alice_step2.svg
    :align: center
 
    The **origin process** (left sloth) puts data in the memory window of the
@@ -88,7 +88,7 @@ in the target process.
 Conversely, process 0 might have populated its memory window with some data: any
 other process in the communicator can now **get** (load) this data, using |term-MPI_Get|:
 
-.. figure:: img/steve-alice_step3.svg
+.. figure:: img/E02-steve-alice_step3.svg
    :align: center
 
    The **origin process** (right sloth) gets data in the memory window of the
@@ -214,22 +214,32 @@ Load/store
 Synchronization
   Ensure that the data is available for remote memory accesses. The load/store
   routines are *nonblocking* and the programmer must take care that subsequent
-  accesses are *safe* and *sound*.  Synchronization can be achieved in two
-  styles:
+  accesses are *safe* and *correct*.  How synchronization is achieved depends on
+  the one-sided communication *paradigm* adopted:
 
-  - **Active** if both origin and target processes play a role.
-  - **Passive** if the origin process orchestrates data transfer and synchronization.
+  - **Active** if both origin and target processes play a role in the
+    synchronization. This is indeed the message passing model of parallel
+    computation.
+  - **Passive** if the origin process orchestrates data transfer and
+    synchronization. Conceptually, this is closely related to the shared memory
+    model of parallel computation: the window is the shared memory in the
+    communicator and every process can operate on it, seemingly independently of
+    each other.
 
   There are three sets of routines currently available in MPI:
 
-  - |term-MPI_Win_fence| this is an example of **active target** synchronization.
-  - |term-MPI_Win_start|, |term-MPI_Win_complete|, |term-MPI_Win_post|, |term-MPI_Win_wait| another example of **active target** synchronization.
-  - |term-MPI_Win_lock|, |term-MPI_Win_unlock| which enables **passive target** synchronization.
+  - |term-MPI_Win_fence| this achieves synchronization in the **active target**
+    communication paradigm.
+  - |term-MPI_Win_start|, |term-MPI_Win_complete|, |term-MPI_Win_post|,
+    |term-MPI_Win_wait| are also used in the **active target** communication
+    paradigm.
+  - |term-MPI_Win_lock|, |term-MPI_Win_unlock| which enables synchronization in
+    the **passive target** paradigm.
 
   We will discuss synchronization further in the next episode :ref:`one-sided-2`.
 
 
-.. figure:: img/RMA_timeline-coarse.svg
+.. figure:: img/E02-RMA_timeline-coarse.svg
    :align: center
 
    The timeline of window creation, calls to RMA routines, and synchronization
@@ -271,12 +281,12 @@ the communicator will reserve the specified memory for remote memory accesses.
                            void *baseptr,
                            MPI_Win *win)
 
-  We can expose an array of 10 ``double``-s for RMA with:
+   We can expose an array of 10 ``double``-s for RMA with:
 
-  .. literalinclude:: code/snippets/allocate.c
-     :language: c
-     :lines: 6-15
-     :dedent: 2
+   .. literalinclude:: code/snippets/allocate.c
+      :language: c
+      :lines: 6-15
+      :dedent: 2
 
 .. parameters::
 
