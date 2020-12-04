@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-12-04T21:42:38.444Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36" etag="WdobW8wsMlWpB6ljihsO" version="13.10.4" type="github" pages="6">
+<mxfile host="app.diagrams.net" modified="2020-12-04T22:07:10.249Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36" etag="3uSffddhjaPiZyamy18z" version="13.10.4" type="github" pages="6">
   <diagram id="rAH2tptxaiKPJn4yS_jS" name="RMA_quizzes">
     <mxGraphModel dx="729" dy="858" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -1784,6 +1784,12 @@
       <root>
         <mxCell id="iVnqNREOh-r_hH4M37F4-0" />
         <mxCell id="iVnqNREOh-r_hH4M37F4-1" parent="iVnqNREOh-r_hH4M37F4-0" />
+        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-58" value="" style="rounded=1;whiteSpace=wrap;html=1;opacity=30;fillColor=#f5f5f5;fontColor=#333333;strokeWidth=3;strokeColor=#B3FF66;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="418" y="570" width="120" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-57" value="" style="rounded=1;whiteSpace=wrap;html=1;opacity=30;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#CDA2BE;strokeWidth=3;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="200" y="541" width="127.25" height="160" as="geometry" />
+        </mxCell>
         <mxCell id="egNub7kne5BXSGqH7tAL-0" value="" style="shape=mxgraph.signs.animals.sloth;html=1;pointerEvents=1;fillColor=#d5e8d4;strokeColor=#82b366;verticalLabelPosition=bottom;verticalAlign=top;align=center;opacity=50;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
           <mxGeometry x="77.5" y="70" width="40" height="41" as="geometry" />
         </mxCell>
@@ -1955,8 +1961,47 @@
         <mxCell id="_1lhrX_ppjoDEcOgTLhZ-25" value="&lt;font face=&quot;Fira Code&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Fira+Code&quot;&gt;&lt;b&gt;MPI_Win_fence&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontFamily=Helvetica;opacity=50;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
           <mxGeometry x="480" y="70" width="40" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-26" value="&lt;font face=&quot;Fira Code&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Fira+Code&quot;&gt;&lt;b&gt;MPI_Win_fence&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontFamily=Helvetica;opacity=50;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
-          <mxGeometry x="480" y="332" width="40" height="20" as="geometry" />
+        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-26" value="&lt;font face=&quot;Fira Code&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Fira+Code&quot;&gt;&lt;b&gt;MPI_Win_start&lt;br&gt;&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontFamily=Helvetica;opacity=50;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="246" y="550" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-27" value="" style="shape=mxgraph.signs.animals.sloth;html=1;pointerEvents=1;fillColor=#d5e8d4;strokeColor=#82b366;verticalLabelPosition=bottom;verticalAlign=top;align=center;opacity=50;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="232.75" y="480" width="40" height="41" as="geometry" />
+        </mxCell>
+        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-28" value="" style="shape=mxgraph.signs.animals.sloth;html=1;pointerEvents=1;fillColor=#f8cecc;strokeColor=#b85450;verticalLabelPosition=bottom;verticalAlign=top;align=center;opacity=50;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="449.25" y="480" width="40" height="41" as="geometry" />
+        </mxCell>
+        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-33" value="&lt;b&gt;ORIGIN&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="222.75" y="496" width="50" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-34" value="&lt;b&gt;TARGET&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="448" y="496" width="50" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-43" value="" style="endArrow=classic;html=1;strokeWidth=2;" edge="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="562.25" y="465" as="sourcePoint" />
+            <mxPoint x="562.25" y="795" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-48" value="&lt;font face=&quot;Fira Code&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Fira+Code&quot;&gt;&lt;b&gt;MPI_Win_post&lt;br&gt;&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontFamily=Helvetica;opacity=50;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="457.5" y="580" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-50" value="&lt;font face=&quot;Fira Code&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Fira+Code&quot;&gt;&lt;b&gt;MPI_Win_wait&lt;br&gt;&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontFamily=Helvetica;opacity=50;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="457.5" y="740" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-51" value="&lt;font face=&quot;Fira Code&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Fira+Code&quot;&gt;&lt;b&gt;MPI_Win_wait&lt;br&gt;&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontFamily=Helvetica;opacity=50;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="457.5" y="521" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-52" value="&lt;font face=&quot;Fira Code&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Fira+Code&quot;&gt;&lt;b&gt;MPI_Win_complete&lt;br&gt;&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontFamily=Helvetica;opacity=50;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="246" y="670" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="_1lhrX_ppjoDEcOgTLhZ-56" value="&lt;font face=&quot;Fira Code&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Fira+Code&quot;&gt;&lt;b&gt;MPI_Put&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontFamily=Helvetica;opacity=50;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="352.5" y="620" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="TXDeQD9PcpxH_JFad1e2-0" value="&lt;b&gt;&lt;u&gt;&lt;font color=&quot;#7f00ff&quot;&gt;Access epoch&lt;/font&gt;&lt;/u&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=30;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="143.25" y="681" width="124.5" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="TXDeQD9PcpxH_JFad1e2-2" value="&lt;b&gt;&lt;u&gt;&lt;font color=&quot;#006600&quot;&gt;Exposure epoch&lt;/font&gt;&lt;/u&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=30;" vertex="1" parent="iVnqNREOh-r_hH4M37F4-1">
+          <mxGeometry x="355.25" y="750" width="124.5" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
