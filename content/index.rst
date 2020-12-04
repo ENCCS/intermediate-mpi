@@ -105,8 +105,15 @@ introduction to parallel programming using Message Passing with MPI
 About the course
 ----------------
 
-
-TODO
+This lesson material is developed by the `EuroCC National Competence
+Center Sweden (ENCCS) <https://enccs.se/>`__ and taught in ENCCS
+workshops. It is aimed at researchers and developers who already know
+the basics of MPI. Each lesson episode has clearly defined learning
+objectives and includes multiple exercises along with solutions, and
+is therefore also useful for self-learning. The lesson material is
+licensed under CC-BY-4.0 and can be used in any form (with appropriate
+credit) in other courses and workshops. Instructors who wish to teach
+this lesson can refer to the :doc:`guide` for practical advice.
 
 
 
