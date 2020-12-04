@@ -69,14 +69,6 @@ int main(int argc, char **argv)
 
     int next_working_data_set[6][8];
 
-    /* ==== CHALLENGE ====
-     *
-     * This code *may* work, at the discretion of the MPI
-     * implementation. Relying on it is unwise. The MPI implementation
-     * is free to deliver the behavior of MPI_Ssend when MPI_Send is
-     * called. Try MPI_Ssend and see the problem!
-     */
-
     int send_up_tag = 0, send_down_tag = 1;
     /* Prepare to receive the halo data */
     int source_rank = size-rank-1;

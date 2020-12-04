@@ -3,11 +3,13 @@ Non-blocking communication 1
 
 .. questions::
 
-   - TODO
+    - Does blocking communication scale well?
+    - Can my code do useful work while waiting for messages?
 
 .. objectives::
 
-   - TODO
+   - Understand that messages can lead to deadlocks
+   - Implement an efficient stencil halo exchange
 
 
 Introduction
@@ -288,10 +290,6 @@ Code-along exercise: non-blocking stencil application
    * Download a :download:`working solution <code/non-blocking-communication-deadlock-solution.c>`
 
      
-four modes
-----------
-
-
 See also
 --------
 

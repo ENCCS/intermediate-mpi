@@ -1,23 +1,38 @@
-Non-blocking communication 2
-============================
+Non-blocking collective communication
+=====================================
 
 .. questions::
 
-   - TODO
+   - Is the synchronization of collective communications avoidable?
 
 .. objectives::
 
-   - TODO
+   - Understand that a non-blocking barrier is useful
 
 
-testsome waitany
+Introduction
+------------
 
-Avoiding races
+Just like for point-to-point messages, applications that use
+non-blocking collectives can be more efficient than blocking
+ones. This is because the latency of communication can overlap with
+unrelated computation.
 
-matching blocking with non-blocking
 
-non-blocking collectives
+Non-blocking barrier synchronization
+------------------------------------
 
+At first glance, this seems like a nonsense. However if a barrier is
+needed, then it can be quite useful to overlap work with the
+synchronization. Use cases are rare, but include highly unstructured
+work described by variable numbers of messages sent between ranks, or
+very latency-sensitive applications. Once all messages have been sent,
+
+
+
+
+It is necessary to use blocking barrier only when communicating
+through a side channel, like a file or a socket.
 
 See also
 --------
