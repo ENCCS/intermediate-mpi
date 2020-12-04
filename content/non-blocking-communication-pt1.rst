@@ -144,9 +144,10 @@ synchronous, and ready-mode sends.
 Non-blocking MPI receive call
 -----------------------------
 
-An |term-MPI_Irecv| creates a receive request and returns a request
-object.  The caller is responsible for not changing the buffer until
-after waiting upon the resulting request object.
+An |term-MPI_Irecv| creates a receive request and returns a receive
+request in an ``MPI_Request`` object. The caller is responsible for
+not changing the buffer until after waiting upon the resulting request
+object.
 
 Call signature:
 
@@ -171,7 +172,7 @@ Waiting for non-blocking call completion
 
 An |term-MPI_Wait| call waits for completion of the operation that
 created the request object passed to it. For a send, the semantics of
-the sending mode have been restored (not necessarily that the message
+the sending mode have been fulfilled (not necessarily that the message
 has been received). For a receive, the buffer is now valid for use,
 however the send has not necessarily completed (though obviously has
 been initiated).
@@ -199,32 +200,30 @@ with related computation while waiting for other requests to complete.
 Testing for non-blocking call completion
 ----------------------------------------
 
-An |term-MPI_Test| call returns immediately whether a corresponding
-|term-MPI_Wait| would return immediately. completes the operation that
-created the request object passed to it. For a send, the semantics of
-the sending mode have been restored (not necessarily that the message
-has been received). For a receive, the buffer is now valid for use,
-however the send has not necessarily completed (though obviously has
-been initiated).
+An |term-MPI_Test| call returns immediately a flag value indicating
+whether a corresponding |term-MPI_Wait| would return immediately.
 
 Call signature:
 
 .. code-block:: c
 
-    int MPI_Wait(MPI_Request *request, MPI_Status *status)
+    int MPI_Test(MPI_Request *request, int *flag, MPI_Status *status)
 
 
 .. note::
 
     ``request`` describes the operation to be waited upon. ``status``
     returns the status of that operation. If the status is not needed,
-    pass ``MPI_STATUS_IGNORE``.
+    pass ``MPI_STATUS_IGNORE``. The value returned in ``flag`` indicates
+    whether the operation is complete (ie a corresponding wait will
+    return immediately).
 
-It can be efficient to wait on any one, some, or all of a set of
-operations before returning. MPI provides |term-MPI_Waitany|,
-|term-MPI_Waitsome|, and |term-MPI_Waitall| for these use cases. For example,
-waiting for any request to complete may allow the caller to continue
-with related computation while waiting for other requests to complete.
+It can be efficient to test any one, some, or all of a set of
+operations before returning. MPI provides |term-MPI_Testany|,
+|term-MPI_Testsome|, and |term-MPI_Testall| for these use cases. For
+example, testing for any request completed may allow the caller to
+continue with unrelated computation because no message with work has
+yet arrived.
 
 
 Code-along exercise: non-blocking stencil application
@@ -296,7 +295,6 @@ See also
 
 * TODO
 * TODO
-* Chapter 6 of the **Using Advanced MPI** by William Gropp *et al.* :cite:`Gropp2014-dz`
 
 
 

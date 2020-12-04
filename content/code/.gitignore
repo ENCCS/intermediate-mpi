@@ -10,4 +10,6 @@ non-blocking-communication-deadlock
 non-blocking-communication-deadlock-solution
 non-blocking-communication-overlap
 non-blocking-communication-overlap-solution
+non-blocking-communication-ireduce
+non-blocking-communication-ireduce-solution
 *~

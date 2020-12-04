@@ -445,3 +445,14 @@ MPI functions
                           int *flag, MPI_Status array_of_statuses[])
 
        |MPI_Testall-implementors_docs|
+
+   ``MPI_Ireduce``
+       Non-blocking variant of TODO ``term-MPI_Reduce``
+
+       .. code-block:: c
+
+          int MPI_Ireduce(const void* sendbuf, void* recvbuf, int count,
+                          MPI_Datatype datatype, MPI_Op op, int root,
+                          MPI_Comm comm, MPI_Request *request)
+
+       |MPI_Ireduce-implementors_docs|

@@ -55,6 +55,7 @@ lesson_rma = [
 # collectives
 lesson_coll = [
     [ "MPI_Allgatherv", 107],
+    [ "MPI_Ireduce", 134],
 ]
 # non-blocking
 lesson_non_blocking = [
