@@ -456,3 +456,5 @@ MPI functions
                           MPI_Comm comm, MPI_Request *request)
 
        |MPI_Ireduce-implementors_docs|
+
+.. TODO MPI_Send, MPI_Xsend, non-blocking forms

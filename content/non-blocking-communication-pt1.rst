@@ -137,8 +137,27 @@ Call signature:
     to ``dest`` rank of ``comm`` using tag ``tag``. The ``request`` object
     that is returned must be used to wait on the communication later.
 
-Other calls exist for other sending modes, including buffered,
-synchronous, and ready-mode sends.
+Other calls exist for other sending modes familiar to you from
+point-to-point messages, including buffered, synchronous, and
+ready-mode sends. They are listed in the table below, along with
+links for more information.
+
+.. table:: Point-to-point communication functions
+   :widths: auto
+
+   +------------------------+------------------------+------------------+-------------------+
+   |                                                 |             Communication            |
+   +                                                 +------------------+-------------------+
+   |                                                 | Blocking         | Nonblocking       |
+   +========================+========================+==================+===================+
+   |                        | **Standard**           | |term-MPI_Send|  | |term-MPI_Isend|  |
+   +                        +------------------------+------------------+-------------------+
+   | **Mode**               | **Synchronous**        | |term-MPI_Ssend| | |term-MPI_Issend| |
+   +                        +------------------------+------------------+-------------------+
+   |                        | **Ready**              | |term-MPI_Rsend| | |term-MPI_Irsend| |
+   +                        +------------------------+------------------+-------------------+
+   |                        | **Buffered**           | |term-MPI_Bsend| | |term-MPI_Ibsend| |
+   +------------------------+------------------------+------------------+-------------------+
 
 
 Non-blocking MPI receive call
