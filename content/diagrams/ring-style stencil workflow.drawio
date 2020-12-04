@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-12-04T08:36:24.504Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36" etag="RWev0JiUoZLL7AQeq4Av" version="13.9.7" type="github">
+<mxfile host="app.diagrams.net" modified="2020-12-04T08:39:27.470Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36" etag="Suemj-usRnG93EME3Ak8" version="13.9.7" type="github">
   <diagram id="5Cmo91NUEk2H3ckEnoAz" name="Page-1">
     <mxGraphModel dx="800" dy="1141" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -26,10 +26,10 @@
           <mxGeometry x="160" y="360" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="lO88fd5yi4aPhk9MZSfZ-8" value="Send border data" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;gradientColor=#7ea6e0;" parent="1" vertex="1">
-          <mxGeometry x="320" y="360" width="80" height="80" as="geometry" />
+          <mxGeometry x="520" y="360" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="lO88fd5yi4aPhk9MZSfZ-9" value="Receive halo data" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" parent="1" vertex="1">
-          <mxGeometry x="520" y="360" width="80" height="80" as="geometry" />
+          <mxGeometry x="320" y="360" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="lO88fd5yi4aPhk9MZSfZ-10" value="Non-local computation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#36393d;" parent="1" vertex="1">
           <mxGeometry x="680" y="360" width="80" height="80" as="geometry" />
