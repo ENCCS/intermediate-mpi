@@ -115,9 +115,14 @@ def MPI_glossary():
     glossary_helper = "\n".join(
         [abbr_and_term.format(function=f) for f in MPI_functions + MPI_functions_2]
     )
+    glossary_helper += "\n"
+    glossary_helper += "\n".join(
+        [abbr_and_term.format(function=f) for f,id in MPI_functions_2]
+    )
 
     # documentation string from implementors
     implementors_docs = "\n".join([impls.format(function=f) for f in MPI_functions])
+    implementors_docs += "\n"
     implementors_docs += "\n".join([impls_2.format(function=f,id=id) for f,id in MPI_functions_2])
 
     # include all customisation in the rst_epilog, so it's available everywhere

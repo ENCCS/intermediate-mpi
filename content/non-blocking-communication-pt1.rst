@@ -197,8 +197,8 @@ with related computation while waiting for other requests to complete.
 Testing for non-blocking call completion
 ----------------------------------------
 
-An ``MPI_Test`` call returns immediately whether a corresponding
-``MPI_Wait`` would return immediately. completes the operation that
+An |term-MPI_Test| call returns immediately whether a corresponding
+|term-MPI_Wait| would return immediately. completes the operation that
 created the request object passed to it. For a send, the semantics of
 the sending mode have been restored (not necessarily that the message
 has been received). For a receive, the buffer is now valid for use,
