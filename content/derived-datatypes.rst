@@ -85,10 +85,15 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
 .. figure:: img/E01-pack_unpack.svg
    :align: center
 
+   MPI allows the programmer to communicate heterogeneous collections into a
+   single message, without defining a full-fledged custom datatype. The data is
+   packed into a buffer of type ``MPI_PACKED``. On the receiving end, the buffer
+   will be unpacked into its constituent components.
+
 
 .. signature:: |term-MPI_Pack|
 
-   Pack data in a message. The message is in contiguous memory.
+   Pack data in noncontiguous memory to a contiguous memory buffer.
 
    .. code-block:: c
 
@@ -103,23 +108,29 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
 .. parameters::
 
    ``inbuf``
-     Blaa
+     The input buffer, *i.e.* the data to be packed into contigous memory.
    ``incount``
-     Blaa
+     Number of input data items.
    ``datatype``
-     Blaa
+     The datatype of each item to be packed.
    ``outbuf``
-     Blaa
+     Starting address of the output buffer.
    ``outsize``
-     Blaa
+     The size, in bytes, of the output buffer.
    ``position``
-     Blaa
+     This is an input/output parameter:
+
+     - In *input*, the data in ``inbuf`` will be copied at the address
+       ``outbuf + *position``.
+     - In *output*, it is the first location in ``outbuf`` *after* copying the
+       data.
+
    ``comm``
-     Blaa
+     The communicator.
 
 .. signature:: |term-MPI_Unpack|
 
-   Unpack a message to data in contiguous memory.
+   Unpack a contiguous memory buffer into noncontiguous memory locations.
 
    .. code-block:: c
 
@@ -134,19 +145,28 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
 .. parameters::
 
    ``inbuf``
-     Blaa
-   ``incount``
-     Blaa
-   ``datatype``
-     Blaa
-   ``outbuf``
-     Blaa
-   ``outsize``
-     Blaa
+     The input buffer, *i.e.* the data to be unpacked.
+   ``insize``
+     The size, in bytes, of the input buffer.
    ``position``
-     Blaa
+     This is an input/output parameter:
+
+     - In *input*, the data in ``inbuf`` will be copied at the address
+       ``outbuf + *position``.
+     - In *output*, it is the first location in ``inbuf`` *after* copying the
+       data.
+
+   ``outbuf``
+     Starting address of the output buffer.
+   ``outcount``
+     Number of output data items.
+   ``datatype``
+     The datatype of each item to be unpacked.
    ``comm``
-     Blaa
+     The communicator.
+
+
+What should ``outsize`` and ``insize`` be?
 
 .. todo::
 
@@ -167,7 +187,12 @@ Datatype constructors in MPI
 .. figure:: img/E01-type-life-cycle.svg
    :align: center
 
-   The lifecycle of user-defined datatypes in MPI.
+   The lifecycle of user-defined datatypes in MPI. Calling any of the type
+   constructors will create an object of type ``MPI_Datatype`` with the
+   user-defined typemap. Before using this custom datatype in message passing,
+   it needs to be published with |term-MPI_Type_commit|: the typemap is made
+   known to the runtime, allowing it to handle messages of the new custom type.
+   The programmer must take care to free the custom datatype object.
 
 
 .. todo::
