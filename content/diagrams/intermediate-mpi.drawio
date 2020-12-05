@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-12-05T20:46:08.648Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36" etag="Om4WzSdrC7iz4em8nTdT" version="13.10.4" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2020-12-05T20:53:17.405Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36" etag="tvId6Nr4f-VpK0Ba5ESc" version="13.10.4" type="github" pages="7">
   <diagram id="rAH2tptxaiKPJn4yS_jS" name="RMA_quizzes">
     <mxGraphModel dx="713" dy="858" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -2230,6 +2230,18 @@
             <mxPoint x="200.0000000000001" y="480" as="sourcePoint" />
             <mxPoint x="660.0000000000001" y="480" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="Xs97He_0VqaD7Sggwqv4-1" value="&lt;b&gt;Type construction&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=-30;" vertex="1" parent="NAqijjQ5elvdxjjpEKF7-1">
+          <mxGeometry x="180" y="510" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="Xs97He_0VqaD7Sggwqv4-2" value="&lt;b&gt;Commit&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=-30;" vertex="1" parent="NAqijjQ5elvdxjjpEKF7-1">
+          <mxGeometry x="273" y="510" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="Xs97He_0VqaD7Sggwqv4-4" value="&lt;b&gt;Use&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=-30;" vertex="1" parent="NAqijjQ5elvdxjjpEKF7-1">
+          <mxGeometry x="367" y="510" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="Xs97He_0VqaD7Sggwqv4-5" value="&lt;b&gt;Free&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=-30;" vertex="1" parent="NAqijjQ5elvdxjjpEKF7-1">
+          <mxGeometry x="460" y="510" width="120" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
