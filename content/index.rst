@@ -20,23 +20,28 @@ for recommended prerequisite knowledge.
 
    Before attending this workshop, please make sure that you have access
    to a computer with a C compiler and an MPI library installed. If you
-   have access to a supercomputer (e.g. a `SNIC system <https://supr.snic.se/>`__)
+   have access to a supercomputer (e.g. a `SNIC system <https://supr.snic.se/>`_)
    with a compute allocation you can use that during the workshop. Any questions
    on how to use a particular HPC resource should be directed to the appropriate
    support desk.  
    You can also use your own computer for this workshop, provided that it has
    compilers and an MPI library installed. If you do not already have these
    installed, we recommend that you set up an isolated software environment
-   using `conda`. For Windows computers we recommend to use the Windows
+   using ``conda``. For Windows computers we recommend to use the Windows
    Subsystem for Linux (WSL). Detailed instructions can be found 
    on the :doc:`setup` page.
 
 .. toctree::
    :hidden:
    :maxdepth: 1
-   :caption: The lesson
 
    setup
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+   :caption: The lesson
+
    communicators-groups
    derived-datatypes
    one-sided-pt1
@@ -106,22 +111,71 @@ About the course
 ----------------
 
 This lesson material is developed by the `EuroCC National Competence
-Center Sweden (ENCCS) <https://enccs.se/>`__ and taught in ENCCS
+Center Sweden (ENCCS) <https://enccs.se/>`_ and taught in ENCCS
 workshops. It is aimed at researchers and developers who already know
 the basics of MPI. Each lesson episode has clearly defined learning
 objectives and includes multiple exercises along with solutions, and
-is therefore also useful for self-learning. The lesson material is
-licensed under CC-BY-4.0 and can be used in any form (with appropriate
-credit) in other courses and workshops. Instructors who wish to teach
-this lesson can refer to the :doc:`guide` for practical advice.
+is therefore also useful for self-learning.
+The lesson material is licensed under `CC-BY-4.0
+<https://creativecommons.org/licenses/by/4.0/>`_ and can be reused in any form
+(with appropriate credit) in other courses and workshops.
+Instructors who wish to teach this lesson can refer to the :doc:`guide` for
+practical advice.
+
+
+Graphical and text conventions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We adopt a few conventions which help organize the material.
+
+Function signatures
+   These are shown in a text block marked with a wrench emoji:
+
+   .. signature:: ``MPI_Win_unlock``
+
+      .. code-block:: c
+
+         int MPI_Win_unlock(int rank,
+                            MPI_Win win)
+
+   The signature can be hidden by clicking the toggle.
+
+Function parameters
+   The description of the function parameters will appear in a separate text
+   box. It will be marked with a laptop emoji:
+
+   .. parameters::
+
+      ``rank``
+          The rank whose memory window should be unlocked.
+      ``win``
+          The window object.
+
+   The description is hidden and will be shown by clicking the toggle.
 
 
 
 See also
 --------
 
+There are many free online resources whose contents overlap with those covered
+in this lesson.
+Here is a non-comprehensive list:
 
-TODO
+- The `EPCC <https://www.epcc.ed.ac.uk/>`_ materials on `basic and intermediate
+  MPI <https://github.com/EPCCed/archer2-MPI-2020-05-14>`_ and `advanced topics
+  <http://www.archer.ac.uk/training/course-material/2020/01/advMPI-imperial/index.php>`_
+- The freely available book `Parallel Programming for Science Engineering
+  <https://pages.tacc.utexas.edu/~eijkhout/pcse/html/index.html>`_ by Viktor
+  Eijkhout.
+- The `MPI Standard <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/mpi31-report.htm>`_. It is very dry, technical material.
+
+
+You can also consult the following books:
+
+- **Parallel Programming with MPI** by Peter Pacheco.
+- **Using MPI** by William Gropp, Ewing Lusk, and Anthony Skjellum.
+- **Using Advanced MPI** by William Gropp, Torsten Hoefler, Rajeev Thakur, and Ewing Lusk.
 
 
 Credits
