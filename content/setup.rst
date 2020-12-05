@@ -1,5 +1,5 @@
-Installation
-============
+Setting up your system
+======================
 
 In order to follow this workshop, you will need access to compilers
 and MPI libraries. You can either use a cluster or set things up on
@@ -12,9 +12,10 @@ inside that environment. Root-level system installation is also
 possible but will not be covered here due to the risk of various
 conflicts (or worse).
 
-These instructions are based on installing compilers and MPI via the
-``conda`` package and environment manager, as it provides a convenient
-way to install binary packages in an isolated software environment.
+These instructions are based on installing compilers and MPI via the `Conda
+package and enviroment manager <https://docs.conda.io/en/latest/>`_, as it
+provides a convenient way to install binary packages in an isolated software
+environment.
 
 Operating systems
 ^^^^^^^^^^^^^^^^^
@@ -24,7 +25,7 @@ Windows, it is necessary to first install the Windows Subsystem for
 Linux (see these `installation instructions for WSL
 <https://docs.microsoft.com/en-us/windows/wsl/install-win10>`_).
 Installing compilers and MPI natively on Windows is also possible
-through `Cygwin <https://www.cygwin.com/>`__ and the Microsoft
+through `Cygwin <https://www.cygwin.com/>`_ and the Microsoft
 Distribution of MPICH, but we recommend WSL which is available for
 Windows 10 and later.
 
@@ -34,8 +35,8 @@ Installing conda
 
 Begin by installing Miniconda:
 
-1. Download the 64-bit installer from `here <https://docs.conda.io/en/latest/miniconda.html>`__
-   for your operating system:
+1. Download the 64-bit installer from `here
+   <https://docs.conda.io/en/latest/miniconda.html>`_ for your operating system:
 
      - for MacOS and Linux, choose the bash installer
      - on Windows, open a Linux-WSL terminal and type: ``wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh``.  
