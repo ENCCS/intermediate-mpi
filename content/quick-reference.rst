@@ -13,10 +13,27 @@ Quick Reference
    intercommunicator
       Foo
 
+   origin process
+      In :term:`RMA`, the process invoking |term-MPI_Put| and |term-MPI_Get| to access another process's (the *target* process) window.
+
+   target process
+      In :term:`RMA`, the process whose window is accessed by |term-MPI_Put| and |term-MPI_Get| invoked by another process (the *origin* process)
+
    window
    memory window
    remote memory window
-      Process-local memory allocated for remote memory access operations. It is of implementation-dependent type ``MPI_Win``.
+      Process-local memory allocated for :term:`RMA` operations. It is of implementation-dependent type ``MPI_Win``.
+      Windows can be created with a variety of MPI functions:
+
+      - |term-MPI_Win_create|
+      - |term-MPI_Win_allocate|
+      - |term-MPI_Win_allocate_shared|
+      - |term-MPI_Win_create_dynamic|
+
+   RMA
+   remote memory access
+   one-sided communication
+      Foooo
 
    synchronization
       The necessary coordination of remote memory accesses. It can be *active* or *passive*.
@@ -30,6 +47,14 @@ Quick Reference
       .. math::
 
          \textrm{Typemap} = \{ \textrm{Datatype}_{0}: \textrm{Displacement}_{0}, \ldots, \textrm{Datatype}_{n-1}: \textrm{Displacement}_{n-1} \}
+
+
+Visual glossary
+^^^^^^^^^^^^^^^
+
+.. todo::
+
+   Explain the graphical conventions for ``MPI_Send``, ``MPI_Recv``, ``MPI_Get``, ``MPI_Put`` etc
 
 MPI functions
 ^^^^^^^^^^^^^

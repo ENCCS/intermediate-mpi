@@ -9,93 +9,109 @@
 #
 # Communicators and groups
 lesson_comms = [
-    [ "MPI_Comm_split", 156],
-    [ "MPI_Comm_create", 156],
-    [ "MPI_Comm_free", 157],
-    [ "MPI_Comm_rank", 155],
-    [ "MPI_Comm_size", 155],
-    [ "MPI_Comm_group", 152],
-    [ "MPI_Group_free", 153],
-    [ "MPI_Cart_create", 192],
+    ["MPI_Comm_split", 156],
+    ["MPI_Comm_create", 156],
+    ["MPI_Comm_free", 157],
+    ["MPI_Comm_rank", 155],
+    ["MPI_Comm_size", 155],
+    ["MPI_Comm_group", 152],
+    ["MPI_Group_free", 153],
+    ["MPI_Cart_create", 192],
 ]
 # derived datatypes
 lesson_dd = [
-    [ "MPI_Type_get_extent", 84],
-    [ "MPI_Type_size", 82],
-    [ "MPI_Pack", 92],
-    [ "MPI_Unpack", 92],
-    [ "MPI_Type_contiguous", 79],
-    [ "MPI_Type_vector", 79],
-    [ "MPI_Type_indexed", 79],
-    [ "MPI_Type_create_hvector", 79],
-    [ "MPI_Type_create_hindexed", 79],
-    [ "MPI_Type_create_struct", 79],
-    [ "MPI_Type_commit", 86],
-    [ "MPI_Type_free", 86],
-    [ "MPI_Op_create", 115],
-    [ "MPI_Op_free", 115],
+    ["MPI_Type_get_extent", 84],
+    ["MPI_Type_size", 82],
+    ["MPI_Pack", 92],
+    ["MPI_Unpack", 92],
+    ["MPI_Type_contiguous", 79],
+    ["MPI_Type_vector", 79],
+    ["MPI_Type_indexed", 79],
+    ["MPI_Type_create_hvector", 79],
+    ["MPI_Type_create_hindexed", 79],
+    ["MPI_Type_create_struct", 79],
+    ["MPI_Type_commit", 86],
+    ["MPI_Type_free", 86],
+    ["MPI_Op_create", 115],
+    ["MPI_Op_free", 115],
 ]
 # remote memory access
 lesson_rma = [
-    [ "MPI_Get", 270],
-    [ "MPI_Put", 269],
-    [ "MPI_Accumulate", 273],
-    [ "MPI_Win_create", 261],
-    [ "MPI_Win_allocate", 262],
-    [ "MPI_Win_allocate_shared", 263],
-    [ "MPI_Win_create_dynamic", 264],
-    [ "MPI_Win_fence", 280],
-    [ "MPI_Win_post", 281],
-    [ "MPI_Win_start", 281],
-    [ "MPI_Win_complete", 281],
-    [ "MPI_Win_wait", 281],
-    [ "MPI_Win_lock", 282],
-    [ "MPI_Win_unlock", 282],
+    ["MPI_Get", 270],
+    ["MPI_Put", 269],
+    ["MPI_Accumulate", 273],
+    ["MPI_Win_create", 261],
+    ["MPI_Win_allocate", 262],
+    ["MPI_Win_allocate_shared", 263],
+    ["MPI_Win_create_dynamic", 264],
+    ["MPI_Win_fence", 280],
+    ["MPI_Win_post", 281],
+    ["MPI_Win_start", 281],
+    ["MPI_Win_complete", 281],
+    ["MPI_Win_wait", 281],
+    ["MPI_Win_lock", 282],
+    ["MPI_Win_unlock", 282],
+    ["MPI_Win_free", 265],
+    ["MPI_Win_test", 281],
 ]
 # collectives
 lesson_coll = [
-    [ "MPI_Allgatherv", 107],
-    [ "MPI_Ireduce", 134],
+    ["MPI_Allgatherv", 107],
+    ["MPI_Ireduce", 134],
 ]
 # non-blocking
 lesson_non_blocking = [
-    [ "MPI_Send", 47],
-    [ "MPI_Rsend", 57],
-    [ "MPI_Bsend", 57],
-    [ "MPI_Ssend", 57],
-    [ "MPI_Isend", 63],
-    [ "MPI_Issend", 63],
-    [ "MPI_Irsend", 63],
-    [ "MPI_Ibsend", 63],
-    [ "MPI_Irecv", 63],
-    [ "MPI_Wait", 64],
-    [ "MPI_Waitany", 66],
-    [ "MPI_Waitsome", 66],
-    [ "MPI_Waitall", 66],
-    [ "MPI_Test", 64],
-    [ "MPI_Testany", 66],
-    [ "MPI_Testsome", 66],
-    [ "MPI_Testall", 66],
+    ["MPI_Send", 47],
+    ["MPI_Ssend", 57],
+    ["MPI_Isend", 63],
+    ["MPI_Irecv", 63],
+    ["MPI_Wait", 64],
+    ["MPI_Waitany", 66],
+    ["MPI_Waitsome", 66],
+    ["MPI_Waitall", 66],
+    ["MPI_Test", 64],
+    ["MPI_Testany", 66],
+    ["MPI_Testsome", 66],
+    ["MPI_Testall", 66],
 ]
 # non-blocking
 lesson_non_blocking = [
-    [ "MPI_Send", 47],
-    [ "MPI_Ssend", 57],
-    [ "MPI_Isend", 63],
-    [ "MPI_Irecv", 63],
-    [ "MPI_Wait", 64],
-    [ "MPI_Waitany", 66],
-    [ "MPI_Waitsome", 66],
-    [ "MPI_Waitall", 66],
-    [ "MPI_Test", 64],
-    [ "MPI_Testany", 66],
-    [ "MPI_Testsome", 66],
-    [ "MPI_Testall", 66],
+    ["MPI_Send", 47],
+    ["MPI_Ssend", 57],
+    ["MPI_Isend", 63],
+    ["MPI_Irecv", 63],
+    ["MPI_Wait", 64],
+    ["MPI_Waitany", 66],
+    ["MPI_Waitsome", 66],
+    ["MPI_Waitall", 66],
+    ["MPI_Test", 64],
+    ["MPI_Testany", 66],
+    ["MPI_Testsome", 66],
+    ["MPI_Testall", 66],
+    ["MPI_Ibsend", 63],
+    ["MPI_Irsend", 63],
+    ["MPI_Issend", 63],
 ]
 # threads
 lesson_threads = []
+# functions mentioned in passing in the lesson
+other = [
+    ["MPI_Recv", 50],
+    ["MPI_Alloc_mem", 216],
+    ["MPI_Free_mem", 216],
+    ["MPI_Bsend", 57],
+    ["MPI_Rsend", 57],
+]
 
-MPI_functions = lesson_comms + lesson_dd + lesson_rma + lesson_coll + lesson_threads + lesson_non_blocking
+MPI_functions = (
+    lesson_comms
+    + lesson_dd
+    + lesson_rma
+    + lesson_coll
+    + lesson_threads
+    + lesson_non_blocking
+    + other
+)
 
 abbr_and_term = """
 .. |{function}| replace:: ``{function}``
@@ -147,17 +163,31 @@ impls_2 = """
 def MPI_glossary():
     # abbreviations and terms for the glossary
     glossary_helper = "\n".join(
-        [abbr_and_term.format(function=function) for function,id in MPI_functions]
+        [abbr_and_term.format(function=function) for function, _ in MPI_functions]
     )
 
     # documentation string from implementors
     implementors_docs = ""
-    for function,id in MPI_functions:
+    for function, id in MPI_functions:
         implementors_docs += header.format(function=function)
-        format_string=impls
+        format_string = impls
         if id >= 0:
             format_string += standard
-        implementors_docs += format_string.format(function=function,id=id)
+        implementors_docs += format_string.format(function=function, id=id)
 
     # include all customisation in the rst_epilog, so it's available everywhere
     return glossary_helper + implementors_docs
+
+
+from sphinx_lesson.directives import _BaseCRDirective
+
+
+class SignatureDirective(_BaseCRDirective):
+    extra_classes = ["toggle-shown", "dropdown"]
+
+
+class ParametersDirective(_BaseCRDirective):
+    extra_classes = ["dropdown"]
+
+
+DIRECTIVES = [SignatureDirective, ParametersDirective]

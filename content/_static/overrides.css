@@ -1,4 +1,3 @@
-
 /* override colors in sphinx_lesson.css with the schemes here: https://personal.sron.nl/~pault/#sec:qualitative */
 
 /* instructor-note */
@@ -10,4 +9,62 @@
 }
 .rst-content .instructor-note > .admonition-title::before {
     content: "";
+}
+
+/* callout */
+.rst-content .callout {
+    background: #EEEEBB;
+}
+.rst-content .callout > .admonition-title {
+    background: #BBCC33;
+}
+
+/* questions */
+.rst-content .questions {
+    background: rgba(253, 219, 199, 0.3);
+}
+.rst-content .questions > .admonition-title {
+    background: rgba(204, 51, 17, 0.5);
+}
+
+/* discussion */
+.rst-content .discussion {
+    background: rgba(231, 212, 232 0.3);
+}
+.rst-content .discussion > .admonition-title {
+    background: rgba(194, 165, 207, 0.5);
+}
+
+/* signature */
+.rst-content .signature {
+    background: rgba(217, 240, 211, 0.3);
+}
+.rst-content .signature > .admonition-title {
+    background: rgba(172, 211, 158, 0.5);
+}
+.rst-content .signature > .admonition-title::before {
+    content: "\01F527";
+}
+
+/* parameters */
+.rst-content .parameters {
+    background: rgba(217, 240, 211, 0.0);
+}
+.rst-content .parameters > .admonition-title {
+    background: rgba(172, 211, 158, 0.5);
+}
+.rst-content .parameters > .admonition-title::before {
+    content: "\01F4BB";
+}
+
+/* Colors and text decoration.
+ * For example, :black:`text in black` or :blink:`text blinking` in rST.
+ */
+
+.red {
+    color: red;
+}
+
+.blue {
+    color: blue;
 }
