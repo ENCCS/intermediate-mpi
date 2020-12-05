@@ -57,6 +57,17 @@
     content: "\01F4BB";
 }
 
+/* typealong */
+.rst-content .typealong {
+    background: rgba(221, 221, 221, 0.3);
+}
+.rst-content .typealong > .admonition-title {
+    background: rgba(187, 187, 187, 1.0);
+}
+.rst-content .typealong > .admonition-title::before {
+    content: "\02328";
+}
+
 /* Colors and text decoration.
  * For example, :black:`text in black` or :blink:`text blinking` in rST.
  */

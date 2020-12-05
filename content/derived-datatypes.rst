@@ -15,18 +15,15 @@ Derived datatypes
    - Learn to send and receive composite messages with |term-MPI_Pack| and |term-MPI_Unpack|
    - Learn how to represent homogeneous collections as MPI messages. |term-MPI_Type_contiguous|, |term-MPI_Type_vector|, |term-MPI_Type_indexed|
    - Learn how to represent your own derived datatypes as MPI messages with |term-MPI_Type_create_struct| and |term-MPI_Type_commit|
-   -  MAYBE: Learn how to define combination operations on your datatypes: |term-MPI_Op_create| and |term-MPI_Op_free|
-
-
-Topic introduction here
-
-You really want to browse this page alongside the source of it, to see
-how this is implemented.  See the links at the to right of the page.
-
 
 
 Representation of datatypes in MPI
 ----------------------------------
+
+.. math::
+
+   \textrm{Typemap} = \{ \textrm{Datatype}_{0}: \textrm{Displacement}_{0}, \ldots, \textrm{Datatype}_{n-1}: \textrm{Displacement}_{n-1} \}
+
 
 - ``MPI_Datatype`` and typemaps
 - Type signature
@@ -53,6 +50,18 @@ Representation of datatypes in MPI
    - Draw diagram showing how to calculate the extent from a typemap.
    - Type-along showing how to get extent and size of basis datatypes.
 
+.. typealong:: Extents and sizes
+
+   .. code-block:: c
+
+      int LB = ... ;
+
+Packing and unpacking
+---------------------
+
+.. todo::
+
+   - pack/unpack send your address. Gotchas: strings need to be statically sized and the size sent separately!
 
 Datatype constructors in MPI
 ----------------------------
@@ -75,11 +84,6 @@ Datatype constructors in MPI
    - Draw diagram showing how new types are created and used: any of the type constuctors, |term-MPI_Type_commit|, use, |term-MPI_Type_free|
    - Type-along showing how to declare and use a contiguous type.
    - Type-along showing the use and meaning of extent and count. See 5.1.3 in :cite:`Gropp2014-qf`
-
-
-.. todo::
-
-   - pack/unpack send your address. Gotchas: strings need to be statically sized and the size sent separately!
 
 
 See also

@@ -190,4 +190,8 @@ class ParametersDirective(_BaseCRDirective):
     extra_classes = ["dropdown"]
 
 
-DIRECTIVES = [SignatureDirective, ParametersDirective]
+class TypealongDirective(_BaseCRDirective):
+    extra_classes = ["toggle-shown", "dropdown"]
+
+
+DIRECTIVES = [SignatureDirective, ParametersDirective, TypealongDirective]
