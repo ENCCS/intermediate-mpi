@@ -105,6 +105,14 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
                    int *position,
                    MPI_Comm comm)
 
+
+.. figure:: img/E01-pack.svg
+   :align: center
+
+   Schematic view of the relation between ``inbuf``, ``outbuf``, and the
+   ``position`` input/output parameter.
+
+
 .. parameters::
 
    ``inbuf``
@@ -141,6 +149,14 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
                      int outcount,
                      MPI_Datatype datatype,
                      MPI_Comm comm)
+
+
+.. figure:: img/E01-unpack.svg
+   :align: center
+
+   Schematic view of the relation between ``inbuf``, ``outbuf``, and the
+   ``position`` input/output parameter.
+
 
 .. parameters::
 
