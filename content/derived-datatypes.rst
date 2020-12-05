@@ -11,8 +11,8 @@ Derived datatypes
 
 .. objectives::
 
-   - Understand how MPI handles datatypes and the :term:`typemap` concept.
-   - Learn to send and receive composite messages with |term-MPI_Pack| and |term-MPI_Unpack|
+   - Understand how MPI handles datatypes.
+   - Learn to send and receive composite messages
    - Learn how to represent homogeneous collections as MPI messages. |term-MPI_Type_contiguous|, |term-MPI_Type_vector|, |term-MPI_Type_indexed|
    - Learn how to represent your own derived datatypes as MPI messages with |term-MPI_Type_create_struct| and |term-MPI_Type_commit|
 
@@ -25,6 +25,19 @@ Representation of datatypes in MPI
    \textrm{Typemap} = \{ \textrm{Datatype}_{0}: \textrm{Displacement}_{0}, \ldots, \textrm{Datatype}_{n-1}: \textrm{Displacement}_{n-1} \}
 
 
+.. math::
+
+   \textrm{LB}(\textrm{Typemap}) = \min_{j}[\textrm{Displacement}_{j}]
+
+.. math::
+
+   \textrm{UB}(\textrm{Typemap}) = \max_{j}[\textrm{Displacement}_{j} + \texttt{sizeof}(\textrm{Datatype}_{j})] + \textrm{Padding}
+
+.. math::
+
+   \textrm{Extent}(\textrm{Typemap}) = \textrm{UB}(\textrm{Typemap}) - \textrm{LB}(\textrm{Typemap})
+
+
 - ``MPI_Datatype`` and typemaps
 - Type signature
 - Lower bounds, upper bounds, extents
@@ -35,12 +48,13 @@ Representation of datatypes in MPI
 
 .. code-block:: c
 
-   struct simple {
-    int an_integer;
-    char a_char;
+   struct Pair {
+    int first;
+    char second;
    };
 
 .. figure:: img/sample-image.png
+   :align: center
    :class: with-border
 
    The relation between size and extent of a derived data type for the case of the ``simple`` datatype.
@@ -59,6 +73,81 @@ Representation of datatypes in MPI
 Packing and unpacking
 ---------------------
 
+MPI offers the possibility to pack and unpack data of the basic datatypes into a
+single contiguous memory buffer, *without* first having to define a
+corresponding datatype.
+This can be an extremely useful technique to reduce messaging traffic and could
+help with the readability and portability of the code.
+The resulting packed buffer will be of type ``MPI_Packed`` and can contain any
+sort of heterogeneous collection of basic datatypes recognized by MPI.
+
+
+.. figure:: img/E01-pack_unpack.svg
+   :align: center
+
+
+.. signature:: |term-MPI_Pack|
+
+   Pack data in a message. The message is in contiguous memory.
+
+   .. code-block:: c
+
+      int MPI_Pack(const void *inbuf,
+                   int incount,
+                   MPI_Datatype datatype,
+                   void *outbuf,
+                   int outsize,
+                   int *position,
+                   MPI_Comm comm)
+
+.. parameters::
+
+   ``inbuf``
+     Blaa
+   ``incount``
+     Blaa
+   ``datatype``
+     Blaa
+   ``outbuf``
+     Blaa
+   ``outsize``
+     Blaa
+   ``position``
+     Blaa
+   ``comm``
+     Blaa
+
+.. signature:: |term-MPI_Unpack|
+
+   Unpack a message to data in contiguous memory.
+
+   .. code-block:: c
+
+      int MPI_Unpack(const void *inbuf,
+                     int insize,
+                     int *position,
+                     void *outbuf,
+                     int outcount,
+                     MPI_Datatype datatype,
+                     MPI_Comm comm)
+
+.. parameters::
+
+   ``inbuf``
+     Blaa
+   ``incount``
+     Blaa
+   ``datatype``
+     Blaa
+   ``outbuf``
+     Blaa
+   ``outsize``
+     Blaa
+   ``position``
+     Blaa
+   ``comm``
+     Blaa
+
 .. todo::
 
    - pack/unpack send your address. Gotchas: strings need to be statically sized and the size sent separately!
@@ -74,10 +163,12 @@ Datatype constructors in MPI
 - General types: |term-MPI_Type_create_struct|
 - Register and unregister your types: |term-MPI_Type_commit|, |term-MPI_Type_free|
 
-.. figure:: img/sample-image.png
-   :class: with-border
+
+.. figure:: img/E01-type-life-cycle.svg
+   :align: center
 
    The lifecycle of user-defined datatypes in MPI.
+
 
 .. todo::
 
