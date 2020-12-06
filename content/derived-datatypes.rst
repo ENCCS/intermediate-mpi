@@ -64,7 +64,7 @@ The MPI types are instead **variants** in the ``MPI_Datatype`` enumeration: they
 appear as the **same** type to the compiler.
 This is a fundamental difference which influences the way custom datatypes are handled.
 
-In the C language, you would declare a ``struct`` such as the following ``Pair``:
+In the C language, you would declare a ``struct`` such as the following:
 
 
 .. code-block:: c
@@ -74,17 +74,18 @@ In the C language, you would declare a ``struct`` such as the following ``Pair``
     char second;
    };
 
-this is a new type. From the compiler's point of view, it has status on par with
-the fundamental datatypes introduced above. The C standard mandates *how to*
-represent this in memory and the compiler will generate machine code to comply
-with it.
+``Pair`` is a new type. From the compiler's point of view, it has status on par
+with the fundamental datatypes introduced above. The C standard mandates *how
+to* represent this in memory and the compiler will generate machine code to
+comply with it.
 
 MPI does not know how to represent user-defined datatypes in memory by itself:
 
 - How much memory does it need? Recall that MPI deals with **groups of
   processes**. For portability, you can *never* assume that two processes share
-  the same exact architecture!
-- How are the components of ``Pair`` laid out in memory? Are they always contiguous? Or are they padded?
+  the same architecture!
+- How are the components of ``Pair`` laid out in memory? Are they always
+  contiguous? Or are they padded?
 
 The programmer needs to provide this low-level information, such that the MPI
 runtime can send and receive custom  datatypes as messages over a heterogeneous
@@ -193,21 +194,86 @@ Thus:
    account, is 8 bytes.
 
 
+MPI offers functions to query extent and size of its types: they all take a variant of the ``MPI_Datatype`` enumeration as argument.
 
+.. signature:: |term-MPI_Type_get_extent|
 
-- ``MPI_Datatype`` and typemaps
-- Type signature
-- Lower bounds, upper bounds, extents
-- Difference between *size* and *extent* of a datatype.
-- Introduce |term-MPI_Type_get_extent| and |term-MPI_Type_size|
+   Returns the lower bound and extent of a type.
 
+   .. code-block:: c
+
+      int MPI_Type_get_extent(MPI_Datatype type,
+                              MPI_Aint *lb,
+                              MPI_Aint *extent)
+
+.. parameters::
+
+   ``type``
+     The datatype whose extent we're querying.
+   ``lb``
+     The lower bound of the datatype. ``MPI_Aint`` is a type designed to hold any valid address.
+   ``extent``
+     The extent of the datatype. ``MPI_Aint`` is a type designed to hold any valid address.
+
+.. signature:: |term-MPI_Type_size|
+
+   Returns the number of bytes occupied by entries in the datatype.
+
+   .. code-block:: c
+
+      int MPI_Type_size(MPI_Datatype type,
+                        int *size)
+
+.. parameters::
+
+   ``type``
+     The datatype whose extent we're querying.
+   ``size``
+     The number of bytes occupied by the entries in the datatype.
 
 
 .. typealong:: Extents and sizes
 
-   .. code-block:: c
+   We will now play around a bit with the compiler and MPI to gain further
+   understanding of padding, alignment, extents, and sizes.
 
-      int LB = ... ;
+   #. What are extents and sizes for the basis datatypes ``char``, ``int``,
+      ``float``, and ``double`` on your architecture? Do the numbers conform to
+      your expectations? What is the result of ``sizeof`` for these types?
+
+      .. code-block:: c
+
+         // char
+         printf("sizeof(char) = %ld\n", sizeof(char));
+         MPI_Type_get_extent(MPI_CHAR, &.., &..);
+         MPI_Type_size(MPI_CHAR, &..);
+         printf("For MPI_CHAR:\n  lowerbound = %ld; extent = %ld; size = %d\n", ..,
+                 .., ..);
+
+   #. Let's now look at the ``Pair`` data structure. We first need declare the
+      data structure to MPI. The following code, which we will study
+      in much detail later on, achieves the purpose:
+
+      .. code-block:: c
+
+         // build up the typemap for Pair
+         // the type signature for Pair
+         MPI_Datatype typesig[2] = {MPI_INT, MPI_CHAR};
+         // how many of each type in a "block" of Pair
+         int block_lengths[2] = {1, 1};
+         // displacements of data members in Pair
+         MPI_Aint displacements[2];
+         // why not use pointer arithmetic directly?
+         MPI_Get_address(&my_pair.first, &displacements[0]);
+         MPI_Get_address(&my_pair.second, &displacements[1]);
+
+         // create and commit the new type
+         MPI_Datatype mpi_pair;
+         MPI_Type_create_struct(2, block_lengths, displacements, typesig, &mpi_pair);
+         MPI_Type_commit(&mpi_pair);
+
+      What are the size and the extent? Do they match up with our pen-and-paper calculation?
+      Try different combinations of datatypes and adding other fields to the ``struct``.
 
 
 Packing and unpacking
