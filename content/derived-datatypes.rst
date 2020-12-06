@@ -250,6 +250,8 @@ MPI offers functions to query extent and size of its types: they all take a vari
          printf("For MPI_CHAR:\n  lowerbound = %ld; extent = %ld; size = %d\n", ..,
                  .., ..);
 
+      Download a :download:`working solution <code/basic-extent-size-solution.c>`
+
    #. Let's now look at the ``Pair`` data structure. We first need declare the
       data structure to MPI. The following code, which we will study
       in much detail later on, achieves the purpose:
@@ -274,6 +276,8 @@ MPI offers functions to query extent and size of its types: they all take a vari
 
       What are the size and the extent? Do they match up with our pen-and-paper calculation?
       Try different combinations of datatypes and adding other fields to the ``struct``.
+
+      Download a :download:`working solution <code/struct-extent-size-solution.c>`
 
 
 Packing and unpacking
@@ -391,9 +395,59 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
 Both |term-MPI_Pack| and |term-MPI_Unpack|
 What should ``outsize`` and ``insize`` be?
 
-.. todo::
 
-   - pack/unpack send your address. Gotchas: strings need to be statically sized and the size sent separately!
+.. challenge::
+
+   In the Pokémon trading card game, opponents face each in duels using their
+   pokémons. The game is played in turns and at each turn a player can attack.
+   We have to send:
+
+   - The attacking pokémon's name: a ``char`` array.
+   - How many life points it has: a ``double``.
+   - The damage its attack will inflict: an ``int``.
+   - A damage multiplier: a ``double``.
+
+   .. tabs::
+
+      .. tab:: Pack and unpack
+
+         1. Download the :download:`scaffold source code <code/pokemon-pack-unpack.c>`.
+            Open it and read through it.
+         2. Pack the data in the ``message`` buffer.
+         3. Unpack the ``message`` buffer into its component data.
+
+         Compile with::
+
+           mpicc -g -Wall -std=c11 pokemon-pack-unpack.c -o pokemon-pack-unpack
+
+         - Why are we hardcoding the length of the pokémon's name?
+         - What is the purpose of the ``position`` variable? Print its value
+           after each packing and unpacking. Do these values conform with your
+           intuition?
+         - Should packing and unpacking happen in the same order? What happens if not?
+         - What happens when there is a mismatch of types between packing and unpacking?
+
+         Download a :download:`working solution <code/pokemon-pack-unpack-solution.c>`
+
+      .. tab:: Bonus
+
+         The ``message`` is a buffer of size ``BUFSIZ`` (defined in the standard
+         header ``stdio.h``) We cannot always be sure this is the correct
+         choice: the space might be plentiful, in which case we're wasting
+         resource, or it might not be enough, in which case the program is not
+         safe and likely not even portable!
+
+         MPI offers the function ``MPI_Pack_size`` for this purpose. Look up its
+         documentation and modify the source code such that the buffer is sized
+         more appropriately.
+
+         Download a :download:`working solution <code/pokemon-pack-unpack-size-solution.c>`
+
+      .. tab:: Superbonus
+
+         The length of the string holding the pokémon's name is hardcoded to a
+         constant. How would you generalize this program?
+
 
 Datatype constructors in MPI
 ----------------------------
