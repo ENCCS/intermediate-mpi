@@ -282,10 +282,24 @@ MPI offers functions to query extent and size of its types: they all take a vari
 
 .. typealong:: Extents and the ``count`` parameter
 
-   .. todo::
+   Let us reiterate: the extent of a custom datatype *is not* its size. The
+   extent tells the MPI runtime how to get to the **next** item in an array of a
+   given type, much like a *stride*.
 
-      - Type-along showing the use and meaning of extent and count. See 5.1.3 in :cite:`Gropp2014-qf`
+   We can send an array of ``n`` ``int``-s with a single |term-MPI_Send|:
 
+   .. literalinclude:: code/snippets/send_n.c
+      :language: c
+      :lines: 33-45
+
+   or with ``n`` such calls:
+
+   .. literalinclude:: code/snippets/n_send.c
+      :language: c
+      :lines: 35-46
+
+   In the latter case, we must program explicitly how to get the next element in
+   the array by using the extent of the datatype.
 
 
 Packing and unpacking
@@ -400,10 +414,6 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
      The communicator.
 
 
-Both |term-MPI_Pack| and |term-MPI_Unpack|
-What should ``outsize`` and ``insize`` be?
-
-
 .. challenge::
 
    In the Pokémon trading card game, opponents face each in duels using their
@@ -445,7 +455,7 @@ What should ``outsize`` and ``insize`` be?
          resource, or it might not be enough, in which case the program is not
          safe and likely not even portable!
 
-         MPI offers the function ``MPI_Pack_size`` for this purpose. Look up its
+         MPI offers the function |term-MPI_Pack_size| for this purpose. Look up its
          documentation and modify the source code such that the buffer is sized
          more appropriately.
          What could be problematic with the pack/unpack approach?
