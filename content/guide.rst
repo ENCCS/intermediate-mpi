@@ -38,22 +38,7 @@ Each day was concluded with exercises and a wrap-up.
      12:20 - 12:30 ; Wrap-up
 
 
-**Day 2 - Wednesday 9 December 2020 – One-sided communication**
-
-  .. csv-table::
-     :widths: auto
-     :align: center
-     :delim: ;
-
-      9:00 -  9:10 ; What did we cover yesterday?
-      9:10 - 10:30 ; **The whys and hows of remote memory access in MPI**
-     10:30 - 10:45 ; Break
-     10:45 - 11:25 ; **RMA and synchronization**
-     11:25 - 12:20 ; Exercises
-     12:20 - 12:30 ; Wrap-up
-
-
-**Day 3 - Thursday 10 December 2020 - Collective communication (including nonblocking)**
+**Day 2 - Wednesday 9 December 2020 - Collective communication (including nonblocking)**
 
   .. csv-table::
      :widths: auto
@@ -64,6 +49,21 @@ Each day was concluded with exercises and a wrap-up.
       9:10 - 10:30 ; **A closer look at collective communication functionss**
      10:30 - 10:45 ; Break
      10:45 - 11:25 ; **Nonblocking communication**
+     11:25 - 12:20 ; Exercises
+     12:20 - 12:30 ; Wrap-up
+
+
+**Day 3 - Thursday 10 December 2020 – One-sided communication**
+
+  .. csv-table::
+     :widths: auto
+     :align: center
+     :delim: ;
+
+      9:00 -  9:10 ; What did we cover yesterday?
+      9:10 - 10:30 ; **The whys and hows of remote memory access in MPI**
+     10:30 - 10:45 ; Break
+     10:45 - 11:25 ; **RMA and synchronization**
      11:25 - 12:20 ; Exercises
      12:20 - 12:30 ; Wrap-up
 
