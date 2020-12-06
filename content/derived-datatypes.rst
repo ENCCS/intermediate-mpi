@@ -17,25 +17,182 @@ Derived datatypes
    - Learn how to represent your own derived datatypes as MPI messages with |term-MPI_Type_create_struct| and |term-MPI_Type_commit|
 
 
+The ability to define custom datatypes is one of the hallmarks of a modern
+programming language, since it allows programmers to structure their code in a
+way that enhances readability and maintainability.
+How can this be done in MPI? Recall that MPI is a standard describing a library
+to enable parallel programming in the message passing model.
+
+MPI supports many of the basic datatypes recognized by the C standard.
+
+
+.. csv-table:: Basic datatypes in MPI and in the C standard. For a comprehensive
+               explanation of the types defined in the C language, you can
+               consult `this reference
+               <https://en.cppreference.com/w/c/language/type>`_.
+   :widths: auto
+   :align: center
+   :header-rows: 1
+   :delim: ;
+
+   MPI ; C
+   ``MPI_CHAR`` ; ``signed char``
+   ``MPI_FLOAT`` ; ``float``
+   ``MPI_DOUBLE`` ; ``double``
+   ``MPI_LONG_DOUBLE`` ; ``long double``
+   ``MPI_WCHAR`` ; ``wchar_t``
+   ``MPI_SHORT`` ; ``short``
+   ``MPI_INT`` ; ``int``
+   ``MPI_LONG`` ; ``long``
+   ``MPI_LONG_LONG_INT`` ; ``long long``
+   ``MPI_SIGNED_CHAR`` ; ``signed char``
+   ``MPI_UNSIGNED_CHAR`` ; ``unsigned char``
+   ``MPI_UNSIGNED_SHORT`` ; ``unsigned short``
+   ``MPI_UNSIGNED`` ; ``unsigned int``
+   ``MPI_UNSIGNED_LONG`` ; ``unsigned long``
+   ``MPI_UNSIGNED_LONG_LONG`` ; ``unsigned long long``
+   ``MPI_C_COMPLEX`` ; ``float _Complex``
+   ``MPI_C_DOUBLE_COMPLEX`` ; ``double _Complex``
+   ``MPI_C_LONG_DOUBLE_COMPLEX`` ; ``long double _Complex``
+   ``MPI_PACKED`` ;
+   ``MPI_BYTE`` ;
+
+
+In the C language, types are **primitive** constructs: they
+are *defined* by the standard and *enforced* by the compiler.
+The MPI types are instead **variants** in the ``MPI_Datatype`` enumeration: they
+appear as the **same** type to the compiler.
+This is a fundamental difference which influences the way custom datatypes are handled.
+
+In the C language, you would declare a ``struct`` such as the following ``Pair``:
+
+
+.. code-block:: c
+
+   struct Pair {
+    int first;
+    char second;
+   };
+
+this is a new type. From the compiler's point of view, it has status on par with
+the fundamental datatypes introduced above. The C standard mandates *how to*
+represent this in memory and the compiler will generate machine code to comply
+with it.
+
+MPI does not know how to represent user-defined datatypes in memory by itself:
+
+- How much memory does it need? Recall that MPI deals with **groups of
+  processes**. For portability, you can *never* assume that two processes share
+  the same exact architecture!
+- How are the components of ``Pair`` laid out in memory? Are they always contiguous? Or are they padded?
+
+The programmer needs to provide this low-level information, such that the MPI
+runtime can send and receive custom  datatypes as messages over a heterogeneous
+network of processes.
+
+
 Representation of datatypes in MPI
 ----------------------------------
 
-.. math::
-
-   \textrm{Typemap} = \{ \textrm{Datatype}_{0}: \textrm{Displacement}_{0}, \ldots, \textrm{Datatype}_{n-1}: \textrm{Displacement}_{n-1} \}
-
+The representation of datatypes in MPI uses few low-level concepts.
+The **type signature** of a custom datatypes is the list of its basic datatypes:
 
 .. math::
+   :label: eq:typesig
 
-   \textrm{LB}(\textrm{Typemap}) = \min_{j}[\textrm{Displacement}_{j}]
+   \textrm{Typemap}[\texttt{T}] = [ \texttt{Datatype}_{0}, \ldots, \texttt{Datatype}_{n-1} ]
+
+The **typemap** is the associative array (map) with datatypes, as understood by MPI, as
+*keys* and displacements, in bytes, as *values*.
+
+
+.. math::
+   :label: eq:typemap
+
+   \textrm{Typemap}[\texttt{T}] = \{ \texttt{Datatype}_{0}: \textrm{Displacement}_{0}, \ldots, \texttt{Datatype}_{n-1}: \textrm{Displacement}_{n-1} \}
+
+
+The displacements are *relative* to the buffer the datatype describes.
+
+Assuming that an ``int`` takes 4 bytes of memory, the typemap for our ``Pair``
+datatype would be: :math:`\textrm{Typemap}[\texttt{Pair}] = \{ \texttt{int}: 0,
+\texttt{char}: 4\}`. Note again that the displacements are *relative*.
+
+.. figure:: img/E01-displacements.svg
+   :align: center
+
+   Depiction of the typemap for the ``Pair`` custom type. The displacements are
+   always relative.
+
+
+Knowledge of typemap and type signature is not enough for a full description of
+the type to the MPI runtime: the underlying programming language might mandate
+architecture-specific :term:`alignment` of the basic datatypes. The data
+structure would then be laid out in memory incoherently with the displacements
+in its typemap.
+We need a few more concepts. Given a typemap :math:`m` we can define:
+
+Lower bound
+  The first byte occupied by the datatype.
+
+  .. math::
+     :label: eq:lowerbound
+
+     \textrm{LB}[m] = \min_{j}[\textrm{Displacement}_{j}]
+
+Upper bound
+  The last byte occupied by the datatype.
+
+  .. math::
+     :label: eq:upperbound
+
+     \textrm{UB}[m] = \max_{j}[\textrm{Displacement}_{j} + \texttt{sizeof}(\textrm{Datatype}_{j})] + \textrm{Padding}
+
+Extent
+  The amount of memory needed to represent the datatype, taking into account architecture-specific alignment.
+
+  .. math::
+     :label: eq:extent
+
+     \textrm{Extent}[m] = \textrm{UB}[m] - \textrm{LB}[m]
+
+
+The C language (and Fortran) *require* that the data occurs in memory at
+well-defined addresses: the data needs to be aligned. The address, in bytes, of
+any item must be a multiple of the size of that item in bytes. This is so-called
+*natural alignment*.
+For our ``Pair`` data structure the ``first`` element is an ``int`` and occupies
+4 bytes. An ``int`` will align to 4 bytes boundaries: when allocating a new
+``int`` in memory, the compiler will insert **padding** to reach the alignment
+boundary.
+Indeed, ``second`` is a ``char`` and requires just 1 byte. To insert yet another
+``Pair`` item, we first need to reach the alignment boundary with a padding of 3
+bytes.
+Thus:
 
 .. math::
 
-   \textrm{UB}(\textrm{Typemap}) = \max_{j}[\textrm{Displacement}_{j} + \texttt{sizeof}(\textrm{Datatype}_{j})] + \textrm{Padding}
+   \begin{aligned}
+     \textrm{LB}[\texttt{Pair}] &= \min_{j}[0, 4] = 0 \\
+     \textrm{UB}[\texttt{Pair}] &= \max_{j}[0+4, 4+1] + 3 = 8 \\
+     \textrm{Extent}[\texttt{Pair}] &= \textrm{UB}[\texttt{Pair}] - \textrm{LB}[\texttt{Pair}] = 8 \\
+   \end{aligned}
 
-.. math::
+.. figure:: img/E01-extent_and_size.svg
+   :align: center
 
-   \textrm{Extent}(\textrm{Typemap}) = \textrm{UB}(\textrm{Typemap}) - \textrm{LB}(\textrm{Typemap})
+   The relation between **size** and **extent** of a derived datatype in the
+   case of the ``Pair``.
+   We show the address alignment boundaries with
+   vertical :red:`red` lines. The lowerbound of the custom datatype is 4:
+   ``first`` can be found with an offset of 4 bytes after the starting address.
+   Notice the 3 bytes of padding, necessary to achieve natural alignment of
+   ``Pair``.  The upperbound is 8: the *next* item of type ``Pair`` can be found
+   with an offset of 8 bytes after the previous element.
+   The total size is 5 bytes, but the extent, which takes the padding into
+   account, is 8 bytes.
+
+
 
 
 - ``MPI_Datatype`` and typemaps
@@ -46,29 +203,12 @@ Representation of datatypes in MPI
 
 
 
-.. code-block:: c
-
-   struct Pair {
-    int first;
-    char second;
-   };
-
-.. figure:: img/sample-image.png
-   :align: center
-   :class: with-border
-
-   The relation between size and extent of a derived data type for the case of the ``simple`` datatype.
-
-.. todo::
-
-   - Draw diagram showing how to calculate the extent from a typemap.
-   - Type-along showing how to get extent and size of basis datatypes.
-
 .. typealong:: Extents and sizes
 
    .. code-block:: c
 
       int LB = ... ;
+
 
 Packing and unpacking
 ---------------------
@@ -182,6 +322,7 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
      The communicator.
 
 
+Both |term-MPI_Pack| and |term-MPI_Unpack|
 What should ``outsize`` and ``insize`` be?
 
 .. todo::
@@ -229,4 +370,4 @@ See also
 .. keypoints::
 
    - A low-level representation as typemap can be associated with any derived data structure.
-   - Typemaps are essential to enable MPI communication of complex data types.
+   - Typemaps are essential to enable MPI communication of complex datatypes.
