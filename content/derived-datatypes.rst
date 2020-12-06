@@ -73,12 +73,12 @@ Representation of datatypes in MPI
 Packing and unpacking
 ---------------------
 
-MPI offers the possibility to pack and unpack data of the basic datatypes into a
+MPI offers the possibility to pack and unpack data of known datatype into a
 single contiguous memory buffer, *without* first having to define a
 corresponding datatype.
 This can be an extremely useful technique to reduce messaging traffic and could
 help with the readability and portability of the code.
-The resulting packed buffer will be of type ``MPI_Packed`` and can contain any
+The resulting packed buffer will be of type ``MPI_PACKED`` and can contain any
 sort of heterogeneous collection of basic datatypes recognized by MPI.
 
 
