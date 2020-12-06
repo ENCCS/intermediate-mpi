@@ -44,13 +44,13 @@ for recommended prerequisite knowledge.
 
    communicators-groups
    derived-datatypes
-   one-sided-pt1
-   one-sided-pt2
    collective-communication-pt1
    collective-communication-pt2
    collective-communication-pt3
    non-blocking-communication-pt1
    non-blocking-communication-pt2
+   one-sided-pt1
+   one-sided-pt2
    mpi-and-threads-pt1
    mpi-and-threads-pt2
 
@@ -62,13 +62,13 @@ for recommended prerequisite knowledge.
 
    30 min ; :doc:`communicators-groups`
    30 min ; :doc:`derived-datatypes`
-   30 min ; :doc:`one-sided-pt1`
-   30 min ; :doc:`one-sided-pt2`
    35 min ; :doc:`collective-communication-pt1`
    35 min ; :doc:`collective-communication-pt2`
    35 min ; :doc:`collective-communication-pt3`
    60 min ; :doc:`non-blocking-communication-pt1`
    30 min ; :doc:`non-blocking-communication-pt2`
+   30 min ; :doc:`one-sided-pt1`
+   30 min ; :doc:`one-sided-pt2`
    30 min ; :doc:`mpi-and-threads-pt1`
    30 min ; :doc:`mpi-and-threads-pt2`
 
