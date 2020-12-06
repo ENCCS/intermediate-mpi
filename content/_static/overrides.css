@@ -68,6 +68,14 @@
     content: "\02328";
 }
 
+/* Equation numbers to the right */
+.math {
+    text-align: left;
+}
+.eqno {
+    float: right;
+}
+
 /* Colors and text decoration.
  * For example, :black:`text in black` or :blink:`text blinking` in rST.
  */
