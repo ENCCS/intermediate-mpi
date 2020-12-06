@@ -232,7 +232,7 @@ MPI offers functions to query extent and size of its types: they all take a vari
      The number of bytes occupied by the entries in the datatype.
 
 
-.. typealong:: Extents and sizes
+.. challenge:: Extents and sizes
 
    We will now play around a bit with the compiler and MPI to gain further
    understanding of padding, alignment, extents, and sizes.
@@ -278,6 +278,14 @@ MPI offers functions to query extent and size of its types: they all take a vari
       Try different combinations of datatypes and adding other fields to the ``struct``.
 
       Download a :download:`working solution <code/struct-extent-size-solution.c>`
+
+
+.. typealong:: Extents and the ``count`` parameter
+
+   .. todo::
+
+      - Type-along showing the use and meaning of extent and count. See 5.1.3 in :cite:`Gropp2014-qf`
+
 
 
 Packing and unpacking
@@ -440,6 +448,7 @@ What should ``outsize`` and ``insize`` be?
          MPI offers the function ``MPI_Pack_size`` for this purpose. Look up its
          documentation and modify the source code such that the buffer is sized
          more appropriately.
+         What could be problematic with the pack/unpack approach?
 
          Download a :download:`working solution <code/pokemon-pack-unpack-size-solution.c>`
 
@@ -474,9 +483,7 @@ Datatype constructors in MPI
 
 .. todo::
 
-   - Draw diagram showing how new types are created and used: any of the type constuctors, |term-MPI_Type_commit|, use, |term-MPI_Type_free|
    - Type-along showing how to declare and use a contiguous type.
-   - Type-along showing the use and meaning of extent and count. See 5.1.3 in :cite:`Gropp2014-qf`
 
 
 See also
@@ -491,3 +498,4 @@ See also
 
    - A low-level representation as typemap can be associated with any derived data structure.
    - Typemaps are essential to enable MPI communication of complex datatypes.
+   - User-defined packing and unpacking can be quite useful, but might lead to less readable programs.
