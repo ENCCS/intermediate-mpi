@@ -14,7 +14,7 @@ Derived datatypes
    - Understand how MPI handles datatypes.
    - Learn to send and receive messages using composite datatypes
    - Learn how to represent homogeneous collections as MPI datatypes. |term-MPI_Type_contiguous|, |term-MPI_Type_vector|, |term-MPI_Type_indexed|
-   - Learn how to represent your own derived datatypes as MPI messages with |term-MPI_Type_create_struct| and |term-MPI_Type_commit|
+   - Learn how to represent your own derived datatypes as MPI datatypes with |term-MPI_Type_create_struct| and |term-MPI_Type_commit|
 
 
 The ability to define custom datatypes is one of the hallmarks of a modern
