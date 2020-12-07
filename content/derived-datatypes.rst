@@ -354,7 +354,7 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
    ``MPI_Pack``.  In this figure, ``outbuf`` already holds some data (the red
    shaded area). The data in ``inbuf`` is copied to ``outbuf`` starting at the
    address ``outbuf+*position``.  When the function returns, the ``position``
-   parameter will have been updated to the *first* position in ``outbuf``
+   parameter will have been updated to refer to the *first* position in ``outbuf``
    following the just copied data.
 
 
