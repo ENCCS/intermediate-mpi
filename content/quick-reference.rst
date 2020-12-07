@@ -471,6 +471,25 @@ MPI functions
 
        |MPI_Testall-implementors_docs|
 
+   ``MPI_Init_thread``
+       Initializes MPI and the threading environment within it. Should
+       be preferred to ``MPI_Init`` by thread-aware applications.
+
+       .. code-block:: c
+
+          int MPI_Init_thread(int *argc, char ***argv, int required, int *provided)
+
+       |MPI_Init_thread-implementors_docs|
+   
+   ``MPI_Query_thread``
+       Returns the current level of threading support.
+
+       .. code-block:: c
+
+          int MPI_Query_thread(int *provided)
+
+       |MPI_Query_thread-implementors_docs|
+   
    ``MPI_Ireduce``
        Non-blocking variant of TODO ``term-MPI_Reduce``
 

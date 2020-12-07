@@ -1,5 +1,5 @@
-MPI and threads 1
-=================
+Using MPI and threads
+=====================
 
 .. questions::
 
@@ -10,10 +10,142 @@ MPI and threads 1
    - TODO
 
 
-Topic introduction here
+Why move past pure-MPI programs?
+--------------------------------
 
-You really want to browse this page alongside the source of it, to see
-how this is implemented.  See the links at the to right of the page.
+MPI is an excellent tool for parallel execution of programs. A key
+strength is that the programmer must explicitly move data to where it
+is needed. That can make code easier to understand, albeit more work
+to write. Since one writes code less often than the author *and
+maintainers* read it, that is often desirable.
+
+However, such approaches tend to perform poorly at scale. Computer
+hardware has not grown much faster in the last 20 years, but instead
+made many more potentially parallel execution units available. One can
+hardly buy a single-core CPU any more, and HPC nodes with multiple CPU
+sockets each containing scores of cores abound. MPI was designed in an
+era where it was much more common to find a node with only a single
+processor and a single core, and total counts were in the hundreds to
+thousands. Such jobs are often *too small* to be permitted to run on
+current high-end clusters.
+
+Code that assumes one MPI process to a core has trouble scaling to
+:math:`N` processes (eg. for N > 1000) for several reasons:
+
+* collective communication cost tends to scale at least like
+  :math:`\mathrm{log} N` - aggregating messages helps a lot but more
+  processes as starting and ending points for messages simply must
+  take more time
+
+* data must be replicated to each process, which takes time that grows
+  with the process count
+
+* replicated data forces cores to share the memory bandwith, thus
+  defeating the advantages of shared memory caches
+
+MPI + threading
+---------------
+  
+The MPI standard has been updated to accommodate the use of threads
+within processes. Using this is optional, and presents numerous
+advantages and disadvantages
+
+Advantages of MPI + threading
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* possiblity for better scaling of communication costs
+
+* either simpler and/or faster code that does not need to distribute
+  as much data, because all threads in the process can share it
+  already
+
+* higher performance from using memory caches better
+
+* reduced need to dedicate a rank solely to communication coordination
+  in code using a manager-worker paradigm
+
+* TODO
+
+Disadvantages of MPI + threading
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* implicitly shared data can be harder to reason about correctly
+  (eg. race conditions)
+
+* code now has to be correct MPI code *and* correct threaded code
+
+* possibility of lower performance from cache contention
+
+* more code complexity
+
+* might be merely shifting bottlenecks from one place to another
+  (eg. opening and closing OpenMP thread regions)
+
+* needs higher quality MPI implementations
+
+* TODO
+
+Threading library options
+-------------------------
+
+`OpenMP <https://www.openmp.org/>`_ is the open standard for HPC
+threading, and is widely used with many quality implementations. It is
+possible to use raw ``pthreads``, and you will find MPI examples using
+them, but this is much less productive in programmer time and made
+more sense when OpenMP was less mature. In most HPC cases, OpenMP is
+implemented using ``pthreads``.
+
+This workshop will use simple OpenMP for illustrative purposes.
+
+MPI support for threading
+-------------------------
+
+Since version 2.0, MPI can be initialized in up to four different ways. The former
+approach using ``MPI_Init`` still works, but applications that wish to use
+threading should use |term-MPI_Init_thread|.
+
+Call signature::
+
+  int MPI_Init_thread(int *argc, char ***argv, int required, int *provided)
+
+.. note::
+
+   The ``argc`` and ``argv`` may be ``NULL`` (and generally should
+   be). ``required`` describes the level of threading support that is
+   requested, and the value returned in ``*provided`` describes the
+   level that the MPI runtime was able to provide. If this is not the
+   level required, the program should inform the user and either use
+   threading only at the level provided, or ``MPI_Finalize`` and
+   e.g. ``exit()``.
+
+The following threading levels are generally supported:
+
+* ``MPI_THREAD_SINGLE`` - application is not allowed to use threads,
+  basically equivalent to calling ``MPI_Init``.
+
+  .. figure:: img/MPI_THREAD_SINGLE.svg
+     :align: center
+
+      Application will not use threads
+
+* ``MPI_THREAD_FUNNELED`` - application can be multi-threaded but only
+  the main thread may call MPI functions. Ideal for fork-join
+  parallelism such as used in ``#pragma omp parallel``, where *all*
+  MPI calls are outside the OpenMP regions.
+
+* ``MPI_THREAD_SERIALIZED`` - application can be multi-threaded but
+  only one thread at a time may call MPI functions. The application
+  must ensure that MPI is used in a thread-safe way.
+
+* ``MPI_THREAD_MULTIPLE`` - application can be multi-threaded and any
+  thread may call MPI functions. The MPI library ensures that this
+  access is safe across threads. Note that this makes all MPI
+  operations less efficient, even if only one thread makes MPI calls,
+  so should be used only where necessary.
+
+Note that different MPI ranks may make different requirements for MPI
+threading. This can be efficient for applications using manager-worker
+paradigms where the workers have simpler communication patterns.
 
 
 

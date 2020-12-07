@@ -93,7 +93,11 @@ lesson_non_blocking = [
     ["MPI_Issend", 63],
 ]
 # threads
-lesson_threads = []
+lesson_threads = [
+    ["MPI_Init_thread", 303],
+    ["MPI_Query_thread", 303],
+#    ["MPI_", 303],
+]
 # functions mentioned in passing in the lesson
 other = [
     ["MPI_Recv", 50],
