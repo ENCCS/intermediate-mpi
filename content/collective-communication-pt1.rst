@@ -1,5 +1,5 @@
-Collective communication 1
-==========================
+Simple collective communication
+===============================
 
 .. questions::
 
