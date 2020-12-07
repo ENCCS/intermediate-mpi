@@ -1,10 +1,9 @@
-Collective communication 3
-==========================
+Generalized forms of gather
+===========================
 
 .. questions::
 
    - How can I do more complex rearrangements of data?
-   - How can I join data from the ranks of my program?
 
 .. objectives::
 

@@ -1,5 +1,5 @@
-Using MPI and threads
-=====================
+Introducing MPI and threads
+===========================
 
 .. questions::
 
