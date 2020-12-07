@@ -702,7 +702,7 @@ constructor |term-MPI_Type_create_struct| will suit your needs:
 
    .. tabs::
 
-      .. tab::
+      .. tab:: Pokémons, again!
 
          We will revisit the Pokémon example from above using custom datatypes.
 
