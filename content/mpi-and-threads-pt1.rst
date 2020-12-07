@@ -3,11 +3,11 @@ Using MPI and threads
 
 .. questions::
 
-   - TODO
+   - What might stop my code scaling?
 
 .. objectives::
 
-   - TODO
+   - Understand the different threading modes available to an MPI rank
 
 
 Why move past pure-MPI programs?
@@ -100,9 +100,10 @@ This workshop will use simple OpenMP for illustrative purposes.
 MPI support for threading
 -------------------------
 
-Since version 2.0, MPI can be initialized in up to four different ways. The former
-approach using ``MPI_Init`` still works, but applications that wish to use
-threading should use |term-MPI_Init_thread|.
+Since version 2.0, MPI can be initialized in up to four different
+ways. The former approach using ``MPI_Init`` still works, but
+applications that wish to use threading should use
+|term-MPI_Init_thread|.
 
 Call signature::
 
@@ -185,6 +186,77 @@ same application naively implemented and using
 ``MPI_THREAD_MULTIPLE``, because the latter will need to use more
 synchronization.
 
+Querying the MPI runtime
+------------------------
+
+When writing a library, sometimes MPI will be initialized outside your
+code. If you wish to use threading, you have to honor the requirements
+established at the time MPI was initialized (or give an error). This
+can be done with |term-MPI_Query_thread|.
+
+Call signature::
+
+  int MPI_Query_thread(int *provided)
+
+.. note::
+
+   The value returned in ``*provided`` describes the level that the
+   MPI runtime is providing. If this is not the level required, the
+   library should inform the user and either use threading only at the
+   level provided, or return an error to its caller.
+
+   It is possible to influence the threading support availble from
+   some MPI implementations with environment variables, so it can be
+   wise to use such a method even if your code is managing the call to
+   |term-MPI_Init_thread|.
+
+Similarly, MPI regards the thread that called |term-MPI_Init_thread|
+as the main thread for the purpose of ``MPI_THREAD_FUNNELED``. If your
+code needs to identify that thread (eg. to ensure that calls to your
+library happen from that thread, so you use MPi), then you need to
+call |term-MPI_Is_thread_main|.
+
+Call signature::
+
+   int MPI_Is_thread_main(int *flag)
+
+.. note::
+
+   A boolean value is returned in ``*flag`` to indicate whether the
+   thread that called |term-MPI_Is_thread_main| is the main thread,
+   ie. the one that called |term-MPI_Init_thread|.
+
+
+Code-along exercise: run MPI with threading support
+---------------------------------------------------
+
+.. challenge:: 1.1 Compile an MPI program and observe what thread
+               level is supported
+
+   1. Download the :download:`source code
+      <code/threading-query.c>`. Open
+      ``collective-communication-broadcast.c`` and read through it. Try
+      to compile with::
+
+        mpicc -g -Wall -std=c11 collective-communication-broadcast.c -o collective-communication-broadcast
+
+   2. When you have the code compiling, try to run with::
+
+        mpiexec -np 2 ./collective-communication-broadcast
+
+   3. Use clues from the compiler and the comments in the code to
+      change the code so it compiles and runs. Try to get all ranks to
+      report success :-)
+
+.. solution::
+
+   * One correct call is::
+
+         MPI_Bcast(values_to_broadcast, 2, MPI_INT, rank_of_root, comm);
+
+   * There are other calls that work correctly. Is yours better or worse
+     than this one? Why?
+   * Download a :download:`working solution <code/collective-communication-broadcast-solution.c>`
 
 
 See also

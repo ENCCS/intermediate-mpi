@@ -490,6 +490,15 @@ MPI functions
 
        |MPI_Query_thread-implementors_docs|
    
+   ``MPI_Is_thread_main``
+       Returns whether the calling thread previously called |term-MPI_Init_thread|
+
+       .. code-block:: c
+
+          int MPI_Is_thread_main(int *flag)
+
+       |MPI_Is_thread_main-implementors_docs|
+   
    ``MPI_Ireduce``
        Non-blocking variant of TODO ``term-MPI_Reduce``
 
