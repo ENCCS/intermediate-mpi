@@ -6,7 +6,7 @@ Learning outcomes
 
 - Communicators, groups, derived datatypes
 - One-sided communication
-- Collective communication, blocking and nonblocking
+- Collective communication, blocking and non-blocking
 - MPI and threads
 
 Timing
@@ -48,7 +48,7 @@ Each day was concluded with exercises and a wrap-up.
       9:00 -  9:10 ; What did we cover yesterday?
       9:10 - 10:30 ; **A closer look at collective communication functionss**
      10:30 - 10:45 ; Break
-     10:45 - 11:25 ; **Nonblocking communication**
+     10:45 - 11:25 ; **Non-blocking communication**
      11:25 - 12:20 ; Exercises
      12:20 - 12:30 ; Wrap-up
 
