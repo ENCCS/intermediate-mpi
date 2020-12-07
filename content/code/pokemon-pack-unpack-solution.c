@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
   int position;
 
   // name of pokemon attacking
-  char pokemon[STRLEN];
+  char name[STRLEN];
   // life points
   double life_points;
   // damage done by the attack
@@ -33,16 +33,16 @@ int main(int argc, char *argv[]) {
   MPI_Comm_rank(comm, &rank);
 
   if (rank == 0) {
-    sprintf(pokemon, "Blastoise");
+    sprintf(name, "Blastoise");
     life_points = 150.0;
     damage = 40;
     multiplier = 1.32;
 
     position = 0;
     // we're ready to do some packing!
-    MPI_Pack(&pokemon, STRLEN, MPI_CHAR, message, BUFSIZ, &position, comm);
+    MPI_Pack(&name, STRLEN, MPI_CHAR, message, BUFSIZ, &position, comm);
     // where is position now?
-    printf("packed pokemon, position = %d\n", position);
+    printf("packed name, position = %d\n", position);
 
     MPI_Pack(&life_points, 1, MPI_DOUBLE, message, BUFSIZ, &position, comm);
     printf("packed life_points, position = %d\n", position);
@@ -62,8 +62,8 @@ int main(int argc, char *argv[]) {
     position = 0;
     // let's get to unpacking
     // !!! the length of the string MUST be known
-    MPI_Unpack(message, BUFSIZ, &position, &pokemon, STRLEN, MPI_CHAR, comm);
-    printf("unpacked pokemon, position = %d\n", position);
+    MPI_Unpack(message, BUFSIZ, &position, &name, STRLEN, MPI_CHAR, comm);
+    printf("unpacked name, position = %d\n", position);
 
     MPI_Unpack(message, BUFSIZ, &position, &life_points, 1, MPI_DOUBLE, comm);
     printf("unpacked life_points, position = %d\n", position);
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 
     // did we get it right?
     printf("rank %d:\n", rank);
-    printf("  pokemon = %s\n", pokemon);
+    printf("  name = %s\n", name);
     printf("  life_points = %2.2f\n", life_points);
     printf("  damage = %d\n", damage);
     printf("  multiplier = %2.2f\n", multiplier);

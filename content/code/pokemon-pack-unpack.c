@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
   int position;
 
   // name of pokemon attacking
-  char pokemon[STRLEN];
+  char name[STRLEN];
   // life points
   double life_points;
   // damage done by the attack
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 
     // did we get it right?
     printf("rank %d:\n", rank);
-    printf("  pokemon = %s\n", pokemon);
+    printf("  name = %s\n", name);
     printf("  life_points = %2.2f\n", life_points);
     printf("  damage = %d\n", damage);
     printf("  multiplier = %2.2f\n", multiplier);

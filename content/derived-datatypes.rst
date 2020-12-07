@@ -12,9 +12,9 @@ Derived datatypes
 .. objectives::
 
    - Understand how MPI handles datatypes.
-   - Learn to send and receive messages using composite datatypes
-   - Learn how to represent homogeneous collections as MPI datatypes. |term-MPI_Type_contiguous|, |term-MPI_Type_vector|, |term-MPI_Type_indexed|
-   - Learn how to represent your own derived datatypes as MPI datatypes with |term-MPI_Type_create_struct| and |term-MPI_Type_commit|
+   - Learn to send and receive messages using composite datatypes.
+   - Learn how to represent homogeneous collections as MPI datatypes.
+   - Learn how to represent your own derived datatypes as MPI datatypes.
 
 
 The ability to define custom datatypes is one of the hallmarks of a modern
@@ -355,7 +355,7 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
    shaded area). The data in ``inbuf`` is copied to ``outbuf`` starting at the
    address ``outbuf+*position``.  When the function returns, the ``position``
    parameter will have been updated to refer to the *first* position in ``outbuf``
-   following the data copied by this call.```
+   following the data copied by this call.
 
 
 .. parameters::
@@ -427,7 +427,7 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
      The communicator.
 
 
-.. challenge::
+.. challenge:: Message passing Pokémons
 
    In the Pokémon trading card game, opponents face each in duels using their
    pokémons. The game is played in turns and at each turn a player can attack.
@@ -455,10 +455,14 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
          - What is the purpose of the ``position`` variable? Print its value
            after each packing and unpacking. Do these values conform with your
            intuition?
-         - Should packing and unpacking happen in the same order? What happens if not?
-         - What happens when there is a mismatch of types between packing and unpacking?
 
          Download a :download:`working solution <code/pokemon-pack-unpack-solution.c>`
+
+         - Should packing and unpacking happen in the same order? What happens if not?
+         - What happens when there is a mismatch of types between packing and unpacking?
+         - We could have packed our data as ``char``, ``int``, ``double``, and
+           ``double``. Is there a way to pack (unpack) the life points and the
+           damage multiplier with one call to ``MPI_Pack`` (``MPI_Unpack``)?
 
       .. tab:: Bonus
 
@@ -481,16 +485,19 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
          constant. How would you generalize this program?
 
 
-Datatype constructors in MPI
-----------------------------
+Any type you like: datatype constructors in MPI
+-----------------------------------------------
 
-- Contiguous types: |term-MPI_Type_contiguous|
-- Extent-strided types: |term-MPI_Type_vector|
-- Byte-strided types: |term-MPI_Type_create_hvector|
-- Extent-indexed types: |term-MPI_Type_indexed|
-- Byte-strided types: |term-MPI_Type_create_hindexed|
-- General types: |term-MPI_Type_create_struct|
-- Register and unregister your types: |term-MPI_Type_commit|, |term-MPI_Type_free|
+The typemap concept allows us to provide a *low-level* description of any compound
+datatype.  The class of functions ``MPI_Type_*`` offers facilities for *portable* type
+manipulations in the MPI standard.
+At a glance, each custom datatype goes through a well-defined lifecycle in an MPI application:
+
+- We *construct* our new datatype with a **type constructor**. The new type will
+  be a variable with ``MPI_Datatype`` type.
+- We *publish* our new type to the runtime with |term-MPI_Type_commit|.
+- We *use* the new type in any of the MPI communication routines, as needed.
+- We *free* the new type from memory with |term-MPI_Type_free|.
 
 
 .. figure:: img/E01-type-life-cycle.svg
@@ -504,9 +511,226 @@ Datatype constructors in MPI
    The programmer must take care to free the custom datatype object.
 
 
-.. todo::
+It is not always necessary to go all the way down to a typemap to construct new
+datatypes in MPI.  The following types can be created with convenience
+functions, side-stepping the explicit computation of a typemap. In MPI
+nomenclature, these types are:
 
-   - Type-along showing how to declare and use a contiguous type.
+Contiguous
+  A homogeneous collection of a given datatype. The returned new type will
+  describe a collection of ``count`` times the old type. Elements are
+  contiguous: :math:`n` and :math:`n-1` are separated by the extent of the old
+  type.
+
+  .. signature:: |term-MPI_Type_contiguous|
+
+     .. code-block:: c
+
+        int MPI_Type_contiguous(int count,
+                                MPI_Datatype oldtype,
+                                MPI_Datatype *newtype)
+
+Vector
+  A slight generalization of the contiguous type: ``count`` elements in the new
+  type can be separated by a stride that is an arbitrary multiple of the extent
+  of the old type.
+
+  .. signature:: |term-MPI_Type_vector|
+
+     .. code-block:: c
+
+        int MPI_Type_vector(int count,
+                            int blocklength,
+                            int stride,
+                            MPI_Datatype oldtype,
+                            MPI_Datatype *newtype)
+
+Hvector
+  Yet another generalization of the contiguous datatype. The separation between
+  elements in a hvector is expressed in bytes, rather than as a multiple of the
+  extent.
+
+  .. signature:: |term-MPI_Type_create_hvector|
+
+     .. code-block:: c
+
+        int MPI_Type_create_hvector(int count,
+                                    int blocklength,
+                                    MPI_Aint stride,
+                                    MPI_Datatype oldtype,
+                                    MPI_Datatype *newtype)
+
+Indexed
+  This type allows to have non-homogeneous separations between the elements.
+  Each displacements is intended as a multiple of the extent of the old type.
+
+  .. signature:: |term-MPI_Type_indexed|
+
+     .. code-block:: c
+
+        int MPI_Type_indexed(int count,
+                             const int array_of_blocklengths[],
+                             const int array_of_displacements[],
+                             MPI_Datatype oldtype,
+                             MPI_Datatype *newtype)
+
+Hindexed
+  This is a generalization of the indexed type analogous to the hvector.  The
+  non-homogeneous separations between the elements are expressed in bytes,
+  rather than as multiples of the extent.
+
+  .. signature:: |term-MPI_Type_create_hindexed|
+
+     .. code-block:: c
+
+        int MPI_Type_create_hindexed(int count,
+                                     const int array_of_blocklengths[],
+                                     const MPI_Aint array_of_displacements[],
+                                     MPI_Datatype oldtype,
+                                     MPI_Datatype *newtype)
+
+
+Before using the output parameter ``newtype``, it needs to be "published" to the
+runtime with |term-MPI_Type_commit|:
+
+.. signature:: |term-MPI_Type_commit|
+
+   .. code-block:: c
+
+      int MPI_Type_commit(MPI_Datatype *type)
+
+
+``newtype`` is a variable of type ``MPI_Datatype``. The programmer must
+ensure proper release of the memory used at the end of the program by calling
+|term-MPI_Type_free|:
+
+
+.. signature:: |term-MPI_Type_free|
+
+   .. code-block:: c
+
+      int MPI_Type_free(MPI_Datatype *type)
+
+
+In practice, none of the previous convenience constructors might be suitable for
+your application. As we glimpsed in a previous challenge, the general type
+constructor |term-MPI_Type_create_struct| will suit your needs:
+
+.. signature:: |term-MPI_Type_create_struct|
+
+   .. code-block:: c
+
+      int MPI_Type_create_struct(int count,
+                                 const int array_of_block_lengths[],
+                                 const MPI_Aint array_of_displacements[],
+                                 const MPI_Datatype array_of_types[],
+                                 MPI_Datatype *newtype)
+
+.. parameters::
+
+   ``count``
+     Number of fields (*blocks* in MPI nomenclature) of the datatype. This is
+     the length of the ``array_of_block_lengths``, ``array_of_displacements``,
+     and ``array_of_types`` parameters.
+
+   ``array_of_block_lengths``
+     Number of elements in each field of the datatype.
+
+   ``array_of_displacements``
+     Displacements, in bytes, for each field of the datatype.
+
+   ``array_of_types``
+     Types for each field of the datatype, *i.e.* the type signature.
+
+   ``newtype``
+     The new datatype.
+
+
+
+.. typealong:: The MPI version of the ``Pair`` datatype
+
+   We saw code for this earlier on, but without explanation. Let's dive into it now!
+
+   ``Pair`` has two fields, hence ``count = 2`` in the call to
+   ``MPI_Type_create_struct``. All array arguments to this function will have
+   length 2.
+   The type signature is:
+
+   .. code-block:: c
+
+      MPI_Datatype typesig[2] = {MPI_INT, MPI_CHAR};
+
+   We have one ``int`` in the ``first`` field and one ``char`` in the ``second``
+   fields, hence the ``array_of_block_lengths`` argument is:
+
+   .. code-block:: c
+
+      int block_lengths[2] = {1, 1};
+
+   The calculation of displacements is slightly more involved.  We will use
+   ``MPI_Get_address`` to fill the ``displacements`` array. Notice that its
+   elements are of type ``MPI_Aint``:
+
+   .. code-block:: c
+
+      MPI_Aint displacements[2];
+      MPI_Get_address(&my_pair.first, &displacements[0]);
+      MPI_Get_address(&my_pair.second, &displacements[1]);
+
+   We *cannot use* pointer arithmetic to compute displacements. Always keep in
+   mind that your program might be deployed on heterogeneous architectures: you
+   have to program for correctness and portability.
+
+   We are now ready to call the type constructor and commit our type:
+
+   .. code-block:: c
+
+      MPI_Datatype mpi_pair;
+      MPI_Type_create_struct(2, block_lengths, displacements, typesig, &mpi_pair);
+      MPI_Type_commit(&mpi_pair);
+
+   And clean up after use, of course!
+
+   .. code-block:: c
+
+      MPI_Type_free(&mpi_pair);
+
+   Download the :download:`complete source code <code/struct-extent-size-solution.c>`
+
+
+.. challenge:: More message passing Pokémons
+
+   .. tabs::
+
+      .. tab::
+
+         We will revisit the Pokémon example from above using custom datatypes.
+
+         1. Download the :download:`scaffold source code <code/pokemon-type-create-struct.c>`.
+            Open it and read through it.
+         2. Define the C ``struct`` for a pokémon. This has to contain:
+
+            - The attacking pokémon's name: a ``char`` array.
+            - How many life points it has: a ``double``.
+            - The damage its attack will inflict: an ``int``.
+            - A damage multiplier: a ``double``.
+
+         3. Create its corresponding MPI datatype.
+         4. Print it out on the receiving process.
+
+         Compile with::
+
+           mpicc -g -Wall -std=c11 pokemon-type-create-struct.c -o pokemon-type-create-struct
+
+         What happens if you don't commit the type?
+
+         Download a :download:`working solution <code/pokemon-type-create-struct-solution.c>`
+
+      .. tab:: Superbonus
+
+         Somehow the rules have changed: you can use multiple pokémon's in your round!
+         Modify your code to broadcast an array of 4 pokémons as a new type.
+
 
 
 See also
@@ -521,4 +745,9 @@ See also
 
    - A low-level representation as typemap can be associated with any derived data structure.
    - Typemaps are essential to enable MPI communication of complex datatypes.
-   - User-defined packing and unpacking can be quite useful, but might lead to less readable programs.
+   - You can reduce message traffic by packing (unpacking) heterogeneous data together.
+   - MPI offers many type constructors to portably use your own datatypes in message passing.
+   - Packing/unpacking are straightforward to use, but might lead to less
+     readable programs.
+   - Usage of the type constructors can be quite involved, but you strictly
+     ensure your programs will be portable.
