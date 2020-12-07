@@ -350,8 +350,12 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
 .. figure:: img/E01-pack.svg
    :align: center
 
-   Schematic view of the relation between ``inbuf``, ``outbuf``, and the
-   ``position`` input/output parameter.
+   The relation of ``inbuf``, ``outbuf``, and ``position`` when calling
+   ``MPI_Pack``.  In this figure, ``outbuf`` already holds some data (the red
+   shaded area). The data in ``inbuf`` is copied to ``outbuf`` starting at the
+   address given with ``position``.  When the function returns, the ``position``
+   parameter will have been updated to the *first* position in ``outbuf``
+   following the just copied data.
 
 
 .. parameters::
@@ -393,8 +397,12 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
 .. figure:: img/E01-unpack.svg
    :align: center
 
-   Schematic view of the relation between ``inbuf``, ``outbuf``, and the
-   ``position`` input/output parameter.
+   The relation of ``inbuf``, ``outbuf``, and ``position`` when calling
+   ``MPI_Unpack``.  In this figure, ``inbuf`` holds some data. The data
+   in ``inbuf`` is copied to ``outbuf`` starting at the address given with
+   ``position``.  When the function returns, the ``position`` parameter will
+   have been updated to the *first* position in ``inbuf`` following the just
+   copied data.
 
 
 .. parameters::
