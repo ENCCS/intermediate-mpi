@@ -355,7 +355,7 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
    shaded area). The data in ``inbuf`` is copied to ``outbuf`` starting at the
    address ``outbuf+*position``.  When the function returns, the ``position``
    parameter will have been updated to refer to the *first* position in ``outbuf``
-   following the just copied data.
+   following the data copied by this call.```
 
 
 .. parameters::
