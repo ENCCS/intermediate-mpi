@@ -75,7 +75,7 @@ In the C language, you would declare a ``struct`` such as the following:
    };
 
 ``Pair`` is a new type. From the compiler's point of view, it has status on par
-with the fundamental datatypes introduced above. The C standard mandates *how
+with the fundamental datatypes introduced above. The C standard makes requirements on *how
 to* represent this in memory and the compiler will generate machine code to
 comply with it.
 
