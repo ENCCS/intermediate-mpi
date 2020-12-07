@@ -165,8 +165,17 @@ any item must be a multiple of the size of that item in bytes. This is so-called
 For our ``Pair`` data structure the ``first`` element is an ``int`` and occupies
 4 bytes. An ``int`` will align to 4 bytes boundaries: when allocating a new
 ``int`` in memory, the compiler will insert **padding** to reach the alignment
-boundary.
-Indeed, ``second`` is a ``char`` and requires just 1 byte. To insert yet another
+boundary. Indeed, ``second`` is a ``char`` and requires just 1 byte. This gives:
+
+.. math::
+
+   \begin{aligned}
+     \texttt{Pair.first} &\rightarrow \textrm{Displacement}_{0} = 0, \quad \texttt{sizeof}(\texttt{int}) = 4 \\
+     \texttt{Pair.second} &\rightarrow \textrm{Displacement}_{1} = 4, \quad \texttt{sizeof}(\texttt{char}) = 1
+   \end{aligned}
+
+
+To insert yet another
 ``Pair`` item, we first need to reach the alignment boundary with a padding of 3
 bytes.
 Thus:
@@ -174,9 +183,9 @@ Thus:
 .. math::
 
    \begin{aligned}
-     \textrm{LB}[\texttt{Pair}] &= \min_{j}[0, 4] = 0 \\
-     \textrm{UB}[\texttt{Pair}] &= \max_{j}[0+4, 4+1] + 3 = 8 \\
-     \textrm{Extent}[\texttt{Pair}] &= \textrm{UB}[\texttt{Pair}] - \textrm{LB}[\texttt{Pair}] = 8 \\
+     \textrm{LB}[\texttt{Pair}] &= \min[0, 4] = 0 \\
+     \textrm{UB}[\texttt{Pair}] &= \max[0+4, 4+1] + 3 = 8 \\
+     \textrm{Extent}[\texttt{Pair}] &= \textrm{UB}[\texttt{Pair}] - \textrm{LB}[\texttt{Pair}] = 8
    \end{aligned}
 
 .. figure:: img/E01-extent_and_size.svg
