@@ -1,5 +1,5 @@
-MPI and threads 2
-=================
+MPI and threads in practice
+===========================
 
 .. questions::
 
