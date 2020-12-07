@@ -367,13 +367,11 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
    ``outsize``
      The size, in bytes, of the output buffer.
    ``position``
-     This is an input/output parameter:
-
-     - In *input*, the data in ``inbuf`` will be copied at the address
-       ``outbuf + *position``.
-     - In *output*, it is the first location in ``outbuf`` *after* copying the
-       data.
-
+     This is an input/output parameter that describes locations within
+     ``outbuf``. The data at ``inbuf`` will be copied to ``outbuf + *position``.
+     After the function returns, the value ``*position`` indicates the first
+     position in ``outbuf`` that follows the data just copied.
+     This is useful to pass as ``position`` to the next call to ``MPI_Pack``.
    ``comm``
      The communicator.
 
@@ -406,13 +404,11 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
    ``insize``
      The size, in bytes, of the input buffer.
    ``position``
-     This is an input/output parameter:
-
-     - In *input*, the data in ``inbuf`` will be copied at the address
-       ``outbuf + *position``.
-     - In *output*, it is the first location in ``inbuf`` *after* copying the
-       data.
-
+     This is an input/output parameter that describes locations within
+     ``inbuf``. The data at ``inbuf + *position`` will be copied to ``outbuf``.
+     After the function returns, the value ``*position`` indicates the first
+     position in ``inbuf`` that follows the data just copied.
+     This is useful to pass as ``position`` to the next call to ``MPI_Unpack``.
    ``outbuf``
      Starting address of the output buffer.
    ``outcount``
