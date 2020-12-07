@@ -12,7 +12,7 @@ Derived datatypes
 .. objectives::
 
    - Understand how MPI handles datatypes.
-   - Learn to send and receive composite messages
+   - Learn to send and receive messages using composite datatypes
    - Learn how to represent homogeneous collections as MPI messages. |term-MPI_Type_contiguous|, |term-MPI_Type_vector|, |term-MPI_Type_indexed|
    - Learn how to represent your own derived datatypes as MPI messages with |term-MPI_Type_create_struct| and |term-MPI_Type_commit|
 
