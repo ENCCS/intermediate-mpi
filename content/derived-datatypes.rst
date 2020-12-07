@@ -23,7 +23,7 @@ way that enhances readability and maintainability.
 How can this be done in MPI? Recall that MPI is a standard describing a library
 to enable parallel programming in the message passing model.
 
-MPI supports many of the basic datatypes recognized by the C standard.
+MPI supports many of the basic datatypes recognized by the C and Fortran standards.
 
 
 .. csv-table:: Basic datatypes in MPI and in the C standard. For a comprehensive
