@@ -69,7 +69,7 @@ for recommended prerequisite knowledge.
    30 min ; :doc:`non-blocking-communication-pt2`
    30 min ; :doc:`one-sided-pt1`
    30 min ; :doc:`one-sided-pt2`
-   30 min ; :doc:`mpi-and-threads-pt1`
+   60 min ; :doc:`mpi-and-threads-pt1`
    30 min ; :doc:`mpi-and-threads-pt2`
 
 .. toctree::
