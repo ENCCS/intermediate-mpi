@@ -118,34 +118,72 @@ Call signature::
    threading only at the level provided, or ``MPI_Finalize`` and
    e.g. ``exit()``.
 
+
 The following threading levels are generally supported:
 
-* ``MPI_THREAD_SINGLE`` - application is not allowed to use threads,
-  basically equivalent to calling ``MPI_Init``.
+* ``MPI_THREAD_SINGLE`` - rank is not allowed to use threads,
+  which is basically equivalent to calling ``MPI_Init``.
 
   .. figure:: img/MPI_THREAD_SINGLE.svg
      :align: center
+     :class: with-border
 
-      Application will not use threads
+     With ``MPI_THREAD_SINGLE``, the rank may use MPI freely
+     and will not use threads.
 
-* ``MPI_THREAD_FUNNELED`` - application can be multi-threaded but only
+
+* ``MPI_THREAD_FUNNELED`` - rank can be multi-threaded but only
   the main thread may call MPI functions. Ideal for fork-join
   parallelism such as used in ``#pragma omp parallel``, where *all*
   MPI calls are outside the OpenMP regions.
 
-* ``MPI_THREAD_SERIALIZED`` - application can be multi-threaded but
-  only one thread at a time may call MPI functions. The application
-  must ensure that MPI is used in a thread-safe way.
+  .. figure:: img/MPI_THREAD_FUNNELED.svg
+     :align: center
+     :class: with-border
 
-* ``MPI_THREAD_MULTIPLE`` - application can be multi-threaded and any
+     With ``MPI_THREAD_FUNNELED``, the rank can use MPI from
+     only the main thread.
+
+
+* ``MPI_THREAD_SERIALIZED`` - rank can be multi-threaded but
+  only one thread at a time may call MPI functions. The rank
+  must ensure that MPI is used in a thread-safe way. One approach is
+  to enssure that MPI usage is *mutually excluded* by all the threads,
+  eg. with a *mutex*.
+
+
+  .. figure:: img/MPI_THREAD_SERIALIZED.svg
+     :align: center
+     :class: with-border
+
+     With ``MPI_THREAD_SERIALIZED``, the rank can use MPI from
+     any thread so long as it ensures the threads synchronize such
+     that no thread calls MPI while another thread is doing so.
+
+
+* ``MPI_THREAD_MULTIPLE`` - rank can be multi-threaded and any
   thread may call MPI functions. The MPI library ensures that this
   access is safe across threads. Note that this makes all MPI
   operations less efficient, even if only one thread makes MPI calls,
   so should be used only where necessary.
 
+  .. figure:: img/MPI_THREAD_MULTIPLE.svg
+     :align: center
+     :class: with-border
+
+     With ``MPI_THREAD_MULTIPLE``, the rank can use MPI from
+     any thread. The MPI library ensures the necessary synchronization
+
+
 Note that different MPI ranks may make different requirements for MPI
 threading. This can be efficient for applications using manager-worker
 paradigms where the workers have simpler communication patterns.
+
+For applications where it is possible to implement using
+``MPI_THREAD_SERIALIZED`` approach, it will generally outperform the
+same application naively implemented and using
+``MPI_THREAD_MULTIPLE``, because the latter will need to use more
+synchronization.
 
 
 
@@ -153,13 +191,13 @@ See also
 --------
 
 
-* The lecture covering MPI+OpenMP from EPCC is available `here <http://www.archer.ac.uk/training/course-material/2020/01/advMPI-imperial/Slides/L06-MPIandOpenMP.pdf>`_
-* Chapter 6 of the **Using Advanced MPI** by William Gropp *et al.* :cite:`Gropp2014-dz`
+* TODO
+* TODO
 
 
 
 .. keypoints::
 
-   - What the learner should take away
+   - TODO
    - point 2
    - ...
