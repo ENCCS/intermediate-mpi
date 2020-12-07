@@ -49,6 +49,7 @@ jobs:
       - name: Build Sphinx docs
         run: |
           make dirhtml
+          sed -i 's/url_root="#"/url_root=""/' _build/dirhtml/index.html || true
 
 
       # The following supports building all branches and combining on
