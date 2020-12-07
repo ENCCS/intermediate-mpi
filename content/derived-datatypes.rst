@@ -700,11 +700,11 @@ constructor |term-MPI_Type_create_struct| will suit your needs:
 
 .. challenge:: More message passing Pokémons
 
+   We will revisit the Pokémon example from above using custom datatypes.
+
    .. tabs::
 
       .. tab:: Pokémons, again!
-
-         We will revisit the Pokémon example from above using custom datatypes.
 
          1. Download the :download:`scaffold source code <code/pokemon-type-create-struct.c>`.
             Open it and read through it.
