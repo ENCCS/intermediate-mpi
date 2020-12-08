@@ -191,9 +191,12 @@ Code-along exercise: broadcast and reduce
 
 .. solution::
 
-   * One correct call is::
+   * One correct pair of calls is::
 
          MPI_Bcast(values_to_broadcast, 2, MPI_INT, rank_of_root, comm);
+         /* ... */
+         MPI_Reduce(values_to_broadcast, reduced_values, 2, MPI_INT,
+                    MPI_SUM, rank_of_root, comm);
 
    * There are other calls that work correctly. Is yours better or worse
      than this one? Why?
@@ -203,18 +206,44 @@ Code-along exercise: broadcast and reduce
 Tips when using collective communication
 ----------------------------------------
 
-TODO ordering
+Unlike point-to-point messages, collective communication does not use
+tags. This is deliberate, because collective communication requires
+all ranks in the communicator to contribute to the work before any
+rank will return from the call. There's no facility for more than one
+collective communication to run at a time on a communicator, so
+there's no need for a tag to clarify which communication is taking
+place. That's implied by the **order** of the collective communication
+calls.
+
+However, it's fine to use point-to-point messages on the same
+communicator in any order; they work independently.
+
+
+.. challenge:: 1.2 Quiz: if one rank calls a reduce,
+   and another rank calls a broadcast, is it a problem?
+
+   1. Yes, always.
+
+   2. No, never.
+
+   3. Yes when they are using the same communicator
+
+.. solution::
+
+   3. Collectives *on the same communicator* must be called in the
+      same order by all ranks of that communicator. Collectives on
+      different communicators from disjoint groups of ranks don't
+      create problems for eachother.
+
 
 See also
 --------
 
-* Upstream information
-* Another course
-
+* Check out the `MPI standard <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node95.htm#Node95>`_
+* https://www.codingame.com/playgrounds/349/introduction-to-mpi/introduction-to-collective-communications
 
 
 .. keypoints::
 
-   - TODO
-   - point 2
-   - ...
+   - Collective communication requires participation of all ranks in that communicator
+   - Collective communication happens *in order* and so no tags are needed.

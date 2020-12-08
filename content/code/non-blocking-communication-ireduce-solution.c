@@ -30,7 +30,7 @@ int main(int argc, char **argv)
     {
         if (rank == 0)
         {
-            fprintf(stdout, "Only two ranks is supported for this exercise, "
+            printf("Only two ranks is supported for this exercise, "
                     "please re-run with two ranks\n");
         }
         MPI_Finalize();
@@ -39,10 +39,10 @@ int main(int argc, char **argv)
 
     /* Prepare the initial values for this process */
     float local_data_set[4][8];
-    fprintf(stdout, "Local data set on rank %d was:\n", rank);
+    printf("Local data set on rank %d was:\n", rank);
     for (int i = 0; i < 4; i = i + 1)
     {
-        fprintf(stdout, " [ ");
+        printf(" [ ");
         for (int j = 0; j < 8; j = j + 1)
         {
             /* Make sure the local data on each rank is different, so
@@ -50,11 +50,11 @@ int main(int argc, char **argv)
             local_data_set[i][j] = 1*(rank + 1);
             if (j != 0)
             {
-                fprintf(stdout, ", ");
+                printf(", ");
             }
-            fprintf(stdout, "%g", local_data_set[i][j]);
+            printf("%g", local_data_set[i][j]);
         }
-        fprintf(stdout, " ]\n");
+        printf(" ]\n");
     }
     float working_data_set[6][8];
     for (int i = 0; i < 4; i = i + 1)
@@ -129,7 +129,7 @@ int main(int argc, char **argv)
             if (total != expected_total_value)
             {
                 success = 0;
-                fprintf(stdout, "Failed on step %d with total %g not matching expected %g\n",
+                printf("Failed on step %d with total %g not matching expected %g\n",
                         step, total, expected_total_value);
             }
         }
@@ -164,7 +164,7 @@ int main(int argc, char **argv)
         if (total != expected_total_value)
         {
             success = 0;
-            fprintf(stdout, "Failed on step %d with total %g not matching expected %g\n",
+            printf("Failed on step %d with total %g not matching expected %g\n",
                     max_step - 1, total, expected_total_value);
         }
     }
@@ -174,11 +174,11 @@ int main(int argc, char **argv)
     {
         if (success)
         {
-            fprintf(stdout, "SUCCESS on rank %d!\n", rank);
+            printf("SUCCESS on rank %d!\n", rank);
         }
         else
         {
-            fprintf(stdout, "Improvement needed before rank %d can report success!\n", rank);
+            printf("Improvement needed before rank %d can report success!\n", rank);
         }
     }
 

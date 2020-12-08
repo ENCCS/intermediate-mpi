@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     {
         if (rank == 0)
         {
-            fprintf(stdout, "Only two ranks is supported for this exercise, "
+            printf("Only two ranks is supported for this exercise, "
                     "please re-run with two ranks\n");
         }
         MPI_Finalize();
@@ -40,10 +40,10 @@ int main(int argc, char **argv)
 
     /* Prepare the initial values for this process */
     int local_data_set[4][8];
-    fprintf(stdout, "Local data set on rank %d was:\n", rank);
+    printf("Local data set on rank %d was:\n", rank);
     for (int i = 0; i < 4; i = i + 1)
     {
-        fprintf(stdout, " [ ");
+        printf(" [ ");
         for (int j = 0; j < 8; j = j + 1)
         {
             /* Make sure the local data on each rank is different, so
@@ -51,11 +51,11 @@ int main(int argc, char **argv)
             local_data_set[i][j] = 10*(rank + 1);
             if (j != 0)
             {
-                fprintf(stdout, ", ");
+                printf(", ");
             }
-            fprintf(stdout, "%3d", local_data_set[i][j]);
+            printf("%3d", local_data_set[i][j]);
         }
-        fprintf(stdout, " ]\n");
+        printf(" ]\n");
     }
     int working_data_set[6][8];
     for (int i = 0; i < 4; i = i + 1)
@@ -108,19 +108,19 @@ int main(int argc, char **argv)
      * Can you simplify the above code with MPI_Waitall?
      */
 
-    fprintf(stdout, "Next local data set on rank %d was:\n", rank);
+    printf("Next local data set on rank %d was:\n", rank);
     for (int i = 1; i < 5; i = i + 1)
     {
-        fprintf(stdout, " [ ");
+        printf(" [ ");
         for (int j = 0; j < 8; j = j + 1)
         {
             if (j != 0)
             {
-                fprintf(stdout, ", ");
+                printf(", ");
             }
-            fprintf(stdout, "%3d", next_working_data_set[i][j]);
+            printf("%3d", next_working_data_set[i][j]);
         }
-        fprintf(stdout, " ]\n");
+        printf(" ]\n");
     }
 
     /* Report whether the code is correct */
@@ -143,11 +143,11 @@ int main(int argc, char **argv)
     }
     if (success)
     {
-        fprintf(stdout, "SUCCESS on rank %d!\n", rank);
+        printf("SUCCESS on rank %d!\n", rank);
     }
     else
     {
-        fprintf(stdout, "Improvement needed before rank %d can report success!\n", rank);
+        printf("Improvement needed before rank %d can report success!\n", rank);
     }
 
     /* Clean up and exit */

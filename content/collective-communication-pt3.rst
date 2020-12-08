@@ -7,6 +7,7 @@ Generalized forms of gather
 
 .. objectives::
 
+   - Know that gather can be generalized
    - Know the difference between generalized forms of gather
 
 
@@ -169,16 +170,23 @@ Code-along exercise: all-gather and all-to-all
    * What happened if you mistakenly used 4 or 12 for the counts? Why?
    * Download a :download:`working solution <code/collective-communication-alltoall-solution.c>`
 
+Final thoughts
+--------------
+
+There are further generalizations available in MPI, including a
+combined scatter-gather, and versions of gather that permit different
+amounts of data to be sent to/from each rank. Check the existing
+options before rolling your own or giving up!
+
+
 See also
 --------
 
-* Upstream information
-* Another course
-
+* https://www.mcs.anl.gov/~thakur/sc17-mpi-tutorial/slides.pdf
+* https://www.rookiehpc.com/mpi/docs/mpi_allgather.php
+* https://www.rookiehpc.com/mpi/docs/mpi_alltoall.php
 
 
 .. keypoints::
 
-   - TODO
-   - point 2
-   - ...
+   - More complex distribution patterns are also optimized in MPI

@@ -9,7 +9,6 @@ Scatter and gather
 .. objectives::
 
    - Know the difference between scatter and gather
-   - Know that gather can be generalized
 
 
 Scatter
@@ -154,13 +153,10 @@ Code-along exercise: scatter and gather
 See also
 --------
 
-* Upstream information
-* Another course
-
+* http://www.archer.ac.uk/training/course-material/2020/01/advMPI-imperial/Slides/AMPP-Advanced-Collectives.pdf
+* https://www.codingame.com/playgrounds/349/introduction-to-mpi/scattering-and-gathering
 
 
 .. keypoints::
 
-   - TODO
-   - point 2
-   - ...
+   - MPI applications can scatter and gather data to suit common application patterns.
