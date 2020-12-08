@@ -77,6 +77,21 @@ Clearly, using tags to distinguish the origin of messages *does not scale* with
 the number of components involved in a software project and will reduce the
 extensibility and maintainability of the codebase.
 
+.. challenge:: What might happen if some other component uses your message tag?
+
+   1. The program hangs waiting for the right message
+
+   2. The program crashes
+
+   3. The program continues normally, but perhaps with wrong results
+
+   4. All of the above
+
+.. solution::
+
+   All of the above. Note that the behavior also depends on which communicator
+   is used.
+
 Note that ``MPI_Send`` and ``MPI_Recv`` also take a communicator as parameter
 and indeed the use of communicators is the solution offered by the MPI standard
 for the problems faced by library authors.
@@ -169,6 +184,23 @@ A communicator consists of:
    The new communicator is an object of ``MPI_Comm`` type, which can be used in
    any context where you would have used ``MPI_COMM_WORLD``.  You can clean up
    such an object with |term-MPI_Comm_free|.
+
+   .. challenge:: What happens when you call |term-MPI_Comm_create|?
+
+      Check the documentation about `creating communicators
+      <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node156.htm#Node156>`_. Which
+      of the following is true when calling |term-MPI_Comm_create|?
+
+      1. Every rank in ``comm`` needs to call |term-MPI_Comm_create|
+
+      2. Every rank in ``group`` needs to call |term-MPI_Comm_create|
+
+      3. Only one rank needs to call |term-MPI_Comm_create|
+
+      .. solution::
+
+         1. Every rank must call |term-MPI_Comm_create|. Creation of
+            communicators is a collective operation.
 
    Manipulation of groups can be a tedious affair. It is usually more convenient
    to create new communicators by splitting existing ones with
