@@ -46,10 +46,15 @@ Each day was concluded with exercises and a wrap-up.
      :delim: ;
 
       9:00 -  9:10 ; What did we cover yesterday?
-      9:10 - 10:30 ; **A closer look at collective communication functionss**
-     10:30 - 10:45 ; Break
-     10:45 - 11:25 ; **Non-blocking communication**
-     11:25 - 12:20 ; Exercises
+      9:10 - 09:45 ; **Simple collective communication**
+      9:45 - 09:50 ; Break
+      9:50 - 10:25 ; **Scatter and gather**
+     10:30 - 10:35 ; Break
+     10:35 - 11:10 : **Generalized forms of gather**
+     11:10 - 11:20 ; Break
+     11:20 - 11:40 ; **Non-blocking point-to-point communication**
+     11:40 - 11:45 ; Break
+     11:45 - 12:20 ; **Non-blocking collective communication**
      12:20 - 12:30 ; Wrap-up
 
 
