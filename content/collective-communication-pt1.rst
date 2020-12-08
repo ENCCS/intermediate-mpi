@@ -61,15 +61,13 @@ When debugging problems in other MPI communication, adding calls to
 your program to function correctly, that may suggest your
 program has a bug!
 
-Call signature::
+.. signature:: |term-MPI_Barrier|
 
-  int MPI_Barrier(MPI_Comm comm)
+   .. code-block:: c
 
-Link to `MPI_Barrier man page <https://www.open-mpi.org/doc/v4.0/man3/MPI_Barrier.3.php>`_
+      int MPI_Barrier(MPI_Comm comm)
 
-Link to `Specification of MPI_Barrier <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node100.htm#Node100>`_
-
-.. note::
+.. parameters::
 
    It takes one argument, the communicator over which the barrier
    operates.  All ranks within that communicator must call it or the
@@ -96,16 +94,16 @@ other ranks in the communicator. For example, one rank might read
 a file, and then broadcast the content to all other ranks. This is
 usually more efficient than having each rank read the same file.
 
-Call signature::
+.. signature:: |term-MPI_Bcast|
 
-  int MPI_Bcast(void *buffer, int count, MPI_Datatype datatype,
-                int root, MPI_Comm comm)
+   Sends data from one rank to all other ranks
 
-Link to `MPI_Bcast man page <https://www.open-mpi.org/doc/v4.0/man3/MPI_Bcast.3.php>`_
+   .. code-block:: c
 
-Link to `Specification of MPI_Bcast <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node101.htm#Node101>`_
+      int MPI_Bcast(void *buffer, int count, MPI_Datatype datatype,
+                    int root, MPI_Comm comm)
 
-.. note::
+.. parameters::
 
    All ranks must supply the same value for ``root``, which specifies
    the rank of that communicator that provides the values that are
@@ -140,17 +138,18 @@ over all ranks (and even the rank upon which it was found) can be
 returned to the root rank. Often one simply wants a sum, and for that
 ``MPI_SUM`` is provided. 
 
-Call signature::
+.. signature:: |term-MPI_Reduce|
 
-  int MPI_Reduce(const void *sendbuf, void *recvbuf, int count,
-                 MPI_Datatype datatype, MPI_Op op,
-                 int root, MPI_Comm comm)
+   Combines data from all ranks using an operation and returns values
+   to a single rank.
 
-Link to `MPI_Reduce man page <https://www.open-mpi.org/doc/v4.0/man3/MPI_Reduce.3.php>`_
+   .. code-block:: c
 
-Link to `Specification of MPI_Reduce <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node111.htm#Node111>`_
+      int MPI_Reduce(const void *sendbuf, void *recvbuf, int count,
+                     MPI_Datatype datatype, MPI_Op op,
+                     int root, MPI_Comm comm)
 
-.. note::
+.. parameters::
 
    All ranks must supply the same value for ``root``, which specifies
    the rank of the process within that communicator that receives the
