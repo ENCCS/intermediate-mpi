@@ -8,10 +8,12 @@ Quick Reference
       See also `Wikipedia <https://en.wikipedia.org/wiki/Data_structure_alignment>`_.
 
    intracommunicator
-      Foo
+      An object managing a group of processes and a communication context.
+      Processes in the communicator can perform message passing operations with
+      each other, but are isolated from processes not in the communicator.
 
    intercommunicator
-      Foo
+      A communicator for group-to-group communication.
 
    origin process
       In :term:`RMA`, the process invoking |term-MPI_Put| and |term-MPI_Get| to access another process's (the *target* process) window.
