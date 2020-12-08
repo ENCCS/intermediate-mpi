@@ -101,7 +101,7 @@ The **type signature** of a custom datatypes is the list of its basic datatypes:
 .. math::
    :label: eq:typesig
 
-   \textrm{Typemap}[\texttt{T}] = [ \texttt{Datatype}_{0}, \ldots, \texttt{Datatype}_{n-1} ]
+   \textrm{Type signature}[\texttt{T}] = [ \texttt{Datatype}_{0}, \ldots, \texttt{Datatype}_{n-1} ]
 
 The **typemap** is the associative array (map) with datatypes, as understood by MPI, as
 *keys* and displacements, in bytes, as *values*.
