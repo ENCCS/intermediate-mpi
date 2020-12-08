@@ -51,10 +51,10 @@ Each day was concluded with exercises and a wrap-up.
       9:50 - 10:25 ; **Scatter and gather**
      10:30 - 10:35 ; Break
      10:35 - 11:10 : **Generalized forms of gather**
-     11:10 - 11:15 ; Break
-     11:15 - 11:35 ; **Non-blocking point-to-point communication**
-     11:35 - 11:40 ; Break
-     11:40 - 12:20 ; **Non-blocking collective communication**
+     11:10 - 11:20 ; Break
+     11:20 - 11:40 ; **Non-blocking point-to-point communication**
+     11:40 - 11:45 ; Break
+     11:45 - 12:20 ; **Non-blocking collective communication**
      12:20 - 12:30 ; Wrap-up
 
 
