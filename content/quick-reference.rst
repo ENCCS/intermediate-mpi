@@ -484,4 +484,83 @@ MPI functions
 
        |MPI_Ireduce-implementors_docs|
 
+   ``MPI_Barrier``
+       Ensures all ranks arrive at this call before any of the proceeds
+       past it.
+
+       .. code-block:: c
+
+          int MPI_Barrier(MPI_Comm comm)
+
+       |MPI_Barrier-implementors_docs|
+
+   ``MPI_Bcast``
+       Sends data from one rank to all other ranks
+
+       .. code-block:: c
+
+            int MPI_Bcast(void *buffer, int count, MPI_Datatype datatype,
+                          int root, MPI_Comm comm)
+
+       |MPI_Bcast-implementors_docs|
+
+   ``MPI_Reduce``
+       Combines data from all ranks using an operation and returns
+       values to a single rank.
+
+       .. code-block:: c
+
+            int MPI_Reduce(const void *sendbuf, void *recvbuf, int count,
+                           MPI_Datatype datatype, MPI_Op op,
+                           int root, MPI_Comm comm)
+
+       |MPI_Reduce-implementors_docs|
+
+   ``MPI_Scatter``
+       Sends data from one rank to all other ranks
+
+       .. code-block:: c
+
+            int MPI_Scatter(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
+                            void *recvbuf, int recvcount, MPI_Datatype recvtype,
+                            int root, MPI_Comm comm)
+
+
+       |MPI_Scatter-implementors_docs|
+
+   ``MPI_Gather``
+       Sends data from all ranks to a single rank
+
+       .. code-block:: c
+
+            int MPI_Scatter(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
+                            void *recvbuf, int recvcount, MPI_Datatype recvtype,
+                            int root, MPI_Comm comm)
+
+       |MPI_Gather-implementors_docs|
+
+   ``MPI_Allgather``
+       Gathers data from all ranks and provides the same data to all ranks
+
+       .. code-block:: c
+
+            int MPI_Allgather(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
+                              void *recvbuf, int recvcount, MPI_Datatype recvtype,
+                              MPI_Comm comm)
+
+       |MPI_Allgather-implementors_docs|
+
+   ``MPI_Alltoall``
+       Gathers data from all ranks and provides different parts of the
+       data to different ranks.
+
+       .. code-block:: c
+
+            int MPI_Alltoall(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
+                             void *recvbuf, int recvcount, MPI_Datatype recvtype,
+                             MPI_Comm comm)
+
+       |MPI_Alltoall-implementors_docs|
+
+
 .. TODO MPI_Send, MPI_Xsend, non-blocking forms

@@ -61,15 +61,13 @@ When debugging problems in other MPI communication, adding calls to
 your program to function correctly, that may suggest your
 program has a bug!
 
-Call signature::
+.. signature:: |term-MPI_Barrier|
 
-  int MPI_Barrier(MPI_Comm comm)
+   .. code-block:: c
 
-Link to `MPI_Barrier man page <https://www.open-mpi.org/doc/v4.0/man3/MPI_Barrier.3.php>`_
+      int MPI_Barrier(MPI_Comm comm)
 
-Link to `Specification of MPI_Barrier <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node100.htm#Node100>`_
-
-.. note::
+.. parameters::
 
    It takes one argument, the communicator over which the barrier
    operates.  All ranks within that communicator must call it or the
@@ -96,16 +94,16 @@ other ranks in the communicator. For example, one rank might read
 a file, and then broadcast the content to all other ranks. This is
 usually more efficient than having each rank read the same file.
 
-Call signature::
+.. signature:: |term-MPI_Bcast|
 
-  int MPI_Bcast(void *buffer, int count, MPI_Datatype datatype,
-                int root, MPI_Comm comm)
+   Sends data from one rank to all other ranks
 
-Link to `MPI_Bcast man page <https://www.open-mpi.org/doc/v4.0/man3/MPI_Bcast.3.php>`_
+   .. code-block:: c
 
-Link to `Specification of MPI_Bcast <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node101.htm#Node101>`_
+      int MPI_Bcast(void *buffer, int count, MPI_Datatype datatype,
+                    int root, MPI_Comm comm)
 
-.. note::
+.. parameters::
 
    All ranks must supply the same value for ``root``, which specifies
    the rank of that communicator that provides the values that are
@@ -140,17 +138,18 @@ over all ranks (and even the rank upon which it was found) can be
 returned to the root rank. Often one simply wants a sum, and for that
 ``MPI_SUM`` is provided. 
 
-Call signature::
+.. signature:: |term-MPI_Reduce|
 
-  int MPI_Reduce(const void *sendbuf, void *recvbuf, int count,
-                 MPI_Datatype datatype, MPI_Op op,
-                 int root, MPI_Comm comm)
+   Combines data from all ranks using an operation and returns values
+   to a single rank.
 
-Link to `MPI_Reduce man page <https://www.open-mpi.org/doc/v4.0/man3/MPI_Reduce.3.php>`_
+   .. code-block:: c
 
-Link to `Specification of MPI_Reduce <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node111.htm#Node111>`_
+      int MPI_Reduce(const void *sendbuf, void *recvbuf, int count,
+                     MPI_Datatype datatype, MPI_Op op,
+                     int root, MPI_Comm comm)
 
-.. note::
+.. parameters::
 
    All ranks must supply the same value for ``root``, which specifies
    the rank of the process within that communicator that receives the
@@ -191,9 +190,12 @@ Code-along exercise: broadcast and reduce
 
 .. solution::
 
-   * One correct call is::
+   * One correct pair of calls is::
 
          MPI_Bcast(values_to_broadcast, 2, MPI_INT, rank_of_root, comm);
+         /* ... */
+         MPI_Reduce(values_to_broadcast, reduced_values, 2, MPI_INT,
+                    MPI_SUM, rank_of_root, comm);
 
    * There are other calls that work correctly. Is yours better or worse
      than this one? Why?
@@ -203,18 +205,44 @@ Code-along exercise: broadcast and reduce
 Tips when using collective communication
 ----------------------------------------
 
-TODO ordering
+Unlike point-to-point messages, collective communication does not use
+tags. This is deliberate, because collective communication requires
+all ranks in the communicator to contribute to the work before any
+rank will return from the call. There's no facility for more than one
+collective communication to run at a time on a communicator, so
+there's no need for a tag to clarify which communication is taking
+place. That's implied by the **order** of the collective communication
+calls.
+
+However, it's fine to use point-to-point messages on the same
+communicator in any order; they work independently.
+
+
+.. challenge:: 1.2 Quiz: if one rank calls a reduce,
+   and another rank calls a broadcast, is it a problem?
+
+   1. Yes, always.
+
+   2. No, never.
+
+   3. Yes when they are using the same communicator
+
+.. solution::
+
+   3. Collectives *on the same communicator* must be called in the
+      same order by all ranks of that communicator. Collectives on
+      different communicators from disjoint groups of ranks don't
+      create problems for eachother.
+
 
 See also
 --------
 
-* Upstream information
-* Another course
-
+* Check out the `MPI standard <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node95.htm#Node95>`_
+* https://www.codingame.com/playgrounds/349/introduction-to-mpi/introduction-to-collective-communications
 
 
 .. keypoints::
 
-   - TODO
-   - point 2
-   - ...
+   - Collective communication requires participation of all ranks in that communicator
+   - Collective communication happens *in order* and so no tags are needed.
