@@ -16,7 +16,8 @@ lesson_comms = [
     ["MPI_Comm_size", 155],
     ["MPI_Comm_group", 152],
     ["MPI_Group_free", 153],
-    ["MPI_Cart_create", 192],
+    ["MPI_Group_excl", 153],
+    ["MPI_Group_incl", 153],
 ]
 # derived datatypes
 lesson_dd = [
