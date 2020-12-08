@@ -16,13 +16,15 @@ lesson_comms = [
     ["MPI_Comm_size", 155],
     ["MPI_Comm_group", 152],
     ["MPI_Group_free", 153],
-    ["MPI_Cart_create", 192],
+    ["MPI_Group_excl", 153],
+    ["MPI_Group_incl", 153],
 ]
 # derived datatypes
 lesson_dd = [
     ["MPI_Type_get_extent", 84],
     ["MPI_Type_size", 82],
     ["MPI_Pack", 92],
+    ["MPI_Pack_size", 92],
     ["MPI_Unpack", 92],
     ["MPI_Type_contiguous", 79],
     ["MPI_Type_vector", 79],
@@ -195,4 +197,8 @@ class ParametersDirective(_BaseCRDirective):
     extra_classes = ["dropdown"]
 
 
-DIRECTIVES = [SignatureDirective, ParametersDirective]
+class TypealongDirective(_BaseCRDirective):
+    extra_classes = ["toggle-shown", "dropdown"]
+
+
+DIRECTIVES = [SignatureDirective, ParametersDirective, TypealongDirective]

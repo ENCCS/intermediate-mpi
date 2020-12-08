@@ -252,7 +252,7 @@ while opening and closing of access epochs on origin processes is enabled by:
 
 .. signature:: |term-MPI_Win_test|
 
-   Nonblocking version of |term-MPI_Win_wait|. The output parameter ``flag``
+   Non-blocking version of |term-MPI_Win_wait|. The output parameter ``flag``
    will be set to true if a call to |term-MPI_Win_wait| would return, thus
    finalizing the exposure epoch.
 

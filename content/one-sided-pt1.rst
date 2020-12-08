@@ -213,7 +213,7 @@ Load/store
 
 Synchronization
   Ensure that the data is available for remote memory accesses. The load/store
-  routines are *nonblocking* and the programmer must take care that subsequent
+  routines are *non-blocking* and the programmer must take care that subsequent
   accesses are *safe* and *correct*.  How synchronization is achieved depends on
   the one-sided communication *paradigm* adopted:
 
@@ -410,7 +410,7 @@ RMA operations
 
 .. parameters::
 
-   Both |term-MPI_Put| and |term-MPI_Get| are *nonblocking*: they are completed
+   Both |term-MPI_Put| and |term-MPI_Get| are *non-blocking*: they are completed
    by a call to synchronization routines.
    The two functions have the same argument list. Similarly to |term-MPI_Send|
    and |term-MPI_Recv|, the data is specified by the triplet of address, count,

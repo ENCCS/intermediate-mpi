@@ -153,6 +153,22 @@ Function parameters
 
    The description is hidden and will be shown by clicking the toggle.
 
+Type-along
+   The text and code for these activities are in a separate text box, marked with
+   a keyboard emoji:
+
+   .. typealong:: Let's look at an example
+
+      .. code-block:: c
+
+         #include <stdio.h>
+
+         int main(int argc, char *argv[]) {
+           printf("Hello, world!");
+           return 0;
+         }
+
+   The content can be hidden by clicking the toggle.
 
 
 See also
