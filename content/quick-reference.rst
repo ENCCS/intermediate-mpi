@@ -35,7 +35,7 @@ Quick Reference
    RMA
    remote memory access
    one-sided communication
-      Foooo
+      Communication paradigm allowing processes to access memory on other processes (remote memory) without the latter's explicit involvement.
 
    synchronization
       The necessary coordination of remote memory accesses. It can be *active* or *passive*.
@@ -76,7 +76,7 @@ MPI functions
       |MPI_Comm_split-implementors_docs|
 
    ``MPI_Type_get_extent``
-       Foo
+       Retrieve lower bound and extent of a type known to MPI.
 
        .. code-block:: c
 
@@ -87,7 +87,7 @@ MPI functions
        |MPI_Type_get_extent-implementors_docs|
 
    ``MPI_Type_size``
-       Foo
+       Retrieve size a type known to MPI.
 
        .. code-block:: c
 
@@ -127,7 +127,7 @@ MPI functions
        |MPI_Unpack-implementors_docs|
 
    ``MPI_Type_create_struct``
-       Foo
+       Create a new MPI datatype given its :term:`typemap`.
        This function replaces the *deprecated* ``MPI_Type_struct``.
 
        .. code-block:: c
@@ -141,7 +141,8 @@ MPI functions
        |MPI_Type_create_struct-implementors_docs|
 
    ``MPI_Type_commit``
-       Foo
+       Publish a new type to the MPI runtime. You can only use a new type in MPI
+       routines after calling this routine.
 
        .. code-block:: c
 
@@ -150,7 +151,9 @@ MPI functions
        |MPI_Type_commit-implementors_docs|
 
    ``MPI_Type_contiguous``
-       Foo
+       Create a homogeneous collection of a given datatype. Elements are
+       contiguous: :math:`n` and :math:`n-1` are separated by the extent of the
+       old type.
 
        .. code-block:: c
 
@@ -161,7 +164,8 @@ MPI functions
        |MPI_Type_contiguous-implementors_docs|
 
    ``MPI_Type_vector``
-       Foo
+       Create a collection of ``count`` elements of ``oldtype`` separated by a
+       stride that is an arbitrary multiple of the extent of the old type.
 
        .. code-block:: c
 
@@ -174,7 +178,8 @@ MPI functions
        |MPI_Type_vector-implementors_docs|
 
    ``MPI_Type_indexed``
-       Foo
+       Create a type with non-homogeneous separations between the elements.
+       Each displacement is intended as a multiple of the extent of the old type.
 
        .. code-block:: c
 
@@ -187,17 +192,40 @@ MPI functions
        |MPI_Type_indexed-implementors_docs|
 
    ``MPI_Type_create_hvector``
-       foo
+       Create a collection of ``count`` elements of ``oldtype``. The separation
+       between elements in a hvector is expressed in bytes, rather than as a
+       multiple of the extent.
+
+       .. code-block:: c
+
+          int MPI_Type_create_hvector(int count,
+                                      int blocklength,
+                                      MPI_Aint stride,
+                                      MPI_Datatype oldtype,
+                                      MPI_Datatype *newtype)
 
        |MPI_Type_create_hvector-implementors_docs|
 
    ``MPI_Type_create_hindexed``
-       foo
+       Create a type with non-homogeneous separations between the elements
+       expressed in bytes, rather than as multiples of the extent.
+
+       .. code-block:: c
+
+          int MPI_Type_create_hindexed(int count,
+                                       const int array_of_blocklengths[],
+                                       const MPI_Aint array_of_displacements[],
+                                       MPI_Datatype oldtype,
+                                       MPI_Datatype *newtype)
 
        |MPI_Type_create_hindexed-implementors_docs|
 
    ``MPI_Type_free``
-       foo
+       Free a ``MPI_Datatype`` object.
+
+       .. code-block:: c
+
+          int MPI_Type_free(MPI_Datatype *type)
 
        |MPI_Type_free-implementors_docs|
 
@@ -251,7 +279,7 @@ MPI functions
        |MPI_Accumulate-implementors_docs|
 
    ``MPI_Win_create``
-       Foo
+       Allocates memory and creates the window object.
 
        .. code-block:: c
 
@@ -265,7 +293,7 @@ MPI functions
        |MPI_Win_create-implementors_docs|
 
    ``MPI_Win_allocate``
-       Foo
+       Creates a window from already allocated memory.
 
        .. code-block:: c
 
@@ -279,7 +307,7 @@ MPI functions
        |MPI_Win_allocate-implementors_docs|
 
    ``MPI_Win_allocate_shared``
-       Foo
+       Creates a window from already allocated MPI shared memory.
 
        .. code-block:: c
 
@@ -293,7 +321,7 @@ MPI functions
        |MPI_Win_allocate_shared-implementors_docs|
 
    ``MPI_Win_create_dynamic``
-       Foo
+       Creates a window from allocated memory, but the window-memory pairing is deferred.
 
        .. code-block:: c
 
@@ -304,7 +332,7 @@ MPI functions
        |MPI_Win_create_dynamic-implementors_docs|
 
    ``MPI_Win_fence``
-       Foo
+       Synchronization routine in **active target** RMA. It opens and closes an access epoch.
 
        .. code-block:: c
 
@@ -314,7 +342,7 @@ MPI functions
        |MPI_Win_fence-implementors_docs|
 
    ``MPI_Win_post``
-       Foo
+       Synchronization routine in **active target** RMA. Starts an exposure epoch.
 
        .. code-block:: c
 
@@ -325,7 +353,7 @@ MPI functions
        |MPI_Win_post-implementors_docs|
 
    ``MPI_Win_start``
-       Foo
+       Synchronization routine in **active target** RMA. Starts an access epoch.
 
        .. code-block:: c
 
@@ -336,7 +364,7 @@ MPI functions
        |MPI_Win_start-implementors_docs|
 
    ``MPI_Win_complete``
-       Foo
+       Synchronization routine in **active target** RMA. Finishes an access epoch.
 
        .. code-block:: c
 
@@ -345,7 +373,7 @@ MPI functions
        |MPI_Win_complete-implementors_docs|
 
    ``MPI_Win_wait``
-       Foo
+       Synchronization routine in **active target** RMA. Finishes an exposure epoch.
 
        .. code-block:: c
 
@@ -353,8 +381,20 @@ MPI functions
 
        |MPI_Win_wait-implementors_docs|
 
+   ``MPI_Win_test``
+       Synchronization routine in **active target** RMA. This is the
+       non-blocking version of |term-MPI_Win_wait| and finishes an exposure
+       epoch.
+
+       .. code-block:: c
+
+          int MPI_Win_test(MPI_Win win,
+                           int *flag)
+
+       |MPI_Win_test-implementors_docs|
+
    ``MPI_Win_lock``
-       Foo
+       Synchronization routine in **passive target** RMA. Locks a memory window.
 
        .. code-block:: c
 
@@ -366,7 +406,7 @@ MPI functions
        |MPI_Win_lock-implementors_docs|
 
    ``MPI_Win_unlock``
-       Foo
+       Synchronization routine in **passive target** RMA. Unlocks a memory window.
 
        .. code-block:: c
 
