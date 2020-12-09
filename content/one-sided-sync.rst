@@ -1,4 +1,4 @@
-.. _one-sided-2:
+.. _one-sided-sync:
 
 
 One-sided communication: synchronization

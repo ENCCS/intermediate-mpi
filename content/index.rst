@@ -49,8 +49,9 @@ for recommended prerequisite knowledge.
    collective-communication-pt3
    non-blocking-communication-pt1
    non-blocking-communication-pt2
-   one-sided-pt1
-   one-sided-pt2
+   one-sided-concepts
+   one-sided-routines
+   one-sided-sync
    mpi-and-threads-pt1
    mpi-and-threads-pt2
 
@@ -67,8 +68,9 @@ for recommended prerequisite knowledge.
    35 min ; :doc:`collective-communication-pt3`
    60 min ; :doc:`non-blocking-communication-pt1`
    30 min ; :doc:`non-blocking-communication-pt2`
-   60 min ; :doc:`one-sided-pt1`
-   45 min ; :doc:`one-sided-pt2`
+   30 min ; :doc:`one-sided-concepts`
+   30 min ; :doc:`one-sided-routines`
+   45 min ; :doc:`one-sided-sync`
    60 min ; :doc:`mpi-and-threads-pt1`
    30 min ; :doc:`mpi-and-threads-pt2`
 

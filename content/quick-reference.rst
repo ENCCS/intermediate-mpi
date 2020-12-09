@@ -321,7 +321,7 @@ MPI functions
        |MPI_Win_allocate_shared-implementors_docs|
 
    ``MPI_Win_create_dynamic``
-        Creates a window from allocated memory, but the window-memory pairing is deferred.
+       Creates a window from allocated memory, but the window-memory pairing is deferred.
 
        .. code-block:: c
 
