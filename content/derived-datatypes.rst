@@ -578,7 +578,7 @@ Hvector
 
 Indexed
   This type allows to have non-homogeneous separations between the elements.
-  Each displacements is intended as a multiple of the extent of the old type.
+  Each displacement is intended as a multiple of the extent of the old type.
 
   .. signature:: |term-MPI_Type_indexed|
 
