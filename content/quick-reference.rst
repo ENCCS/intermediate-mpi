@@ -474,7 +474,7 @@ MPI functions
        |MPI_Testall-implementors_docs|
 
    ``MPI_Ireduce``
-       Non-blocking variant of TODO ``term-MPI_Reduce``
+       Non-blocking variant of |term-MPI_Reduce|
 
        .. code-block:: c
 
@@ -483,6 +483,16 @@ MPI functions
                           MPI_Comm comm, MPI_Request *request)
 
        |MPI_Ireduce-implementors_docs|
+
+   ``MPI_Ibarrier``
+       Non-blocking variant of |term-MPI_Barrier|
+
+       .. code-block:: c
+
+          int MPI_Ibarrier(MPI_Comm comm,
+                           MPI_Request *request)
+
+       |MPI_Ibarrier-implementors_docs|
 
    ``MPI_Barrier``
        Ensures all ranks arrive at this call before any of the proceeds
