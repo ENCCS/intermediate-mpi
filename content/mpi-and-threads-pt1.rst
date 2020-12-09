@@ -16,7 +16,8 @@ Why move past pure-MPI programs?
 MPI is an excellent tool for parallel execution of programs. A key
 strength is that the programmer must explicitly move data to where it
 is needed. That can make code easier to understand, albeit more work
-to write. Since one writes code less often than the author *and
+Since both authors *and* maintainers spend more time **reading**
+existing code than **writing** new code, that is often desirable.
 maintainers* read it, that is often desirable.
 
 However, such approaches tend to perform poorly at scale. Computer
@@ -30,7 +31,7 @@ thousands. Such jobs are often *too small* to be permitted to run on
 current high-end clusters.
 
 Code that assumes one MPI process to a core has trouble scaling to
-:math:`N` processes (eg. for N > 1000) for several reasons:
+:math:`N` processes (eg. for :math:`N > 1000`) for several reasons:
 
 * collective communication cost tends to scale at least like
   :math:`\mathrm{log} N` - aggregating messages helps a lot but more
@@ -74,7 +75,8 @@ Disadvantages of MPI + threading
 
 * code now has to be correct MPI code *and* correct threaded code
 
-* possibility of lower performance from cache contention
+* possibility of lower performance from cache contention, when one thread
+  writes to memory that is very close to where another thread needs to read
 
 * more code complexity
 
@@ -90,13 +92,13 @@ Threading library options
 
 `OpenMP <https://www.openmp.org/>`_ is the open standard for HPC
 threading, and is widely used with many quality implementations. It is
-possible to use raw ``pthreads``, and you will find MPI examples using
+possible to use raw ```pthreads`` <https://en.wikipedia.org/wiki/POSIX_Threads>`_, and you will find MPI examples using
 them, but this is much less productive in programmer time and made
 more sense when OpenMP was less mature. In most HPC cases, OpenMP is
 implemented using ``pthreads``.
 
 This workshop will use simple OpenMP for illustrative purposes. For
-more information on Openmp check out `these tutorials
+more information on OpenMP check out `these tutorials
 <https://www.openmp.org/resources/tutorials-articles/>`_.
 
 MPI support for threading
@@ -107,11 +109,13 @@ ways. The former approach using ``MPI_Init`` still works, but
 applications that wish to use threading should use
 |term-MPI_Init_thread|.
 
-Call signature::
+.. signature:: |term-MPI_Init_thread|
 
-  int MPI_Init_thread(int *argc, char ***argv, int required, int *provided)
+   .. code-block:: c
+   
+      int MPI_Init_thread(int *argc, char ***argv, int required, int *provided)
 
-.. note::
+.. parameters::
 
    The ``argc`` and ``argv`` may be ``NULL`` (and generally should
    be). ``required`` describes the level of threading support that is
@@ -151,7 +155,7 @@ The following threading levels are generally supported:
 * ``MPI_THREAD_SERIALIZED`` - rank can be multi-threaded but
   only one thread at a time may call MPI functions. The rank
   must ensure that MPI is used in a thread-safe way. One approach is
-  to enssure that MPI usage is *mutually excluded* by all the threads,
+  to ensure that MPI usage is *mutually excluded* by all the threads,
   eg. with a *mutex*.
 
 
@@ -196,18 +200,20 @@ code. If you wish to use threading, you have to honor the requirements
 established at the time MPI was initialized (or give an error). This
 can be done with |term-MPI_Query_thread|.
 
-Call signature::
+.. signature:: |term-MPI_Query_thread|
 
-  int MPI_Query_thread(int *provided)
+   .. code-block:: c
+     
+      int MPI_Query_thread(int *provided)
 
-.. note::
+.. parameters::
 
    The value returned in ``*provided`` describes the level that the
    MPI runtime is providing. If this is not the level required, the
    library should inform the user and either use threading only at the
    level provided, or return an error to its caller.
 
-   It is possible to influence the threading support availble from
+   It is possible to influence the threading support available from
    some MPI implementations with environment variables, so it can be
    wise to use such a method even if your code is managing the call to
    |term-MPI_Init_thread|.
@@ -215,14 +221,16 @@ Call signature::
 Similarly, MPI regards the thread that called |term-MPI_Init_thread|
 as the main thread for the purpose of ``MPI_THREAD_FUNNELED``. If your
 code needs to identify that thread (eg. to ensure that calls to your
-library happen from that thread, so you use MPi), then you need to
+library happen from that thread, so you use MPI), then you need to
 call |term-MPI_Is_thread_main|.
 
-Call signature::
+.. signature:: |term-MPI_Is_thread_main|
+   
+   .. code-block:: c
 
-   int MPI_Is_thread_main(int *flag)
+      int MPI_Is_thread_main(int *flag)
 
-.. note::
+.. parameters::
 
    A boolean value is returned in ``*flag`` to indicate whether the
    thread that called |term-MPI_Is_thread_main| is the main thread,

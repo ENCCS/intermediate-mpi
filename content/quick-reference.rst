@@ -479,7 +479,7 @@ MPI functions
 
        .. code-block:: c
 
-          int MPI_Init_thread(int *argc, char ***argv, int required, int *provided)
+          int MPI_Init_thread(int *argc, char **argv, int required, int *provided)
 
        |MPI_Init_thread-implementors_docs|
    
