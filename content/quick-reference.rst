@@ -381,6 +381,18 @@ MPI functions
 
        |MPI_Win_wait-implementors_docs|
 
+   ``MPI_Win_test``
+       Synchronization routine in **active target** RMA. This is the
+       non-blocking version of |term-MPI_Win_wait| and finishes an exposure
+       epoch.
+
+       .. code-block:: c
+
+          int MPI_Win_test(MPI_Win win,
+                           int *flag)
+
+       |MPI_Win_test-implementors_docs|
+
    ``MPI_Win_lock``
        Synchronization routine in **passive target** RMA. Locks a memory window.
 
