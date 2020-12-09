@@ -9,6 +9,12 @@ Learning outcomes
 - Collective communication, blocking and non-blocking
 - MPI and threads
 
+Tips
+====
+
+- Append ``?plain=1`` to collapse the sidebar while presenting.
+  Suggestion from `Richard Darst <https://github.com/coderefinery/sphinx-lesson/issues/53#issuecomment-741676048>`_.
+
 Timing
 ======
 
@@ -20,8 +26,9 @@ First iteration: 2020-12-08/11
 
 First iteration of this workshop was given as 4 x (almost) 4 hours, that is 4 half days.
 
-We had two main 30-minutes lectures each day. Each lecture included type-alongs and was followed by ample time for questions and live-coding demos.
-Each day was concluded with exercises and a wrap-up.
+We had two main 30-minutes lectures each day. Each lecture included type-alongs
+and was followed by ample time for questions and live-coding demos.  Each day
+was concluded with exercises and a wrap-up.
 
 **Day 1 - Tuesday 8 December 2020 – Communicators, groups, derived datatypes**
 
