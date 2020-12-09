@@ -9,7 +9,6 @@ Scatter and gather
 .. objectives::
 
    - Know the difference between scatter and gather
-   - Know that gather can be generalized
 
 
 Scatter
@@ -32,17 +31,15 @@ ranks in the communicator. For example, one rank might compute some
 values, and then scatter the content to all other ranks. They can then
 use this as input for future work.
 
-Call signature::
+.. signature:: |term-MPI_Scatter|
 
-  int MPI_Scatter(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
-                  void *recvbuf, int recvcount, MPI_Datatype recvtype,
-                  int root, MPI_Comm comm)
+   .. code-block:: c
 
-Link to `MPI_Scatter man page <https://www.open-mpi.org/doc/v4.0/man3/MPI_Scatter.3.php>`_
+      int MPI_Scatter(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
+                      void *recvbuf, int recvcount, MPI_Datatype recvtype,
+                      int root, MPI_Comm comm)
 
-Link to `Specification of MPI_Scatter <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node105.htm#Node105>`_
-
-.. note::
+.. parameters::
 
    All ranks must supply the same value for ``root``, which specifies
    the rank of that communicator that provides the values that are
@@ -83,17 +80,15 @@ this as input for future work. One use case is to combine data so that
 one rank can compute a combined property, or write all the data to a
 file.
 
-Call signature::
+.. signature:: |term-MPI_Gather|
 
-  int MPI_Gather(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
-                 void *recvbuf, int recvcount, MPI_Datatype recvtype,
-                 int root, MPI_Comm comm)
+   .. code-block:: c
 
-Link to `MPI_Gather man page <https://www.open-mpi.org/doc/v4.0/man3/MPI_Gather.3.php>`_
+      int MPI_Gather(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
+                     void *recvbuf, int recvcount, MPI_Datatype recvtype,
+                     int root, MPI_Comm comm)
 
-Link to `Specification of MPI_Gather <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node103.htm#Node103>`_
-
-.. note::
+.. parameters::
 
    All ranks must supply the same value for ``root``, which specifies
    the rank of the process within that communicator that receives the
@@ -154,13 +149,10 @@ Code-along exercise: scatter and gather
 See also
 --------
 
-* Upstream information
-* Another course
-
+* http://www.archer.ac.uk/training/course-material/2020/01/advMPI-imperial/Slides/AMPP-Advanced-Collectives.pdf
+* https://www.codingame.com/playgrounds/349/introduction-to-mpi/scattering-and-gathering
 
 
 .. keypoints::
 
-   - TODO
-   - point 2
-   - ...
+   - MPI applications can scatter and gather data to suit common application patterns.

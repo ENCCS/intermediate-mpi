@@ -21,25 +21,29 @@ int main(int argc, char **argv)
     }
 
     /* Report the state before the broadcast */
-    fprintf(stdout, "On rank %d, pre-broadcast values were [%d, %d]\n", rank,
+    printf("On rank %d, pre-broadcast values were [%d, %d]\n", rank,
             values_to_broadcast[0],
             values_to_broadcast[1]);
 
     /* ==== CHALLENGE ====
      *
      * Uncomment and fix the MPI call to make this code work!
+     * We want the contents of values_to_broadcast to be 
+     * sent to all ranks in comm.
      */
     /* Do the broadcast */
     MPI_Bcast(values_to_broadcast, 2, MPI_INT, rank_of_root, comm);
 
     /* Report the state after the broadcast */
-    fprintf(stdout, "On rank %d, broadcast values were [%d, %d]\n", rank,
+    printf("On rank %d, broadcast values were [%d, %d]\n", rank,
             values_to_broadcast[0],
             values_to_broadcast[1]);
 
     /* ==== CHALLENGE ====
      *
      * Uncomment and fix the MPI call to make this code work!
+     * We want to reduce values_to_broadcast over all ranks
+     * and compute the sum on the root rank.
      */
     /* Reduce the data over all ranks with summation */
     int reduced_values[2];
@@ -47,7 +51,7 @@ int main(int argc, char **argv)
                MPI_SUM, rank_of_root, comm);
 
     /* Report the state after the reduction */
-    fprintf(stdout, "On rank %d, reduced values were [%d, %d]\n", rank,
+    printf("On rank %d, reduced values were [%d, %d]\n", rank,
             reduced_values[0],
             reduced_values[1]);
 
@@ -62,11 +66,11 @@ int main(int argc, char **argv)
     }
     if (success)
     {
-        fprintf(stdout, "SUCCESS on rank %d!\n", rank);
+        printf("SUCCESS on rank %d!\n", rank);
     }
     else
     {
-        fprintf(stdout, "Improvement needed before rank %d can report success!\n", rank);
+        printf("Improvement needed before rank %d can report success!\n", rank);
     }
 
     /* Clean up and exit */

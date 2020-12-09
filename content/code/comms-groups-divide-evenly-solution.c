@@ -45,9 +45,9 @@ int main(int argc, char *argv[]) {
 
   // split the processes in half, one half goes to ranks1 the other to ranks2
   if (rank < NPROCS / 2) {
-    MPI_Group_incl(world_group, NPROCS / 2, ranks1, &new_group);
+    MPI_Group_excl(world_group, NPROCS / 2, ranks1, &new_group);
   } else {
-    MPI_Group_incl(world_group, NPROCS / 2, ranks2, &new_group);
+    MPI_Group_excl(world_group, NPROCS / 2, ranks2, &new_group);
   }
 
   MPI_Comm_create(MPI_COMM_WORLD, new_group, &new_comm);

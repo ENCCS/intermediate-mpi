@@ -58,6 +58,13 @@ lesson_rma = [
 ]
 # collectives
 lesson_coll = [
+    ["MPI_Barrier", 100],
+    ["MPI_Bcast", 101],
+    ["MPI_Reduce", 111],
+    ["MPI_Scatter", 105],
+    ["MPI_Gather", 103],
+    ["MPI_Allgather", 107],
+    ["MPI_Alltoall", 109],
     ["MPI_Allgatherv", 107],
     ["MPI_Ireduce", 134],
 ]
@@ -124,7 +131,7 @@ abbr_and_term = """
 .. |{function}| replace:: ``{function}``
 .. |term-{function}| raw:: html
 
-   <a class="reference internal" href="../quick-reference/#term-{function}"><span class="xref std std-term"><code class="docutils literal notranslate">{function}</code></span></a>
+   <a class="reference internal" href="../quick-reference/index.html#term-{function}"><span class="xref std std-term"><code class="docutils literal notranslate">{function}</code></span></a>
 """
 
 header = """

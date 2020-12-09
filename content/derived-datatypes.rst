@@ -202,6 +202,22 @@ Thus:
    The total size is 5 bytes, but the extent, which takes the padding into
    account, is 8 bytes.
 
+.. challenge:: Which of the following statements about the size and
+               extent of an MPI datatype is true?
+
+   1. The size is always greater than the extent
+
+   2. The size and extent can be equal
+
+   3. The extent is always greater than the size
+
+   4. None of the above
+
+.. solution::
+
+   2. The size and extent can be equal when no padding is
+      required. It's best not to rely on this even when it is true,
+      because your code or compiler or MPI library can change.
 
 MPI offers functions to query extent and size of its types: they all take a variant of the ``MPI_Datatype`` enumeration as argument.
 

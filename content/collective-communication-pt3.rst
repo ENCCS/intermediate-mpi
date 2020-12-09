@@ -7,6 +7,7 @@ Generalized forms of gather
 
 .. objectives::
 
+   - Know that gather can be generalized
    - Know the difference between generalized forms of gather
 
 
@@ -33,17 +34,17 @@ ranks in the communicator. For example, all ranks might compute some
 values, and then all ranks gather that content to use it in a
 subsequent stage.
 
-Call signature::
+.. signature:: |term-MPI_Allgather|
 
-  int MPI_Allgather(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
-                    void *recvbuf, int recvcount, MPI_Datatype recvtype,
-                    MPI_Comm comm)
+   Gathers data from all ranks and provides the same data to all ranks.
 
-Link to `MPI_Allgather man page <https://www.open-mpi.org/doc/v4.0/man3/MPI_Allgather.3.php>`_
+   .. code-block:: c
 
-Link to `Specification of MPI_Allgather <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node107.htm#Node107>`_
+      int MPI_Allgather(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
+                        void *recvbuf, int recvcount, MPI_Datatype recvtype,
+                        MPI_Comm comm)
 
-.. note::
+.. parameters::
 
    All ranks receive the values send from each process.
 
@@ -82,17 +83,17 @@ ranks in the communicator. For example, a 3D Fast Fourier Transform
 often uses an all-to-all operation to redistribute the working data
 set for each process to a new dimension.
 
-Call signature::
+.. signature:: |term-MPI_Alltoall|
 
-  int MPI_Alltoall(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
-                   void *recvbuf, int recvcount, MPI_Datatype recvtype,
-                   MPI_Comm comm)
+   Gathers data from all ranks and provides distinct data to all ranks.
 
-Link to `MPI_Alltoall man page <https://www.open-mpi.org/doc/v4.0/man3/MPI_Alltoall.3.php>`_
+   .. code-block:: c
 
-Link to `Specification of MPI_Alltoall <https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node109.htm#Node109>`_
+      int MPI_Alltoall(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
+                       void *recvbuf, int recvcount, MPI_Datatype recvtype,
+                       MPI_Comm comm)
 
-.. note::
+.. parameters::
 
    All ranks receive a subset of the values sent from each process.
 
@@ -169,16 +170,23 @@ Code-along exercise: all-gather and all-to-all
    * What happened if you mistakenly used 4 or 12 for the counts? Why?
    * Download a :download:`working solution <code/collective-communication-alltoall-solution.c>`
 
+Final thoughts
+--------------
+
+There are further generalizations available in MPI, including a
+combined scatter-gather, and versions of gather that permit different
+amounts of data to be sent to/from each rank. Check the existing
+options before rolling your own or giving up!
+
+
 See also
 --------
 
-* Upstream information
-* Another course
-
+* https://www.mcs.anl.gov/~thakur/sc17-mpi-tutorial/slides.pdf
+* https://www.rookiehpc.com/mpi/docs/mpi_allgather.php
+* https://www.rookiehpc.com/mpi/docs/mpi_alltoall.php
 
 
 .. keypoints::
 
-   - TODO
-   - point 2
-   - ...
+   - More complex distribution patterns are also optimized in MPI

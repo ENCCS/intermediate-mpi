@@ -19,28 +19,30 @@ int main(int argc, char **argv)
     }
 
     /* Report the state before the all-to-all */
-    fprintf(stdout, "On rank %d, values before the all-to-all were:\n  [", rank);
+    printf("On rank %d, values before the all-to-all were:\n  [", rank);
     for(int i = 0; i < 11; i = i + 1)
     {
-        fprintf(stdout, "%d, ", values_to_all_to_all[i]);
+        printf("%d, ", values_to_all_to_all[i]);
     }
-    fprintf(stdout, "%d]\n", values_to_all_to_all[11]);
+    printf("%d]\n", values_to_all_to_all[11]);
 
     /* ==== CHALLENGE ====
      *
      * Uncomment and fix the MPI call to make this code work!
+     * We want the values_to_all_to_all to end up in
+     * result_values on all ranks.
      */
     /* Do the all-to-all */
     int result_values[12];
     /* MPI_xxx(xxx); */
 
     /* Report the state after the all-to-all */
-    fprintf(stdout, "On rank %d, values after the all-to-all were:\n  [", rank);
+    printf("On rank %d, values after the all-to-all were:\n  [", rank);
     for(int i = 0; i < 11; i = i + 1)
     {
-        fprintf(stdout, "%d, ", result_values[i]);
+        printf("%d, ", result_values[i]);
     }
-    fprintf(stdout, "%d]\n", result_values[11]);
+    printf("%d]\n", result_values[11]);
 
     /* Report whether the code is correct */
     int success = 1;
@@ -52,11 +54,11 @@ int main(int argc, char **argv)
 
     if (success)
     {
-        fprintf(stdout, "SUCCESS on rank %d!\n", rank);
+        printf("SUCCESS on rank %d!\n", rank);
     }
     else
     {
-        fprintf(stdout, "Improvement needed before rank %d can report success!\n", rank);
+        printf("Improvement needed before rank %d can report success!\n", rank);
     }
 
     /* Clean up and exit */
