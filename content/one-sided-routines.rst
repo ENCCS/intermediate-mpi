@@ -86,16 +86,74 @@ Synchronization
    The events in between synchronization calls are said to happen in *epochs*.
 
 
-.. typealong:: RMA
+.. typealong:: RMA in action
 
-   Type along showing two processes talking with RMA.
+   In this example, we will work with two processes:
 
+   - Rank 1, will allocate a buffer and expose it as a window.
+   - Rank 0, will get the values from this buffer.
+
+   First of all, we create the buffer on all ranks. However, only rank 1 will
+   fill it with some values. We will see that window creation is *collective*
+   call for all ranks in the given communicator.
+
+   .. code-block:: c
+
+      int window_buffer[4] = {0};
+      if (rank == 1) {
+          window_buffer[0] = 42;
+          window_buffer[1] = 88;
+          window_buffer[2] = 12;
+          window_buffer[3] = 3;
+      }
+      MPI_Win win;
+      MPI_Win_create(&window_buffer, (MPI_Aint)4 * sizeof(int), sizeof(int),
+                     MPI_INFO_NULL, comm, &win);
+
+   Every rank has now a window, but only the window on rank 1 has values
+   different from 0. Before doing anything on the window, we need to start an
+   *access epoch*:
+
+   .. code-block:: c
+
+      MPI_Win_fence(0, win);
+
+   Process 0 can now load the values into its local memory:
+
+   .. code-block:: c
+
+      int getbuf[4];
+      if (rank == 0) {
+        // Fetch the value from the MPI process 1 window
+        MPI_Get(&getbuf, 4, MPI_INT, 1, 0, 4, MPI_INT, win);
+      }
+
+   We synchronize again once we are done with RMA operations: this access epoch
+   is closed. This is needed even if subsequent accesses are local!
+
+   .. code-block:: c
+
+      MPI_Win_fence(0, win);
+
+   Remember to free the window object!
+
+   .. code-block:: c
+
+      MPI_Win_free(&win);
+
+   Download the full :download:`working source code <code/rma-vs-non-blocking-2.c>`.
 
 
 .. discussion::
 
    - Are there similarities between one-sided and non-blocking communication? In
      which contexts would you prefer one over the other?
+
+
+.. challenge:: Non-blocking vs RMA
+
+   Can you re-express the code shown in the type-along with |term-MPI_Isend|/|term-MPI_Recv|?
+   You can download the :download:`scaffold source code <code/rma-vs-non-blocking-1.c>` and also a :download:`working solution <code/rma-vs-non-blocking-1-solution.c>`.
 
 
 Window creation
@@ -117,12 +175,12 @@ the communicator will reserve the specified memory for remote memory accesses.
                            void *baseptr,
                            MPI_Win *win)
 
-   We can expose an array of 10 ``double``-s for RMA with:
+We can expose an array of 10 ``double``-s for RMA with:
 
-   .. literalinclude:: code/snippets/allocate.c
-      :language: c
-      :lines: 6-15
-      :dedent: 2
+.. literalinclude:: code/snippets/allocate.c
+   :language: c
+   :lines: 6-15
+   :dedent: 2
 
 .. parameters::
 
@@ -132,7 +190,7 @@ the communicator will reserve the specified memory for remote memory accesses.
        Displacement units. If ``disp_unit = 1``, then displacements are computed
        in bytes. The use of displacement units can help with code readability
        and is essential for correctness on heterogeneous systems, where the
-       sizes of the basis types might differ between processes.  See also
+       sizes of the basic types might differ between processes.  See also
        :ref:`derived-datatypes`.
    ``info``
        An info object, which can be used to provide optimization hints to the
@@ -160,15 +218,15 @@ the communicator will reserve the specified memory for remote memory accesses.
                          MPI_Comm comm,
                          MPI_Win *win)
 
-   What if the memory is not allocated? We advise to use |term-MPI_Alloc_mem|:
+What if the memory is not allocated? We advise to use |term-MPI_Alloc_mem|:
 
-   .. literalinclude:: code/snippets/alloc_mem+win_create.c
-      :language: c
-      :lines: 6-21
-      :dedent: 2
+.. literalinclude:: code/snippets/alloc_mem+win_create.c
+   :language: c
+   :lines: 6-21
+   :dedent: 2
 
-   You must explicitly call |term-MPI_Free_mem| to deallocate memory obtained
-   with |term-MPI_Alloc_mem|.
+You must explicitly call |term-MPI_Free_mem| to deallocate memory obtained
+with |term-MPI_Alloc_mem|.
 
 .. parameters::
 
@@ -180,7 +238,7 @@ the communicator will reserve the specified memory for remote memory accesses.
        Displacement units. If ``disp_unit = 1``, then displacements are computed
        in bytes. The use of displacement units can help with code readability
        and is essential for correctness on heterogeneous systems, where the
-       sizes of the basis types might differ between processes.  See also
+       sizes of the basic types might differ between processes.  See also
        :ref:`derived-datatypes`.
    ``info``
        An info object, which can be used to provide optimization hints to the
@@ -192,16 +250,22 @@ the communicator will reserve the specified memory for remote memory accesses.
 
 .. note::
 
-   - With the term *memory window* or simply *window* we refer to the memory,
-     local to each process, reserved for remote memory accesses. A *window
-     object* is instead the collection of windows of all processes in the
-     communicator and it has type ``MPI_Win``.
    - The memory window is usually a single array: the size of the window object
      then coincides with the size of the array.  If the base type of the array
      is a simple type, then the displacement unit is the size of that type,
      *e.g.* ``double`` and ``sizeof(double)``.  You should use a displacement
      unit of 1 otherwise.
 
+
+.. challenge:: Window creation
+
+   Let's look again at the initial example in the type-along. There we published
+   an already allocated buffer as memory window. Use the examples above to
+   figure out how to switch to using |term-MPI_Win_allocate|
+
+   You can download the :download:`scaffold source code
+   <code/rma-win-allocate.c>` and also a :download:`working solution
+   <code/rma-win-allocate-solution.c>`.
 
 
 RMA operations
@@ -268,6 +332,18 @@ RMA operations
    The ``target_rank`` parameter is, as the name suggests, the rank of the
    target process in the communicator.
 
+
+.. challenge:: Using |term-MPI_Put|
+
+   Reorganize the sample code of the previous exercise such that rank 1 *stores*
+   values into rank 0 memory window with |term-MPI_Put|, rather than rank 0
+   *loading* them with |term-MPI_Get|.
+
+   Download the :download:`scaffold source code <code/rma-put.c>` to get started.
+
+   You can download a :download:`working solution <code/rma-put-solution.c>`.
+
+
 .. signature:: |term-MPI_Accumulate|
 
    Store data from the **origin** process to the memory window of the **target**
@@ -294,6 +370,31 @@ RMA operations
    operation is *associative* and *commutative* for the given datatype.  For
    example, ``MPI_SUM`` and ``MPI_PROD`` are *neither* associative *nor*
    commutative for floating point numbers!
+
+
+.. challenge:: Using |term-MPI_Accumulate|
+
+   Download the :download:`scaffold source code <code/rma-accumulate.c>` and
+   complete the function calls to:
+
+   1. Create a window object from an allocated buffer:
+
+      .. code-block::
+
+         int buffer = 42;
+
+   2. Let each process accumulate its rank in the memory window of the process
+      with rank 0. We want to obtain the sum of the accumulating values.
+
+   With 2 processes, you should get the following output to screen:
+
+   .. code-block::
+
+      [MPI process 0] Value in my window_buffer before MPI_Accumulate: 42.
+      [MPI process 1] I accumulate data 1 in MPI process 0 window via MPI_Accumulate.
+      [MPI process 0] Value in my window_buffer after MPI_Accumulate: 43.
+
+   You can download a :download:`working solution <code/rma-accumulate-solution.c>`.
 
 Other routines for RMA operations are:
 

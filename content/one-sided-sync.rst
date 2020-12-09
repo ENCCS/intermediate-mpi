@@ -11,8 +11,8 @@ One-sided communication: synchronization
 
 .. objectives::
 
-   - Active synchronization: |term-MPI_Win_fence|, |term-MPI_Win_post|, |term-MPI_Win_start|, |term-MPI_Win_complete|, |term-MPI_Win_wait|
-   - Passive synchronization: |term-MPI_Win_lock|, |term-MPI_win_unlock|
+   - Learn about active target communication and how to achieve it.
+   - Learn about passive target communication and how to achieve it.
 
 
 .. challenge:: What could go wrong?
@@ -342,32 +342,16 @@ with:
        The window object.
 
 
-.. todo:: FINISH UP THE QUIZ
+.. discussion:: How could synchronization be performed?
 
-.. challenge:: How could synchronization be performed?
-
-   #. .. figure:: img/sync_quiz_q1.svg
-
-      A. Wrong
-      B. Wrong
-      C. Wrong
-      D. |term-MPI_Win_allocate|, |term-MPI_Win_fence|, |term-MPI_Put|, |term-MPI_Win_fence|, |term-MPI_Get|, |term-MPI_Win_fence|
-
-   #. .. figure:: img/sync_quiz_q1.svg
-
-      A. Wrong
-      B. Wrong
-      C. Wrong
-      D. |term-MPI_Win_allocate|, |term-MPI_Win_fence|, |term-MPI_Put|, |term-MPI_Win_fence|, |term-MPI_Get|, |term-MPI_Win_fence|
+   .. figure:: img/sync_quiz_q1.svg
 
 
 .. solution::
 
-   #. Option **A** is correct. Operations on a remote memory window must be
-      encapsulated within an access epoch. In this case, we used the active
-      target synchronization routine |term-MPI_Win_fence|.
-   #.
-
+   A possible solution is to use |term-MPI_Win_fence|. Operations on a remote
+   memory window must be encapsulated within an access epoch. A fence is the
+   most common form of active target communication.
 
 
 See also

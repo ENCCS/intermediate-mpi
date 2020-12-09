@@ -22,7 +22,8 @@ It is like calling up someone: you wait for the other person to pick up to actua
 
    Two-sided communication between two sloths. Both of them are **active**
    participants in the communication: the |term-MPI_Send| has to be matched by
-   an |term-MPI_Recv|.
+   an |term-MPI_Recv|. In this model, we can experience deadlocks and/or
+   degraded computational performance.
 
 However, this is not always the most optimal pattern for transferring data. MPI
 offers routines to perform *remote memory access* (:term:`RMA`), also known as
@@ -31,11 +32,11 @@ as long as it is made available in special *memory windows*.
 
 Proceeding with our telecommunications analogy: one-sided communication
 resembles an email. Your message will sit in your friend's inbox, but you are
-immediately free to do other things after hitting the send button!
+immediately free to do other things after hitting the send button! Your friend
+will read the email at their leisure.
 
 .. discussion::
 
-   - What could be problematic with one-sided communication?
    - What would be the advantages of using one-sided communication?
    - What would be the disadvantages?
 
@@ -97,6 +98,12 @@ In this scenario, process 1 is the origin process: it participates actively in t
 communication by calling the :term:`RMA` routine |term-MPI_Get|.  Process 0 is
 the target process.
 
+.. note::
+
+   - With the term *memory window* or simply *window* we refer to the memory,
+     local to each process, reserved for remote memory accesses. A *window
+     object* is instead the collection of windows of all processes in the
+     communicator and it has type ``MPI_Win``.
 
 .. callout:: Graphical conventions
 
@@ -175,6 +182,14 @@ the target process.
    #. **B** is the correct answer. Different processes can only interact with
       explicit two-sided communication or by first publishing to their remotely
       accessible window.
+
+It is rarely the case that things are as simple as in a figure.  With great
+power, come great responsibilities: operations on windows are non-blocking.
+Whereas non-blocking operations allow the programmer to overlap computation and
+communication, they also pose the burden of **explicit synchronization**.
+One-sided communication has its own styles of synchronization, which we will cover in the episode :ref:`one-sided-sync`. The following figure shows,
+schematically, the concept of *epochs* in RMA and the life cycle of a window
+object.
 
 
 .. figure:: img/E02-RMA_timeline-coarse.svg
