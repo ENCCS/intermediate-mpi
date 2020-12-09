@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     MPI_Init_thread(NULL, NULL, required, &provided);
     /* MPI_xxx(xxx); */
         
-    fprintf(stdout, "Initialization required %d and %d was provided\n", required, provided);
+    printf("Initialization required %d and %d was provided\n", required, provided);
 
     /* Clean up and exit */
     MPI_Finalize();

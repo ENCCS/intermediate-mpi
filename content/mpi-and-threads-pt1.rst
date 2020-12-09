@@ -47,8 +47,8 @@ MPI + threading
 ---------------
   
 The MPI standard has been updated to accommodate the use of threads
-within processes. Using this is optional, and presents numerous
-advantages and disadvantages
+within processes. Using these capabilities is optional, and presents
+numerous advantages and disadvantages
 
 Advantages of MPI + threading
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -95,7 +95,9 @@ them, but this is much less productive in programmer time and made
 more sense when OpenMP was less mature. In most HPC cases, OpenMP is
 implemented using ``pthreads``.
 
-This workshop will use simple OpenMP for illustrative purposes.
+This workshop will use simple OpenMP for illustrative purposes. For
+more information on Openmp check out `these tutorials
+<https://www.openmp.org/resources/tutorials-articles/>`_.
 
 MPI support for threading
 -------------------------
