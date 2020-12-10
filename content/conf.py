@@ -31,6 +31,7 @@ conf_py_path = "/content/"  # with leading and trailing slash
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx.ext.autosectionlabel",
     # githubpages just adds a .nojekyll file
     "sphinx.ext.githubpages",
     "sphinx_lesson",
@@ -38,6 +39,7 @@ extensions = [
     "sphinxcontrib.bibtex",
     "sphinx.ext.todo",
 ]
+autosectionlabel_prefix_document = True
 
 # Settings for myst_nb:
 # https://myst-nb.readthedocs.io/en/latest/use/execute.html#triggering-notebook-execution
