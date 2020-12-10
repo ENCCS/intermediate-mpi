@@ -38,8 +38,8 @@ the regions that are single-threaded.
    Fork-join parallelism is a natural fit for ``MPI_THREAD_FUNNELED``
    where fairly simple code can be improved with thread parallelism.
 
-`for` loops in Fortan/C/C++ can be readily parallelised with `#pragma
-omp parallel`, so applications that already use MPI outside such loops
+``for`` loops in Fortan/C/C++ can be readily parallelised with ``#pragma
+omp parallel``, so applications that already use MPI outside such loops
 can be converted to hybrid parallelism fairly easily.
 
 .. challenge::
