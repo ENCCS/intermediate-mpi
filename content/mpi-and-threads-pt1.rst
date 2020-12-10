@@ -92,10 +92,11 @@ Threading library options
 
 `OpenMP <https://www.openmp.org/>`_ is the open standard for HPC
 threading, and is widely used with many quality implementations. It is
-possible to use raw ```pthreads`` <https://en.wikipedia.org/wiki/POSIX_Threads>`_, and you will find MPI examples using
-them, but this is much less productive in programmer time and made
-more sense when OpenMP was less mature. In most HPC cases, OpenMP is
-implemented using ``pthreads``.
+possible to use raw ```pthreads``
+<https://en.wikipedia.org/wiki/POSIX_Threads>`_, and you will find MPI
+examples using them, but this is much less productive in programmer
+time. It made more sense when OpenMP was less mature. In most HPC
+cases, OpenMP is implemented using ``pthreads``.
 
 This workshop will use simple OpenMP for illustrative purposes. For
 more information on OpenMP check out `these tutorials

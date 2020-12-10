@@ -8,7 +8,7 @@ const char* mpi_thread_strings[4] = { "MPI_THEAD_SINGLE",
                                        "MPI_THREAD_SERIALIZED",
                                        "MPI_THREAD_MULTIPLE" };
 
-void report_whether_thread_is_master(int thread_id, int num_threads, int rank)
+void report_whether_thread_is_master(const char *prefix, int thread_id, int num_threads, int rank)
 {
     int is_master;
     /* ==== CHALLENGE ====
@@ -18,15 +18,21 @@ void report_whether_thread_is_master(int thread_id, int num_threads, int rank)
      * the calling thread is the master thread.
      */
     MPI_Is_thread_main(&is_master);
-    printf("Is this thread with id %d of %d the main thread on rank %d? %s\n",
-           thread_id, num_threads, rank, is_master ? "yes" : "no");
+    printf("%s: The thread with id %d of %d is%s the main thread of rank %d\n",
+           prefix, thread_id, num_threads, is_master ? "" : " not", rank);
 }
 
 int main(int argc, char **argv)
 {
     /* Initialize the MPI environment and report */
     int required, provided;
-    required = MPI_THREAD_FUNNELED;
+    /* ==== CHALLENGE ====
+     *
+     * Uncomment and fix the MPI call to make this code work!
+     * Call the function in a way that asks the MPI library to
+     * start in MPI_THREAD_MULTIPLE mode.
+     */
+    required = MPI_THREAD_MULTIPLE;
     MPI_Init_thread(NULL, NULL, required, &provided);
     MPI_Comm comm = MPI_COMM_WORLD;
     int rank;
@@ -60,16 +66,16 @@ int main(int argc, char **argv)
     /* Also valuable in such cases is information on whether this is
      * the main thread, so that MPI can be used in MPI_THREAD_FUNNELED
      * case. */
-    report_whether_thread_is_master(omp_get_thread_num(), omp_get_num_threads(), rank);
+    report_whether_thread_is_master("Before #pragma omp", omp_get_thread_num(), omp_get_num_threads(), rank);
 
 #pragma omp parallel
     {
         /* Let's see that the other threads are *not* master threads */
-        report_whether_thread_is_master(omp_get_thread_num(), omp_get_num_threads(), rank);
+        report_whether_thread_is_master("After #pragma omp ", omp_get_thread_num(), omp_get_num_threads(), rank);
         /* Only the master thread enters this block */
         #pragma omp master
         {
-            report_whether_thread_is_master(omp_get_thread_num(), omp_get_num_threads(), rank);
+            report_whether_thread_is_master("In master block   ", omp_get_thread_num(), omp_get_num_threads(), rank);
         }
     }
 
