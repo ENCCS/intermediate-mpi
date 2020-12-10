@@ -124,18 +124,23 @@ object. It may or may not have sent the message, or buffered it. The
 caller is responsible for not changing the buffer until after waiting
 upon the resulting request object.
 
-Call signature:
+.. signature:: |term-MPI_Isend|
 
-.. code-block:: c
+   .. code-block:: c
 
-    int MPI_Isend(const void* buf, int count, MPI_Datatype datatype,
-                  int dest, int tag, MPI_Comm comm, MPI_Request *request)
+       int MPI_Isend(const void* buf,
+                     int count,
+                     MPI_Datatype datatype,
+                     int dest,
+                     int tag,
+                     MPI_Comm comm,
+                     MPI_Request *request)
 
-.. note::
+.. parameters::
 
-    ``buf``, ``count`` and ``datatype`` describe the buffer to be sent
-    to ``dest`` rank of ``comm`` using tag ``tag``. The ``request`` object
-    that is returned must be used to wait on the communication later.
+   ``buf``, ``count`` and ``datatype`` describe the buffer to be sent
+   to ``dest`` rank of ``comm`` using tag ``tag``. The ``request`` object
+   that is returned must be used to wait on the communication later.
 
 Other calls exist for other sending modes familiar to you from
 point-to-point messages, including buffered, synchronous, and
@@ -168,20 +173,25 @@ request in an ``MPI_Request`` object. The caller is responsible for
 not changing the buffer until after waiting upon the resulting request
 object.
 
-Call signature:
+.. signature:: |term-MPI_Irecv|
 
-.. code-block:: c
+   .. code-block:: c
 
-    int MPI_Irecv(void* buf, int count, MPI_Datatype datatype,
-                  int source, int tag, MPI_Comm comm, MPI_Request *request)
+      int MPI_Irecv(void* buf,
+                    int count,
+                    MPI_Datatype datatype,
+                    int source,
+                    int tag,
+                    MPI_Comm comm,
+                    MPI_Request *request)
 
 
-.. note::
+.. parameters::
 
-    ``buf``, ``count`` and ``datatype`` describe the buffer to be
-    received from ``source`` rank of ``comm`` using tag ``tag``. The
-    ``request`` object that is returned must be used to wait on the
-    communication later.
+   ``buf``, ``count`` and ``datatype`` describe the buffer to be
+   received from ``source`` rank of ``comm`` using tag ``tag``. The
+   ``request`` object that is returned must be used to wait on the
+   communication later.
 
 An |term-MPI_Irecv| can be used to match any kind of send, regardless of
 sending mode or blocking status.
@@ -196,18 +206,19 @@ has been received). For a receive, the buffer is now valid for use,
 however the send has not necessarily completed (though obviously has
 been initiated).
 
-Call signature:
+.. signature:: |term-MPI_Wait|
 
-.. code-block:: c
+   .. code-block:: c
 
-    int MPI_Wait(MPI_Request *request, MPI_Status *status)
+      int MPI_Wait(MPI_Request *request,
+                   MPI_Status *status)
 
 
-.. note::
+.. parameters::
 
-    ``request`` describes the operation to be waited upon. ``status``
-    returns the status of that operation. If the status is not needed,
-    pass ``MPI_STATUS_IGNORE``.
+   ``request`` describes the operation to be waited upon. ``status``
+   returns the status of that operation. If the status is not needed,
+   pass ``MPI_STATUS_IGNORE``.
 
 It can be efficient to wait on any one, some, or all of a set of
 operations before returning. MPI provides |term-MPI_Waitany|,
@@ -222,20 +233,20 @@ Testing for non-blocking call completion
 An |term-MPI_Test| call returns immediately a flag value indicating
 whether a corresponding |term-MPI_Wait| would return immediately.
 
-Call signature:
+.. signature:: |term-MPI_Test|
 
-.. code-block:: c
+   .. code-block:: c
 
-    int MPI_Test(MPI_Request *request, int *flag, MPI_Status *status)
+      int MPI_Test(MPI_Request *request, int *flag, MPI_Status *status)
 
 
-.. note::
+.. parameters::
 
-    ``request`` describes the operation to be waited upon. ``status``
-    returns the status of that operation. If the status is not needed,
-    pass ``MPI_STATUS_IGNORE``. The value returned in ``flag`` indicates
-    whether the operation is complete (ie a corresponding wait will
-    return immediately).
+   ``request`` describes the operation to be waited upon. ``status``
+   returns the status of that operation. If the status is not needed,
+   pass ``MPI_STATUS_IGNORE``. The value returned in ``flag`` indicates
+   whether the operation is complete (ie a corresponding wait will
+   return immediately).
 
 It can be efficient to test any one, some, or all of a set of
 operations before returning. MPI provides |term-MPI_Testany|,

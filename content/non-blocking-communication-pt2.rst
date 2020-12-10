@@ -28,7 +28,12 @@ synchronization. Use cases are rare, but include highly unstructured
 work described by variable numbers of messages sent between ranks, or
 very latency-sensitive applications. Once all messages have been sent,
 
+.. signature:: |term-MPI_Ibarrier|
 
+   .. code-block:: c
+
+      int MPI_Ibarrier(MPI_Comm comm,
+                       MPI_Request *request)
 
 
 It is necessary to use blocking barrier only when communicating
@@ -38,6 +43,20 @@ Non-blocking reduce
 -------------------
 
 TODO graphic and description of |term-MPI_Ireduce|
+
+.. signature:: |term-MPI_Ireduce|
+
+   .. code-block:: c
+
+      int MPI_Ireduce(const void* sendbuf,
+                      void* recvbuf,
+                      int count,
+                      MPI_Datatype datatype,
+                      MPI_Op op,
+                      int root,
+                      MPI_Comm comm,
+                      MPI_Request *request)
+
 
 
 Code-along exercise: non-blocking ireduce during stencil workflow
