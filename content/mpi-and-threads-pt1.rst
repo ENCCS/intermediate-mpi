@@ -53,6 +53,14 @@ Code that assumes one MPI process to a core has trouble scaling to
    memory. However, realizing those benefits can lead to further work
    to reduce contention and eliminate race conditions.
 
+Imagine if a halo-exchange application like that from :ref:`an earlier
+lesson <non-blocking-communication-pt1:Stencil application example>`
+was implemented in these two ways. The pure-MPI solution has a much
+larger volume of data in the border and halo regions. That means more
+data must be sent in total, as well as more messages between pairs of
+MPI ranks. In the hybrid case, both are reduced. However, the hybrid
+solution can have other challenges, including code complexity, usage
+complexity, synchronization, and avoiding problematic sharing.
 
 MPI + threading
 ---------------
@@ -97,6 +105,26 @@ Disadvantages of MPI + threading
 
 * usage gets more complicated, as both ranks and threads have to be
   shepherded onto cores for maximum performance
+
+.. challenge:: Quiz: Is an application that already scales well with
+   MPI and which uses large amounts of read-only data a good candidate
+   for MPI with threading?
+
+   1. Yes, threads can share the memory
+
+   2. No, threads will have problems from cache contention
+
+   3. No, RMA would definitely be better
+
+   4. Can't tell on the information given
+
+.. solution::
+
+   4. Can't tell. Any of the three statements could be true. But one
+      often needs to understand the whole story. If reading the data
+      is less of a problem than writing the results subject to cache
+      contention then maybe hybrid would be better, etc.
+
 
 Threading library options
 -------------------------

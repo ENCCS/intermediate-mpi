@@ -13,6 +13,14 @@ MPI and threads in practice
 Using fork-join parallelism
 ---------------------------
 
+In fork-join parallelism, multiple threads are launched to collaborate
+on work. Typically regions of parallelism alternate with regions where
+only one thread works. This enables parallelism to be introduced
+gradually, and only where profiling shows that it would be most
+beneficial. In typical implementations, threads are kept idle between
+parallel regions; this is more efficient than creating and destroying
+them many times.
+
 .. figure:: img/fork-join-parallelism.svg
    :align: center
 
@@ -21,14 +29,8 @@ Using fork-join parallelism
    which can be costly. Further, the speed-up depends critically on
    the time spent in the single-threaded regions!
 
-Imagine if a halo-exchange application like that from :ref:`an earlier
-lesson <non-blocking-communication-pt1:Stencil application example>`
-was implemented in these two ways. The pure-MPI solution has a much
-larger volume of data in the border and halo regions. That means more
-data must be sent in total, as well as more messages between pairs of
-MPI ranks. In the hybrid case, both are reduced. However, the hybrid
-solution can have other challenges, including code complexity, usage
-complexity, synchronization, and avoiding problematic sharing.
+The simplest hybrid approach is often to do the MPI communication in
+the regions that are single-threaded.
 
 .. figure:: img/fork-join-with-mpi.svg
    :align: center
@@ -36,9 +38,17 @@ complexity, synchronization, and avoiding problematic sharing.
    Fork-join parallelism is a natural fit for ``MPI_THREAD_FUNNELED``
    where fairly simple code can be improved with thread parallelism.
 
-One hybrid approach that is quite simple to code is fork-join. `for`
-loops in Fortan/C/C++ can be readily parallelised with `#pragma omp
-parallel`
+`for` loops in Fortan/C/C++ can be readily parallelised with `#pragma
+omp parallel`, so applications that already use MPI outside such loops
+can be converted to hybrid parallelism fairly easily.
+
+.. challenge::
+
+   TODO Make MPI work within a fork-join form of the stencil application
+
+.. solution::
+
+   TODO
 
 Using OpenMP tasking with MPI
 -----------------------------
@@ -53,10 +63,48 @@ Using OpenMP tasking with MPI
    time step, but how many threads to assign to each part might be
    able to be tuned over the duration of the program.
 
-Topic introduction here
+.. challenge::
 
-You really want to browse this page alongside the source of it, to see
-how this is implemented.  See the links at the to right of the page.
+   TODO Make MPI work within a tasking form in the stencil application
+
+.. solution::
+
+   TODO
+
+Tips for implementing hybrid MPI+OpenMP
+---------------------------------------
+
+* Demonstrate that you need more scaling to solve the problem.
+  
+* Know why you're adding hybrid parallelism... to access more memory,
+  improve performance, reduce communication or a combination?
+
+* Estimate how much improvement is available, based on existing performance
+  measurements, e.g. profiling to find bottlenecks. If you don't know how,
+  learn. Access to quality tools at HPC clusters are worth it!
+
+* Are your external libraries using threading? How should you manage them?
+
+* You have to introduce effective OpenMP parallelism to 90% of the
+  execution time to get a good result.
+
+* Start with master-only or funneled style. Migrate later if
+  measurements suggest it.
+
+* Initialize data structures inside OpenMP regions, to take advantage of
+  "first-touch" policies needed with NUMA nodes.
+
+* Make use of OpenMP’s conditional compilation features to ensure that
+  the application can still be built without OpenMP.
+
+* If the application makes use of derived datatypes to pack/unpack
+  noncontiguous data, consider replacing these with user-level
+  pack/unpack routines which can be parallelised with OpenMP.
+
+* Learn about and use the OpenMP environment variables well
+
+* Learn how to use the MPI launcher to place the ranks and their
+  threads well. This is different for different applications.
 
 
 See also
