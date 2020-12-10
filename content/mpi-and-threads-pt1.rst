@@ -44,6 +44,16 @@ Code that assumes one MPI process to a core has trouble scaling to
 * replicated data forces cores to share the memory bandwith, thus
   defeating the advantages of shared memory caches
 
+.. figure:: img/pure-vs-hybrid.svg
+   :align: center
+
+   Comparing pure MPI vs hybrid MPI-threading solutions. MPI ranks are
+   shown in red boxes. Total memory usage and message cost tends to be
+   lower with hybrid, because threads can share the same
+   memory. However, realizing those benefits can lead to further work
+   to reduce contention and eliminate race conditions.
+
+
 MPI + threading
 ---------------
   
@@ -65,8 +75,6 @@ Advantages of MPI + threading
 * reduced need to dedicate a rank solely to communication coordination
   in code using a manager-worker paradigm
 
-* TODO
-
 Disadvantages of MPI + threading
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -85,15 +93,12 @@ Disadvantages of MPI + threading
 
 * needs higher quality MPI implementations
 
-* TODO
-
 Threading library options
 -------------------------
 
 `OpenMP <https://www.openmp.org/>`_ is the open standard for HPC
 threading, and is widely used with many quality implementations. It is
-possible to use raw ```pthreads``
-<https://en.wikipedia.org/wiki/POSIX_Threads>`_, and you will find MPI
+possible to use `raw pthreads <https://en.wikipedia.org/wiki/POSIX_Threads>`_, and you will find MPI
 examples using them, but this is much less productive in programmer
 time. It made more sense when OpenMP was less mature. In most HPC
 cases, OpenMP is implemented using ``pthreads``.
@@ -259,26 +264,50 @@ Code-along exercise: run MPI with threading support
 
 .. solution::
 
-   * One correct call is::
+   * One series of correct calls is::
 
-         MPI_Bcast(values_to_broadcast, 2, MPI_INT, rank_of_root, comm);
+         MPI_Is_thread_main(&is_master);
+         /* ... */
+         required = MPI_THREAD_MULTIPLE;
+         MPI_Init_thread(NULL, NULL, required, &provided);
+         /* ... */
+         MPI_Query_thread(&provided_query);
+         /* ... */
+         
 
    * There are other calls that work correctly. Is yours better or worse
      than this one? Why?
    * Download a :download:`working solution <code/threading-query-solution.c>`
 
 
+Which threading level to use?
+-----------------------------
+
+If you're not using threading, use ``MPI_THREAD_SINGLE``.
+
+If you're using fork-join parallelism, e.g. in the style of OpenMP,
+use ``MPI_THREAD_FUNNELED``.
+
+``MPI_THREAD_SERIALIZED`` can be optimal, but forces the programmer to
+pay a lot more attention to manually ensuring that the promise to the
+MPI runtime is honored.
+
+If you're using more complex forms of threading, it's simplest to use
+``MPI_THREAD_MULTIPLE``. Be aware that this forces the MPI runtime to
+be much more defensive about its internal data structures, and that
+will cost you performance. That's not going to be a relevant problem
+until you reach your scaling limits. Get your code working correctly
+first, then see if performance is not as good as you expect, and then
+analyse if you can use a less costly MPI threading level.
+
+
 See also
 --------
 
-
-* TODO
-* TODO
-
+* https://wgropp.cs.illinois.edu/courses/cs598-s15/lectures/lecture36.pdf
 
 
 .. keypoints::
 
-   - TODO
-   - point 2
-   - ...
+   - MPI offers four levels of threading support, use the one that fits
+

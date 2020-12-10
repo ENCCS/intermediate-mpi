@@ -19,8 +19,7 @@ how this is implemented.  See the links at the to right of the page.
 See also
 --------
 
-* Chapter 6 of the **Using Advanced MPI** by William Gropp *et al.* :cite:`Gropp2014-dz`
-
+* `Hybrid MPI-OpenMP best practices <http://www.intertwine-project.eu/sites/default/files/images/INTERTWinE_Best_Practice_Guide_MPI%2BOpenMP_1.2.pdf>`_
 
 .. keypoints::
 
