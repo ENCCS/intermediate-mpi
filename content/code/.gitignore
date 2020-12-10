@@ -14,4 +14,6 @@ non-blocking-communication-ireduce
 non-blocking-communication-ireduce-solution
 threading-query
 threading-query-solution
+threading-funneled
+threading-funneled-solution
 *~
