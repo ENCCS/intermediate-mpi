@@ -151,7 +151,7 @@ applications that wish to use threading should use
 
    .. code-block:: c
    
-      int MPI_Init_thread(int *argc, char ***argv, int required, int *provided)
+      int MPI_Init_thread(int *argc, char **argv, int required, int *provided)
 
 .. parameters::
 
