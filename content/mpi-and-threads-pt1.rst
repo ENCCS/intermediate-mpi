@@ -93,6 +93,11 @@ Disadvantages of MPI + threading
 
 * needs higher quality MPI implementations
 
+* it can be awkward to use libraries that also use threading internally
+
+* usage gets more complicated, as both ranks and threads have to be
+  shepherded onto cores for maximum performance
+
 Threading library options
 -------------------------
 

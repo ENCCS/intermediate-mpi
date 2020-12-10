@@ -10,6 +10,15 @@ MPI and threads in practice
    - TODO
 
 
+.. figure:: img/fork-join-parallelism.svg
+   :align: center
+
+   OpenMP is particularly suited for fork-join parallelism. Beware
+   that each parallel region requires synchronization between threads
+   and the speed-up depends critically on the time spent in the
+   single-threaded regions!
+
+
 Topic introduction here
 
 You really want to browse this page alongside the source of it, to see
