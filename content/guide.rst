@@ -88,8 +88,12 @@ was concluded with exercises and a wrap-up.
      :delim: ;
 
       9:00 -  9:10 ; What did we cover yesterday?
-      9:10 - 10:30 ; **Combining MPI and multithreading parallelization: why and how**
-     10:30 - 10:45 ; Break
-     10:45 - 11:25 ; **Pitfalls in hybrid MPI+threads programming**
-     11:25 - 12:20 ; Exercises
+      9:10 -  9:40 ; **Why use MPI threading?**
+      9:40 -  9:50 ; Break
+      9:50 - 10:50 ; **How does MPI support threading?**
+     10:50 - 11:00 ; Break
+     11:00 - 11:30 ; **Using fork-join parallelism with MPI**
+     11:30 - 11:40 ; Break
+     11:40 - 12:10 ; **Using tasking with MPI**
+     12:10 - 12:20 ; **Tips for hybrid MPI+OpenMP**
      12:20 - 12:30 ; Wrap-up
