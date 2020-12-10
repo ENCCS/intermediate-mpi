@@ -18,7 +18,6 @@ strength is that the programmer must explicitly move data to where it
 is needed. That can make code easier to understand, albeit more work
 Since both authors *and* maintainers spend more time **reading**
 existing code than **writing** new code, that is often desirable.
-maintainers* read it, that is often desirable.
 
 However, such approaches tend to perform poorly at scale. Computer
 hardware has not grown much faster in the last 20 years, but instead
@@ -343,4 +342,3 @@ See also
 .. keypoints::
 
    - MPI offers four levels of threading support, use the one that fits
-
