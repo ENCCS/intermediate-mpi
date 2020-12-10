@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2020-12-10T14:26:28.696Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" etag="TvDO4s2OM_-2y6-ZDRFg" version="13.11.0" type="github">
+<mxfile host="app.diagrams.net" modified="2020-12-10T14:35:15.581Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" etag="_B2kfzUQyQbIDl7kdf1O" version="13.11.0" type="github">
   <diagram id="sxhNIz98lRBmxHHVhqCK" name="Page-1">
-    <mxGraphModel dx="1257" dy="909" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1257" dy="848" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -28,13 +28,13 @@
         <mxCell id="btSMa7mVRD-in3--dkbl-4" value="3" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="480" y="160" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="btSMa7mVRD-in3--dkbl-6" value="CPU ID" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="btSMa7mVRD-in3--dkbl-6" value="CPU ID" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="20" y="190" width="80" height="20" as="geometry" />
         </mxCell>
         <mxCell id="btSMa7mVRD-in3--dkbl-7" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="120" y="280" width="80" height="240" as="geometry" />
         </mxCell>
-        <mxCell id="btSMa7mVRD-in3--dkbl-8" value="Common&lt;br&gt;read-only&lt;br&gt;data" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="btSMa7mVRD-in3--dkbl-8" value="Common&lt;br&gt;read-only&lt;br&gt;data" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="20" y="390" width="80" height="20" as="geometry" />
         </mxCell>
         <mxCell id="btSMa7mVRD-in3--dkbl-9" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
@@ -58,13 +58,13 @@
         <mxCell id="btSMa7mVRD-in3--dkbl-15" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="480" y="560" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="btSMa7mVRD-in3--dkbl-16" value="Local working data" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="btSMa7mVRD-in3--dkbl-16" value="Local working data" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="20" y="590" width="80" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="btSMa7mVRD-in3--dkbl-18" value="MPI Rank ID" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="btSMa7mVRD-in3--dkbl-18" value="MPI Rank ID" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="20" y="70" width="80" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="btSMa7mVRD-in3--dkbl-19" value="Thread ID" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="btSMa7mVRD-in3--dkbl-19" value="Thread ID" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="20" y="110" width="80" height="20" as="geometry" />
         </mxCell>
         <mxCell id="btSMa7mVRD-in3--dkbl-20" value="0" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
@@ -91,7 +91,7 @@
         <mxCell id="btSMa7mVRD-in3--dkbl-30" value="0" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="500" y="110" width="40" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="btSMa7mVRD-in3--dkbl-31" value="Pure MPI solution - one core per rank" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="btSMa7mVRD-in3--dkbl-31" value="Pure MPI solution - one core per rank" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="180" y="10" width="320" height="20" as="geometry" />
         </mxCell>
         <mxCell id="btSMa7mVRD-in3--dkbl-35" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
@@ -148,7 +148,7 @@
         <mxCell id="btSMa7mVRD-in3--dkbl-57" value="&lt;b&gt;1&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="1060" y="110" width="40" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="btSMa7mVRD-in3--dkbl-58" value="Hybrid MPI-OpenMP solution - two cores per rank" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="btSMa7mVRD-in3--dkbl-58" value="Hybrid MPI-OpenMP solution - two cores per rank" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="740" y="10" width="320" height="20" as="geometry" />
         </mxCell>
       </root>
