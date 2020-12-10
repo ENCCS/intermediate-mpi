@@ -1,184 +1,17 @@
-.. _one-sided-1:
+.. _one-sided-routines:
 
 
-One-sided communication: basic concepts
-=======================================
+One-sided communications: functions
+===================================
 
 .. questions::
 
-   - How can we optimize communication?
+   - What functions should you use for RMA?
 
 .. objectives::
 
-   - Learn about functions for remote-memory access (RMA)
-   - RMA: |term-MPI_Get|, |term-MPI_Put|, |term-MPI_Accumulate|
-   - Windows: |term-MPI_Win_create|, |term-MPI_Win_allocate|, |term-MPI_Win_allocate_shared|, |term-MPI_Win_create_dynamic|
-
-
-You are already familiar with the |term-MPI_Send|/|term-MPI_Recv| communication
-pattern in MPI. This pattern is also called **two-sided communication**: the two
-processes implicitly *synchronize* with each other.
-It is like calling up someone: you wait for the other person to pick up to actually deliver your message.
-
-.. figure:: img/E02-send-recv_step2.svg
-   :align: center
-
-   Two-sided communication between two sloths. Both of them are **active**
-   participants in the communication: the |term-MPI_Send| has to be matched by
-   an |term-MPI_Recv|.
-
-However, this is not always the most optimal pattern for transferring data. MPI
-offers routines to perform *remote memory access* (:term:`RMA`), also known as
-*one-sided communication*, where processes can access data on other processes,
-as long as it is made available in special *memory windows*.
-
-Proceeding with our telecommunications analogy: one-sided communication
-resembles an email. Your message will sit in your friend's inbox, but you are
-immediately free to do other things after hitting the send button!
-
-.. discussion::
-
-   - What could be problematic with one-sided communication?
-   - What would be the advantages of using one-sided communication?
-   - What would be the disadvantages?
-
-
-At a glance: how does it work?
-------------------------------
-
-Let us look at the following figure, what routines are available in MPI for
-process 0 communicate a variable in its local memory to process 1?
-
-.. figure:: img/E02-steve-alice_step0.svg
-   :align: center
-
-   Steve, the sloth on the left, would like to send Alice, the sloth on the
-   right, the data in its ``Y`` variable. This data is stored in Steve's local
-   memory, depicted as a yellow box.
-
-It is foundational to MPI that every interaction between processes be
-*explicit*, so a simple assignment will not do.
-First, we must make a portion of memory on the *target process*, process 1
-in this case, visible for process 0 to manipulate.
-We call this a **window** and we will represent it as a blue diamond.
-
-.. figure:: img/E02-steve-alice_step1.svg
-   :align: center
-
-   We call collective routines, provided by MPI, to open a **memory window** on
-   each process in the communicator. Both the target and origin processes will
-   expose a portion of their memory through their respective windows.
-
-Once a *window* into the memory of process 1 is open, process 0 can access it and manipulate
-it. Process 0 can **put** (store) data in its local memory into the memory window of process
-1, using |term-MPI_Put|:
-
-.. figure:: img/E02-steve-alice_step2.svg
-   :align: center
-
-   The **origin process** (left sloth) puts data in the memory window of the
-   **target process** (right sloth).
-   The |term-MPI_Put| routine is represented with a red line whose arrowhead touches the
-   origin process of the call.
-
-In this example, process 0 is the origin process: it participates actively in
-the communication by calling the :term:`RMA` routine |term-MPI_Put|.  Process 1
-in the target process.
-
-Conversely, process 0 might have populated its memory window with some data: any
-other process in the communicator can now **get** (load) this data, using |term-MPI_Get|:
-
-.. figure:: img/E02-steve-alice_step3.svg
-   :align: center
-
-   The **origin process** (right sloth) gets data in the memory window of the
-   **target process** (left sloth).
-   The |term-MPI_Get| routine is represented with a blue line whose arrowhead touches the
-   origin process.
-
-In this scenario, process 1 is the origin process: it participates actively in the
-communication by calling the :term:`RMA` routine |term-MPI_Get|.  Process 0 is
-the target process.
-
-
-.. callout:: Graphical conventions
-
-   We have introduced these graphical conventions:
-
-   - A memory window is a blue diamond.
-   - A call to |term-MPI_Get| is a :blue:`blue` line whose arrowhead touches the origin
-     process.
-   - A call to |term-MPI_Put| is a :red:`red` line whose arrowhead touches the origin
-     process.
-   - For both routines, the direction of the arrowhead shows from which memory
-     window the data moves.
-
-
-.. challenge:: What kind of operations are being carried out?
-
-   #. .. figure:: img/E02-mpi_put.svg
-
-      A. Process 1 calls |term-MPI_Put| with process 0 as target.
-      B. Process 1 calls |term-MPI_Send| with process 0 as receiver.
-      C. Process 0 calls |term-MPI_Get| with process 1 as target.
-      D. Process 1 calls |term-MPI_Get| with  process 0 as target.
-
-   #. .. figure:: img/E02-mpi_send_mpi_recv.svg
-
-      A. Process 0 calls |term-MPI_Send| with process 1 as receiver. Process 1 matches the call with |term-MPI_Get|.
-      B. Process 0 calls |term-MPI_Put|. Process 1 retrieves the data with |term-MPI_Recv|.
-      C. Process 0 calls |term-MPI_Send| matched with a call to |term-MPI_Recv| by process 1.
-      D. None of the above.
-
-   #. .. figure:: img/E02-mpi_get.svg
-
-      A. Process 1 calls |term-MPI_Put| with process 0 as target.
-      B. Process 1 calls |term-MPI_Recv| with process 0 as sender.
-      C. Process 0 calls |term-MPI_Get| with process 1 as target.
-      D. Process 1 calls |term-MPI_Get| with  process 0 as target.
-
-   #. .. figure:: img/E02-local_load_store.svg
-
-      A. Process 1 calls |term-MPI_Put| with process 0 as target.
-      B. Process 0 loads a variable from its window to its local memory.
-      C. Process 0 calls |term-MPI_Get| with process 1 as target.
-      D. Process 0 stores a variable from its local memory to its window.
-
-   #. .. figure:: img/E02-win_mpi_send_mpi_recv.svg
-
-      A. Process 0 calls |term-MPI_Send| with process 1 as receiver. Process 1 matches the call with |term-MPI_Get|.
-      B. Process 1 calls |term-MPI_Get| with process 0 as target.
-      C. None of the options.
-      D. Process 0 calls |term-MPI_Send| matched with a call to |term-MPI_Recv| by process 1.
-
-   #. .. figure:: img/E02-invalid.svg
-
-      A. Process 0 calls |term-MPI_Send| matched with a call to |term-MPI_Recv| by process 1.
-      B. This operation is not valid in MPI.
-      C. Process 1 calls |term-MPI_Get| with process 0 as target.
-      D. Process 0 calls |term-MPI_Put| with process 1 as target.
-
-
-.. solution::
-
-   #. **A** is the correct answer. Process 1 initiates the one-sided memory access,
-      in order to *put* (*store*) the contents of its local memory to the remote memory
-      window opened on process 0.
-   #. **C** is the correct answer. This is the standard, blocking two-sided
-      communication pattern in MPI.
-   #. **D** is the correct answer. Process 1 initiates the one-sided memory
-      access in order to *get* (*load*) the contents of the remote memory window on
-      process 0 to its local memory.
-   #. Both **B** and **D** are valid answers. The figure depicts a memory
-      operation *within* process 0, which does not involve communication with
-      any other process and thus pertains the programming language and not MPI.
-   #. **D** is the correct answer. This is the standard, blocking two-sided
-      communication pattern in MPI: it does not matter whether the message stems
-      from memory local to process 0 or its remotely accessible window.
-   #. **B** is the correct answer. Different processes can only interact with
-      explicit two-sided communication or by first publishing to their remotely
-      accessible window.
-
+   - Learn how to create memory windows.
+   - Learn how to access remote memory windows.
 
 RMA anatomy
 -----------
@@ -236,7 +69,7 @@ Synchronization
   - |term-MPI_Win_lock|, |term-MPI_Win_unlock| which enables synchronization in
     the **passive target** paradigm.
 
-  We will discuss synchronization further in the next episode :ref:`one-sided-2`.
+  We will discuss synchronization further in the next episode :ref:`one-sided-sync`.
 
 
 .. figure:: img/E02-RMA_timeline-coarse.svg
@@ -253,14 +86,75 @@ Synchronization
    The events in between synchronization calls are said to happen in *epochs*.
 
 
-.. instructor-note:: Type-along
+.. typealong:: RMA in action
 
-   Type along showing two processes talking with RMA.
+   In this example, we will work with two processes:
+
+   - Rank 1, will allocate a buffer and expose it as a window.
+   - Rank 0, will get the values from this buffer.
+
+   First of all, we create the buffer on all ranks. However, only rank 1 will
+   fill it with some values. We will see that window creation is *collective*
+   call for all ranks in the given communicator.
+
+   .. code-block:: c
+
+      int window_buffer[4] = {0};
+      if (rank == 1) {
+          window_buffer[0] = 42;
+          window_buffer[1] = 88;
+          window_buffer[2] = 12;
+          window_buffer[3] = 3;
+      }
+      MPI_Win win;
+      MPI_Win_create(&window_buffer, (MPI_Aint)4 * sizeof(int), sizeof(int),
+                     MPI_INFO_NULL, comm, &win);
+
+   Every rank has now a window, but only the window on rank 1 has values
+   different from 0. Before doing anything on the window, we need to start an
+   *access epoch*:
+
+   .. code-block:: c
+
+      MPI_Win_fence(0, win);
+
+   Process 0 can now load the values into its local memory:
+
+   .. code-block:: c
+
+      int getbuf[4];
+      if (rank == 0) {
+        // Fetch the value from the MPI process 1 window
+        MPI_Get(&getbuf, 4, MPI_INT, 1, 0, 4, MPI_INT, win);
+      }
+
+   We synchronize again once we are done with RMA operations: this access epoch
+   is closed. This is needed even if subsequent accesses are local!
+
+   .. code-block:: c
+
+      MPI_Win_fence(0, win);
+
+   Remember to free the window object!
+
+   .. code-block:: c
+
+      MPI_Win_free(&win);
+
+   Download the full :download:`working source code <code/rma-vs-non-blocking-2.c>`.
+
 
 .. discussion::
 
-   - How could this be achieved with two-sided communication? We will revisit
-     this example when talking about non-blocking communication.
+   - Are there similarities between one-sided and non-blocking communication? In
+     which contexts would you prefer one over the other?
+
+
+.. challenge:: Non-blocking vs RMA
+
+   Can you re-express the code shown in the type-along with |term-MPI_Isend|/|term-MPI_Recv|?
+   You can download the :download:`scaffold source code <code/rma-vs-non-blocking-1.c>` and also a :download:`working solution <code/rma-vs-non-blocking-1-solution.c>`.
+
 
 Window creation
 ---------------
@@ -281,12 +175,12 @@ the communicator will reserve the specified memory for remote memory accesses.
                            void *baseptr,
                            MPI_Win *win)
 
-   We can expose an array of 10 ``double``-s for RMA with:
+We can expose an array of 10 ``double``-s for RMA with:
 
-   .. literalinclude:: code/snippets/allocate.c
-      :language: c
-      :lines: 6-15
-      :dedent: 2
+.. literalinclude:: code/snippets/allocate.c
+   :language: c
+   :lines: 6-15
+   :dedent: 2
 
 .. parameters::
 
@@ -296,7 +190,7 @@ the communicator will reserve the specified memory for remote memory accesses.
        Displacement units. If ``disp_unit = 1``, then displacements are computed
        in bytes. The use of displacement units can help with code readability
        and is essential for correctness on heterogeneous systems, where the
-       sizes of the basis types might differ between processes.  See also
+       sizes of the basic types might differ between processes.  See also
        :ref:`derived-datatypes`.
    ``info``
        An info object, which can be used to provide optimization hints to the
@@ -324,15 +218,15 @@ the communicator will reserve the specified memory for remote memory accesses.
                          MPI_Comm comm,
                          MPI_Win *win)
 
-   What if the memory is not allocated? We advise to use |term-MPI_Alloc_mem|:
+What if the memory is not allocated? We advise to use |term-MPI_Alloc_mem|:
 
-   .. literalinclude:: code/snippets/alloc_mem+win_create.c
-      :language: c
-      :lines: 6-21
-      :dedent: 2
+.. literalinclude:: code/snippets/alloc_mem+win_create.c
+   :language: c
+   :lines: 6-21
+   :dedent: 2
 
-   You must explicitly call |term-MPI_Free_mem| to deallocate memory obtained
-   with |term-MPI_Alloc_mem|.
+You must explicitly call |term-MPI_Free_mem| to deallocate memory obtained
+with |term-MPI_Alloc_mem|.
 
 .. parameters::
 
@@ -344,7 +238,7 @@ the communicator will reserve the specified memory for remote memory accesses.
        Displacement units. If ``disp_unit = 1``, then displacements are computed
        in bytes. The use of displacement units can help with code readability
        and is essential for correctness on heterogeneous systems, where the
-       sizes of the basis types might differ between processes.  See also
+       sizes of the basic types might differ between processes.  See also
        :ref:`derived-datatypes`.
    ``info``
        An info object, which can be used to provide optimization hints to the
@@ -356,16 +250,22 @@ the communicator will reserve the specified memory for remote memory accesses.
 
 .. note::
 
-   - With the term *memory window* or simply *window* we refer to the memory,
-     local to each process, reserved for remote memory accesses. A *window
-     object* is instead the collection of windows of all processes in the
-     communicator and it has type ``MPI_Win``.
    - The memory window is usually a single array: the size of the window object
      then coincides with the size of the array.  If the base type of the array
      is a simple type, then the displacement unit is the size of that type,
      *e.g.* ``double`` and ``sizeof(double)``.  You should use a displacement
      unit of 1 otherwise.
 
+
+.. challenge:: Window creation
+
+   Let's look again at the initial example in the type-along. There we published
+   an already allocated buffer as memory window. Use the examples above to
+   figure out how to switch to using |term-MPI_Win_allocate|
+
+   You can download the :download:`scaffold source code
+   <code/rma-win-allocate.c>` and also a :download:`working solution
+   <code/rma-win-allocate-solution.c>`.
 
 
 RMA operations
@@ -432,6 +332,18 @@ RMA operations
    The ``target_rank`` parameter is, as the name suggests, the rank of the
    target process in the communicator.
 
+
+.. challenge:: Using |term-MPI_Put|
+
+   Reorganize the sample code of the previous exercise such that rank 1 *stores*
+   values into rank 0 memory window with |term-MPI_Put|, rather than rank 0
+   *loading* them with |term-MPI_Get|.
+
+   Download the :download:`scaffold source code <code/rma-put.c>` to get started.
+
+   You can download a :download:`working solution <code/rma-put-solution.c>`.
+
+
 .. signature:: |term-MPI_Accumulate|
 
    Store data from the **origin** process to the memory window of the **target**
@@ -458,6 +370,31 @@ RMA operations
    operation is *associative* and *commutative* for the given datatype.  For
    example, ``MPI_SUM`` and ``MPI_PROD`` are *neither* associative *nor*
    commutative for floating point numbers!
+
+
+.. challenge:: Using |term-MPI_Accumulate|
+
+   Download the :download:`scaffold source code <code/rma-accumulate.c>` and
+   complete the function calls to:
+
+   1. Create a window object from an allocated buffer:
+
+      .. code-block::
+
+         int buffer = 42;
+
+   2. Let each process accumulate its rank in the memory window of the process
+      with rank 0. We want to obtain the sum of the accumulating values.
+
+   With 2 processes, you should get the following output to screen:
+
+   .. code-block::
+
+      [MPI process 0] Value in my window_buffer before MPI_Accumulate: 42.
+      [MPI process 1] I accumulate data 1 in MPI process 0 window via MPI_Accumulate.
+      [MPI process 0] Value in my window_buffer after MPI_Accumulate: 43.
+
+   You can download a :download:`working solution <code/rma-accumulate-solution.c>`.
 
 Other routines for RMA operations are:
 
@@ -510,7 +447,6 @@ Specialized accumulation variants
       the *origin* process, to store its ``C`` variable to the memory window of
       process 1, the *target* process.
 
-
 See also
 --------
 
@@ -522,5 +458,5 @@ See also
 .. keypoints::
 
    - The MPI model for remote memory accesses.
-   - The basic routines to publish remotely accessible memory.
-   - The basic routines to modify remote memory windows.
+   - Window objects and memory windows.
+   - Timeline of RMA and the importance of synchronization.

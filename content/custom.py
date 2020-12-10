@@ -66,22 +66,8 @@ lesson_coll = [
     ["MPI_Allgather", 107],
     ["MPI_Alltoall", 109],
     ["MPI_Allgatherv", 107],
+    ["MPI_Ibarrier", 127],
     ["MPI_Ireduce", 134],
-]
-# non-blocking
-lesson_non_blocking = [
-    ["MPI_Send", 47],
-    ["MPI_Ssend", 57],
-    ["MPI_Isend", 63],
-    ["MPI_Irecv", 63],
-    ["MPI_Wait", 64],
-    ["MPI_Waitany", 66],
-    ["MPI_Waitsome", 66],
-    ["MPI_Waitall", 66],
-    ["MPI_Test", 64],
-    ["MPI_Testany", 66],
-    ["MPI_Testsome", 66],
-    ["MPI_Testall", 66],
 ]
 # non-blocking
 lesson_non_blocking = [
