@@ -44,11 +44,37 @@ can be converted to hybrid parallelism fairly easily.
 
 .. challenge::
 
-   TODO Make MPI work within a fork-join form of the stencil application
+   1. Download the :download:`source code
+      <code/threading-funneled.c>`. Open
+      ``threading-funneled.c`` and read through it. It
+      is quite similar to that for the earlier non-blocking code-along
+      exercise. Compile with::
+
+        mpicc -g -fopenmp -Wall -std=c11 threading-funneled.c -o threading-funneled
+
+   2. When you have the code compiling, try to run with::
+
+        mpiexec -np 2 ./threading-funneled
+
+   3. Try to fix the code so that it compiles, runs, and reports success
 
 .. solution::
 
-   TODO
+   * One correct approach is::
+
+        int provided, required = MPI_THREAD_FUNNELED;
+        MPI_Init_thread(NULL, NULL, required, &provided);
+        /* ... */
+        int local_work[] = {2, 3};
+        /* ... */
+        compute_row(local_work[k], working_data_set, next_working_data_set);
+        /* ... */
+        int non_local_work[] = {1, 4};
+        /* ... */
+        compute_row(non_local_work[k], working_data_set, next_working_data_set);
+
+   * Download a :download:`working solution <code/threading-funneled-solution.c>`
+
 
 Using OpenMP tasking with MPI
 -----------------------------
@@ -65,11 +91,22 @@ Using OpenMP tasking with MPI
 
 .. challenge::
 
-   TODO Make MPI work within a tasking form in the stencil application
+   1. Download the :download:`source code
+      <code/threading-multiple.c>`. Open
+      ``threading-multiple.c`` and read through it. It
+      is quite similar to that for the earlier non-blocking code-along
+      exercise. Compile with::
 
-.. solution::
+        mpicc -g -fopenmp -Wall -std=c11 threading-multiple.c -o threading-multiple
 
-   TODO
+   2. When you have the code compiling, try to run with::
+
+        OMP_NUM_THREADS=4 mpiexec -np 2 ./threading-multiple
+
+   3. Unfortunately I haven't found the last bug in my use of OpenMP tasking,
+      but you can see the kind of approach that can work, and the complexity
+      it entails. Do this only when you really need to!
+
 
 Tips for implementing hybrid MPI+OpenMP
 ---------------------------------------
