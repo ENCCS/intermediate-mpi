@@ -44,7 +44,19 @@ can be converted to hybrid parallelism fairly easily.
 
 .. challenge::
 
-   TODO Make MPI work within a fork-join form of the stencil application
+   1. Download the :download:`source code
+      <code/threading-funneled.c>`. Open
+      ``threading-funneled.c`` and read through it. It
+      is quite similar to that for the earlier non-blocking code-along
+      exercise. Compile with::
+
+        mpicc -g -Wall -std=c11 threading-funneled.c -o threading-funneled
+
+   2. When you have the code compiling, try to run with::
+
+        mpiexec -np 2 ./threading-funneled
+
+   3. Try to fix the code so that it compiles, runs, and reports success
 
 .. solution::
 

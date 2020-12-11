@@ -100,12 +100,22 @@ int main(int argc, char **argv)
         MPI_Isend(working_data_set[1], 8, MPI_FLOAT, destination_rank, send_up_tag, comm, &sent_to_destination[0]);
         MPI_Isend(working_data_set[4], 8, MPI_FLOAT, destination_rank, send_down_tag, comm, &sent_to_destination[1]);
 
-        /* Do the local computation */
+        /* ==== CHALLENGE ====
+         *
+         * Uncomment and fix the arguments to the MPI call to make
+         * this code work!
+         *
+         * Pass parameters to compute_row() in a way that each
+         * iteration of the for loop does an equal part of the
+         * local_work, ie rows 2 and 3 of the working_data_set.  You
+         * may need to consult the parameter names of compute_row().
+         */
+        /* Do the local computation. OpenMP will distribute each
+         * iteration to a different thread. */
         int local_work[] = {2, 3};
 #pragma omp parallel for
         for (int k = 0; k != 2; k = k + 1)
         {
-            compute_row(local_work[k], working_data_set, next_working_data_set);
             compute_row(local_work[k], working_data_set, next_working_data_set);
         }
         /* Implied thread barrier here */
@@ -114,13 +124,23 @@ int main(int argc, char **argv)
         MPI_Wait(&sent_from_source[0], MPI_STATUS_IGNORE);
         MPI_Wait(&sent_from_source[1], MPI_STATUS_IGNORE);
     
-        /* Do the non-local computation */
-        int nonlocal_work[] = {1, 4};
+        /* ==== CHALLENGE ====
+         *
+         * Uncomment and fix the arguments to the MPI call to make
+         * this code work!
+         *
+         * Pass parameters to compute_row() in a way that each
+         * iteration of the for loop does an equal part of the
+         * local_work, ie rows 1 and 4 of the working_data_set.  You
+         * may need to consult the parameter names of compute_row().
+         */
+        /* Do the non-local computation. OpenMP will distribute each
+         * iteration to a different thread. */
+        int non_local_work[] = {1, 4};
 #pragma omp parallel for
         for (int k = 0; k != 2; k = k + 1)
         {
-            compute_row(non_local_work[0], working_data_set, next_working_data_set);
-            compute_row(non_local_work[1], working_data_set, next_working_data_set);
+            compute_row(non_local_work[k], working_data_set, next_working_data_set);
         }
         /* Implied thread barrier here */
 
