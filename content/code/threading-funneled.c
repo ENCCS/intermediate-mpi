@@ -26,8 +26,8 @@ int main(int argc, char **argv)
      * We want to use fork-join parallelism, so pick a more suitable
      * threading mode */
     /* Initialize the MPI environment and check */
-    int provided, required = MPI_THREAD_FUNNELED;
-    MPI_Init_thread(NULL, NULL, required, &provided);
+    int provided, required; /* = FIXME; */
+    MPI_Init(&argc, &argv); /* FIXME */
     MPI_Comm comm = MPI_COMM_WORLD;
 
     /* If the program can't run, stop running */
@@ -117,11 +117,11 @@ int main(int argc, char **argv)
          */
         /* Do the local computation. OpenMP will distribute each
          * iteration to a different thread. */
-        int local_work[] = {2, 3};
+        /* int local_work[] = FIXME; */
 #pragma omp parallel for
         for (int k = 0; k != 2; k = k + 1)
         {
-            compute_row(local_work[k], working_data_set, next_working_data_set);
+            /* compute_row(FIXME, working_data_set, next_working_data_set); */
         }
         /* Implied thread barrier here */
 
@@ -141,11 +141,11 @@ int main(int argc, char **argv)
          */
         /* Do the non-local computation. OpenMP will distribute each
          * iteration to a different thread. */
-        int non_local_work[] = {1, 4};
+        /* int non_local_work[] = FIXME; */
 #pragma omp parallel for
         for (int k = 0; k != 2; k = k + 1)
         {
-            compute_row(non_local_work[k], working_data_set, next_working_data_set);
+            /* compute_row(FIXME, working_data_set, next_working_data_set); */
         }
         /* Implied thread barrier here */
 

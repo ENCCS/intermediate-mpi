@@ -60,7 +60,21 @@ can be converted to hybrid parallelism fairly easily.
 
 .. solution::
 
-   TODO
+   * One correct approach is::
+
+        int provided, required = MPI_THREAD_FUNNELED;
+        MPI_Init_thread(NULL, NULL, required, &provided);
+        /* ... */
+        int local_work[] = {2, 3};
+        /* ... */
+        compute_row(local_work[k], working_data_set, next_working_data_set);
+        /* ... */
+        int non_local_work[] = {1, 4};
+        /* ... */
+        compute_row(non_local_work[k], working_data_set, next_working_data_set);
+
+   * Download a :download:`working solution <code/threading-funneled-solution.c>`
+
 
 Using OpenMP tasking with MPI
 -----------------------------
