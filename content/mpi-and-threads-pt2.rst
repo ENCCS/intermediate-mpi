@@ -50,7 +50,7 @@ can be converted to hybrid parallelism fairly easily.
       is quite similar to that for the earlier non-blocking code-along
       exercise. Compile with::
 
-        mpicc -g -Wall -std=c11 threading-funneled.c -o threading-funneled
+        mpicc -g -fopenmp -Wall -std=c11 threading-funneled.c -o threading-funneled
 
    2. When you have the code compiling, try to run with::
 
@@ -91,11 +91,22 @@ Using OpenMP tasking with MPI
 
 .. challenge::
 
-   TODO Make MPI work within a tasking form in the stencil application
+   1. Download the :download:`source code
+      <code/threading-multiple.c>`. Open
+      ``threading-multiple.c`` and read through it. It
+      is quite similar to that for the earlier non-blocking code-along
+      exercise. Compile with::
 
-.. solution::
+        mpicc -g -fopenmp -Wall -std=c11 threading-multiple.c -o threading-multiple
 
-   TODO
+   2. When you have the code compiling, try to run with::
+
+        OMP_NUM_THREADS=4 mpiexec -np 2 ./threading-multiple
+
+   3. Unfortunately I haven't found the last bug in my use of OpenMP tasking,
+      but you can see the kind of approach that can work, and the complexity
+      it entails. Do this only when you really need to!
+
 
 Tips for implementing hybrid MPI+OpenMP
 ---------------------------------------
