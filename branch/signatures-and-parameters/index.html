@@ -1,0 +1,470 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>INTERMEDIATE MPI &mdash; Intermediate MPI</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/mystnb.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sphinx_tabs/semantic-ui-2.4.1/segment.min.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sphinx_tabs/semantic-ui-2.4.1/menu.min.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sphinx_tabs/semantic-ui-2.4.1/tab.min.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sphinx_tabs/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sphinx_lesson.css" type="text/css" />
+  <link rel="stylesheet" href="_static/overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script src="_static/togglebutton.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/minipres.js"></script>
+        <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex/" />
+    <link rel="search" title="Search" href="search/" />
+    <link rel="next" title="Setting up your system" href="setup/" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home" alt="Documentation Home"> Intermediate MPI
+          
+
+          
+            
+            <img src="_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="setup/">Setting up your system</a></li>
+</ul>
+<p class="caption"><span class="caption-text">The lesson</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="derived-datatypes/">Derived datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="one-sided-pt1/">One-sided communication: basic concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="one-sided-pt2/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide/">Instructor’s guide</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Intermediate MPI</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>INTERMEDIATE MPI</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/index.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="intermediate-mpi">
+<h1>INTERMEDIATE MPI<a class="headerlink" href="#intermediate-mpi" title="Permalink to this headline">¶</a></h1>
+<p>The Message Passing Interface (MPI) is the de facto standard for
+distributed memory parallelism in high performance computing
+(HPC). MPI is the dominant programming model for modern day
+supercomputers and will continue to be critical in enabling
+researchers to scale up their HPC workloads to forthcoming
+pre-exascale and exascale systems.</p>
+<p>This training material targets programmers who already have experience
+with basic MPI and are ready to take the next step to more advanced
+usage. Topics covered include communicators and groups, derived
+datatypes, one-sided communication, collective communication and
+hybrid MPI-threading approaches. <a class="reference internal" href="#learner-personas"><span class="std std-ref">See below</span></a>
+for recommended prerequisite knowledge.</p>
+<div class="admonition-prerequisites prereq admonition">
+<p class="admonition-title">Prerequisites</p>
+<p>Before attending this workshop, please make sure that you have access
+to a computer with a C compiler and an MPI library installed. If you
+have access to a supercomputer (e.g. a <a class="reference external" href="https://supr.snic.se/">SNIC system</a>)
+with a compute allocation you can use that during the workshop. Any questions
+on how to use a particular HPC resource should be directed to the appropriate
+support desk.
+You can also use your own computer for this workshop, provided that it has
+compilers and an MPI library installed. If you do not already have these
+installed, we recommend that you set up an isolated software environment
+using <code class="docutils literal notranslate"><span class="pre">conda</span></code>. For Windows computers we recommend to use the Windows
+Subsystem for Linux (WSL). Detailed instructions can be found
+on the <a class="reference internal" href="setup/"><span class="doc">Setting up your system</span></a> page.</p>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<table class="colwidths-auto docutils align-left">
+<tbody>
+<tr class="row-odd"><td><p>30 min</p></td>
+<td><p><a class="reference internal" href="communicators-groups/"><span class="doc">Communicators and groups</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>30 min</p></td>
+<td><p><a class="reference internal" href="derived-datatypes/"><span class="doc">Derived datatypes</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>35 min</p></td>
+<td><p><a class="reference internal" href="collective-communication-pt1/"><span class="doc">Simple collective communication</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>35 min</p></td>
+<td><p><a class="reference internal" href="collective-communication-pt2/"><span class="doc">Scatter and gather</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>35 min</p></td>
+<td><p><a class="reference internal" href="collective-communication-pt3/"><span class="doc">Generalized forms of gather</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>60 min</p></td>
+<td><p><a class="reference internal" href="non-blocking-communication-pt1/"><span class="doc">Non-blocking point-to-point</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>30 min</p></td>
+<td><p><a class="reference internal" href="non-blocking-communication-pt2/"><span class="doc">Non-blocking collective communication</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>60 min</p></td>
+<td><p><a class="reference internal" href="one-sided-pt1/"><span class="doc">One-sided communication: basic concepts</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>45 min</p></td>
+<td><p><a class="reference internal" href="one-sided-pt2/"><span class="doc">One-sided communication: synchronization</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>60 min</p></td>
+<td><p><a class="reference internal" href="mpi-and-threads-pt1/"><span class="doc">Introducing MPI and threads</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>30 min</p></td>
+<td><p><a class="reference internal" href="mpi-and-threads-pt2/"><span class="doc">MPI and threads in practice</span></a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide/">Instructor’s guide</a></li>
+</ul>
+</div>
+<div class="section" id="who-is-the-course-for">
+<span id="learner-personas"></span><h2>Who is the course for?<a class="headerlink" href="#who-is-the-course-for" title="Permalink to this headline">¶</a></h2>
+<p>This course is for students, researchers, engineers and programmers
+who already know the basics of MPI and want to learn more advanced MPI
+topics. To derive benefit from this material you should have attended
+introductory MPI training and preferably used basic MPI functionality
+in some code projects.  Specifically, this lesson assumes that
+participants have some prior experience with or knowledge of the
+following topics (but no expertise is required):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>General concepts: distributed memory parallelism, MPI process model</p></li>
+<li><p>Communicators</p></li>
+<li><p>Point-to-point communication</p></li>
+<li><p>Non-blocking point-to-point communication</p></li>
+<li><p>MPI datatypes</p></li>
+</ul>
+</div></blockquote>
+<p>These pre-requisites are taught in courses such as <a class="reference external" href="https://pdc-support.github.io/introduction-to-mpi/">PDC’s Introduction to MPI</a>  and the SNIC course <a class="reference external" href="http://www.lunarc.lu.se/training/an-introduction-to-parallel-programming-using-message-passing-with-mpi-1-4-december-2020/">An
+introduction to parallel programming using Message Passing with MPI</a>.</p>
+</div>
+<div class="section" id="about-the-course">
+<h2>About the course<a class="headerlink" href="#about-the-course" title="Permalink to this headline">¶</a></h2>
+<p>This lesson material is developed by the <a class="reference external" href="https://enccs.se/">EuroCC National Competence
+Center Sweden (ENCCS)</a> and taught in ENCCS
+workshops. It is aimed at researchers and developers who already know
+the basics of MPI. Each lesson episode has clearly defined learning
+objectives and includes multiple exercises along with solutions, and
+is therefore also useful for self-learning.
+The lesson material is licensed under <a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC-BY-4.0</a> and can be reused in any form
+(with appropriate credit) in other courses and workshops.
+Instructors who wish to teach this lesson can refer to the <a class="reference internal" href="guide/"><span class="doc">Instructor’s guide</span></a> for
+practical advice.</p>
+<div class="section" id="graphical-and-text-conventions">
+<h3>Graphical and text conventions<a class="headerlink" href="#graphical-and-text-conventions" title="Permalink to this headline">¶</a></h3>
+<p>We adopt a few conventions which help organize the material.</p>
+<dl>
+<dt>Function signatures</dt><dd><p>These are shown in a text block marked with a wrench emoji:</p>
+<div class="admonition-mpi-win-unlock signature toggle-shown dropdown admonition">
+<p class="admonition-title"><code class="docutils literal notranslate"><span class="pre">MPI_Win_unlock</span></code></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Win_unlock</span><span class="p">(</span><span class="kt">int</span> <span class="n">rank</span><span class="p">,</span>
+                   <span class="n">MPI_Win</span> <span class="n">win</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The signature can be hidden by clicking the toggle.</p>
+</dd>
+<dt>Function parameters</dt><dd><p>The description of the function parameters will appear in a separate text
+box. It will be marked with a laptop emoji:</p>
+<div class="admonition-parameters parameters dropdown admonition">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">rank</span></code></dt><dd><p>The rank whose memory window should be unlocked.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">win</span></code></dt><dd><p>The window object.</p>
+</dd>
+</dl>
+</div>
+<p>The description is hidden and will be shown by clicking the toggle.</p>
+</dd>
+<dt>Type-along</dt><dd><p>The text and code for these activities are in a separate text box, marked with
+a keyboard emoji:</p>
+<div class="admonition-let-s-look-at-an-example typealong toggle-shown dropdown admonition">
+<p class="admonition-title">Let’s look at an example</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello, world!&quot;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>The content can be hidden by clicking the toggle.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<p>There are many free online resources whose contents overlap with those covered
+in this lesson.
+Here is a non-comprehensive list:</p>
+<ul class="simple">
+<li><p>The <a class="reference external" href="https://www.epcc.ed.ac.uk/">EPCC</a> materials on <a class="reference external" href="https://github.com/EPCCed/archer2-MPI-2020-05-14">basic and intermediate
+MPI</a> and <a class="reference external" href="http://www.archer.ac.uk/training/course-material/2020/01/advMPI-imperial/index.php">advanced topics</a></p></li>
+<li><p>The freely available book <a class="reference external" href="https://pages.tacc.utexas.edu/~eijkhout/pcse/html/index.html">Parallel Programming for Science Engineering</a> by Viktor
+Eijkhout.</p></li>
+<li><p>The <a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/mpi31-report.htm">MPI Standard</a>. It is very dry, technical material.</p></li>
+</ul>
+<p>You can also consult the following books:</p>
+<ul class="simple">
+<li><p><strong>Parallel Programming with MPI</strong> by Peter Pacheco.</p></li>
+<li><p><strong>Using MPI</strong> by William Gropp, Ewing Lusk, and Anthony Skjellum.</p></li>
+<li><p><strong>Using Advanced MPI</strong> by William Gropp, Torsten Hoefler, Rajeev Thakur, and Ewing Lusk.</p></li>
+</ul>
+</div>
+<div class="section" id="credits">
+<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this headline">¶</a></h2>
+<p>The lesson file structure and browsing layout is inspired by and derived from
+<a class="reference external" href="https://github.com/coderefinery/sphinx-lesson">work</a> by <a class="reference external" href="https://coderefinery.org/">CodeRefinery</a> licensed under the <a class="reference external" href="http://opensource.org/licenses/mit-license.html">MIT license</a>. We have copied and adapted
+most of their license text.</p>
+<div class="section" id="instructional-material">
+<h3>Instructional Material<a class="headerlink" href="#instructional-material" title="Permalink to this headline">¶</a></h3>
+<p>All ENCCS instructional material is made available under the <a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons
+Attribution license (CC-BY-4.0)</a>. The following is a
+human-readable summary of (and not a substitute for) the <a class="reference external" href="https://creativecommons.org/licenses/by/4.0/legalcode">full legal text of the
+CC-BY-4.0 license</a>.
+You are free:</p>
+<ul class="simple">
+<li><p>to <strong>share</strong> - copy and redistribute the material in any medium or format</p></li>
+<li><p>to <strong>adapt</strong> - remix, transform, and build upon the material for any purpose,
+even commercially.</p></li>
+</ul>
+<p>The licensor cannot revoke these freedoms as long as you follow these license terms:</p>
+<ul class="simple">
+<li><p><strong>Attribution</strong> - You must give appropriate credit (mentioning that your work
+is derived from work that is Copyright (c) ENCCS and, where practical, linking
+to <a class="reference external" href="https://enccs.se">https://enccs.se</a>), provide a <a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">link to the license</a>, and indicate if changes were
+made. You may do so in any reasonable manner, but not in any way that suggests
+the licensor endorses you or your use.</p></li>
+<li><p><strong>No additional restrictions</strong> - You may not apply legal terms or
+technological measures that legally restrict others from doing anything the
+license permits. With the understanding that:</p>
+<ul>
+<li><p>You do not have to comply with the license for elements of the material in
+the public domain or where your use is permitted by an applicable exception
+or limitation.</p></li>
+<li><p>No warranties are given. The license may not give you all of the permissions
+necessary for your intended use. For example, other rights such as
+publicity, privacy, or moral rights may limit how you use the material.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="software">
+<h3>Software<a class="headerlink" href="#software" title="Permalink to this headline">¶</a></h3>
+<p>Except where otherwise noted, the example programs and other software provided
+by ENCCS are made available under the <a class="reference external" href="http://opensource.org/">OSI</a>-approved
+<a class="reference external" href="http://opensource.org/licenses/mit-license.html">MIT license</a>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="setup/" class="btn btn-neutral float-right" title="Setting up your system" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, EuroCC National Competence Centre Sweden
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

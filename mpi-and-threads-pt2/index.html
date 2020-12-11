@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MPI and threads in practice &mdash; Intermediate MPI</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/segment.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/menu.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/tab.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/togglebutton.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Quick Reference" href="../quick-reference/" />
+    <link rel="prev" title="Introducing MPI and threads" href="../mpi-and-threads-pt1/" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../" class="icon icon-home" alt="Documentation Home"> Intermediate MPI
+          
+
+          
+            
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes/">Derived datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communications: functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MPI and threads in practice</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#using-fork-join-parallelism">Using fork-join parallelism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-openmp-tasking-with-mpi">Using OpenMP tasking with MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tips-for-implementing-hybrid-mpi-openmp">Tips for implementing hybrid MPI+OpenMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>MPI and threads in practice</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/mpi-and-threads-pt2.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mpi-and-threads-in-practice">
+<h1>MPI and threads in practice<a class="headerlink" href="#mpi-and-threads-in-practice" title="Permalink to this headline">¶</a></h1>
+<div class="admonition-questions questions admonition">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>When should I consider writing hybrid MPI+OpenMP programs?</p></li>
+<li><p>What should I look out for when writing hybrid MPI+OpenMP programs?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Know to estimate the benefits before trying to write code for hybrid parallelism</p></li>
+</ul>
+</div>
+<div class="section" id="using-fork-join-parallelism">
+<h2>Using fork-join parallelism<a class="headerlink" href="#using-fork-join-parallelism" title="Permalink to this headline">¶</a></h2>
+<p>In fork-join parallelism, multiple threads are launched to collaborate
+on work. Typically regions of parallelism alternate with regions where
+only one thread works. This enables parallelism to be introduced
+gradually, and only where profiling shows that it would be most
+beneficial. In typical implementations, threads are kept idle between
+parallel regions; this is more efficient than creating and destroying
+them many times.</p>
+<div class="figure align-center" id="id1">
+<img alt="../_images/fork-join-parallelism.svg" src="../_images/fork-join-parallelism.svg" /><p class="caption"><span class="caption-text">OpenMP is particularly suited for fork-join parallelism. Beware
+that each parallel region requires synchronization between threads,
+which can be costly. Further, the speed-up depends critically on
+the time spent in the single-threaded regions!</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>The simplest hybrid approach is often to do the MPI communication in
+the regions that are single-threaded.</p>
+<div class="figure align-center" id="id2">
+<img alt="../_images/fork-join-with-mpi.svg" src="../_images/fork-join-with-mpi.svg" /><p class="caption"><span class="caption-text">Fork-join parallelism is a natural fit for <code class="docutils literal notranslate"><span class="pre">MPI_THREAD_FUNNELED</span></code>
+where fairly simple code can be improved with thread parallelism.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">for</span></code> loops in Fortan/C/C++ can be readily parallelised with <code class="docutils literal notranslate"><span class="pre">#pragma</span>
+<span class="pre">omp</span> <span class="pre">parallel</span></code>, so applications that already use MPI outside such loops
+can be converted to hybrid parallelism fairly easily.</p>
+<div class="admonition-challenge challenge admonition">
+<p class="admonition-title">Challenge</p>
+<ol class="arabic">
+<li><p>Download the <a class="reference download internal" download="" href="../_downloads/039d26793ad88a647e8e0cdb4c5f29cf/threading-funneled.c"><code class="xref download docutils literal notranslate"><span class="pre">source</span> <span class="pre">code</span></code></a>. Open
+<code class="docutils literal notranslate"><span class="pre">threading-funneled.c</span></code> and read through it. It
+is quite similar to that for the earlier non-blocking code-along
+exercise. Compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">fopenmp</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">threading</span><span class="o">-</span><span class="n">funneled</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">threading</span><span class="o">-</span><span class="n">funneled</span>
+</pre></div>
+</div>
+</li>
+<li><p>When you have the code compiling, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="mi">2</span> <span class="o">./</span><span class="n">threading</span><span class="o">-</span><span class="n">funneled</span>
+</pre></div>
+</div>
+</li>
+<li><p>Try to fix the code so that it compiles, runs, and reports success</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution dropdown admonition">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>One correct approach is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">provided</span><span class="p">,</span> <span class="n">required</span> <span class="o">=</span> <span class="n">MPI_THREAD_FUNNELED</span><span class="p">;</span>
+<span class="n">MPI_Init_thread</span><span class="p">(</span><span class="n">NULL</span><span class="p">,</span> <span class="n">NULL</span><span class="p">,</span> <span class="n">required</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">provided</span><span class="p">);</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="nb">int</span> <span class="n">local_work</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="n">compute_row</span><span class="p">(</span><span class="n">local_work</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">working_data_set</span><span class="p">,</span> <span class="n">next_working_data_set</span><span class="p">);</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="nb">int</span> <span class="n">non_local_work</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="n">compute_row</span><span class="p">(</span><span class="n">non_local_work</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">working_data_set</span><span class="p">,</span> <span class="n">next_working_data_set</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Download a <a class="reference download internal" download="" href="../_downloads/ad89b3807ef6eb9ae6913b7dc48692c7/threading-funneled-solution.c"><code class="xref download docutils literal notranslate"><span class="pre">working</span> <span class="pre">solution</span></code></a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="using-openmp-tasking-with-mpi">
+<h2>Using OpenMP tasking with MPI<a class="headerlink" href="#using-openmp-tasking-with-mpi" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center" id="id3">
+<img alt="../_images/stencil-with-tasking.svg" src="../_images/stencil-with-tasking.svg" /><p class="caption"><span class="caption-text">Stencil code with halo exchange implemented with OpenMP
+tasking. One group of threads takes responsibility for the halo
+exchange and non-local stencil work. Another takes responsibility
+for the local work. The threads are split statically during each
+time step, but how many threads to assign to each part might be
+able to be tuned over the duration of the program.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<div class="admonition-challenge challenge admonition">
+<p class="admonition-title">Challenge</p>
+<ol class="arabic">
+<li><p>Download the <a class="reference download internal" download="" href="../_downloads/41376a0b72164be0ffb37db1d9bbf963/threading-multiple.c"><code class="xref download docutils literal notranslate"><span class="pre">source</span> <span class="pre">code</span></code></a>. Open
+<code class="docutils literal notranslate"><span class="pre">threading-multiple.c</span></code> and read through it. It
+is quite similar to that for the earlier non-blocking code-along
+exercise. Compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">fopenmp</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">threading</span><span class="o">-</span><span class="n">multiple</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">threading</span><span class="o">-</span><span class="n">multiple</span>
+</pre></div>
+</div>
+</li>
+<li><p>When you have the code compiling, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OMP_NUM_THREADS</span><span class="o">=</span><span class="mi">4</span> <span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="mi">2</span> <span class="o">./</span><span class="n">threading</span><span class="o">-</span><span class="n">multiple</span>
+</pre></div>
+</div>
+</li>
+<li><p>Unfortunately I haven’t found the last bug in my use of OpenMP tasking,
+but you can see the kind of approach that can work, and the complexity
+it entails. Do this only when you really need to!</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="tips-for-implementing-hybrid-mpi-openmp">
+<h2>Tips for implementing hybrid MPI+OpenMP<a class="headerlink" href="#tips-for-implementing-hybrid-mpi-openmp" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Demonstrate that you need more scaling to solve the problem.</p></li>
+<li><p>Know why you’re adding hybrid parallelism… to access more memory,
+improve performance, reduce communication or a combination?</p></li>
+<li><p>Estimate how much improvement is available, based on existing performance
+measurements, e.g. profiling to find bottlenecks. If you don’t know how,
+learn. Access to quality tools at HPC clusters are worth it!</p></li>
+<li><p>Are your external libraries using threading? How should you manage them?</p></li>
+<li><p>You have to introduce effective OpenMP parallelism to 90% of the
+execution time to get a good result.</p></li>
+<li><p>Start with master-only or funneled style. Migrate later if
+measurements suggest it.</p></li>
+<li><p>Initialize data structures inside OpenMP regions, to take advantage of
+“first-touch” policies needed with NUMA nodes.</p></li>
+<li><p>Make use of OpenMP’s conditional compilation features to ensure that
+the application can still be built without OpenMP.</p></li>
+<li><p>If the application makes use of derived datatypes to pack/unpack
+noncontiguous data, consider replacing these with user-level
+pack/unpack routines which can be parallelised with OpenMP.</p></li>
+<li><p>Learn about and use the OpenMP environment variables well</p></li>
+<li><p>Learn how to use the MPI launcher to place the ranks and their
+threads well. This is different for different applications.</p></li>
+</ul>
+</div>
+<div class="section" id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.intertwine-project.eu/sites/default/files/images/INTERTWinE_Best_Practice_Guide_MPI%2BOpenMP_1.2.pdf">Hybrid MPI-OpenMP best practices</a></p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>Fork-join parallelism with <code class="docutils literal notranslate"><span class="pre">MPI_THREAD_FUNNELED</span></code> is a cheap way to get improvements, but the benefit is limited</p></li>
+<li><p>More complex multi-threading can do a better job of overlapping communication and computation</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../quick-reference/" class="btn btn-neutral float-right" title="Quick Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../mpi-and-threads-pt1/" class="btn btn-neutral float-left" title="Introducing MPI and threads" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, EuroCC National Competence Centre Sweden
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

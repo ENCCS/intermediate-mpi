@@ -1,0 +1,448 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Generalized forms of gather &mdash; Intermediate MPI</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/segment.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/menu.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/tab.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/togglebutton.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Non-blocking point-to-point" href="../non-blocking-communication-pt1/" />
+    <link rel="prev" title="Scatter and gather" href="../collective-communication-pt2/" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../" class="icon icon-home" alt="Documentation Home"> Intermediate MPI
+          
+
+          
+            
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes/">Derived datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Generalized forms of gather</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#all-gather">All-gather</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#all-to-all">All-to-all</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-along-exercise-all-gather-and-all-to-all">Code-along exercise: all-gather and all-to-all</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#final-thoughts">Final thoughts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communications: functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Generalized forms of gather</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/collective-communication-pt3.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="generalized-forms-of-gather">
+<h1>Generalized forms of gather<a class="headerlink" href="#generalized-forms-of-gather" title="Permalink to this headline">¶</a></h1>
+<div class="admonition-questions questions admonition">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>How can I do more complex rearrangements of data?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Know that gather can be generalized</p></li>
+<li><p>Know the difference between generalized forms of gather</p></li>
+</ul>
+</div>
+<div class="section" id="all-gather">
+<h2>All-gather<a class="headerlink" href="#all-gather" title="Permalink to this headline">¶</a></h2>
+<p>An <code class="docutils literal notranslate"><span class="pre">MPI_Allgather</span></code> call gather the same data from all ranks and
+provides it to all ranks. It is logically identical to <code class="docutils literal notranslate"><span class="pre">MPI_Gather</span></code>
+to a root followed by an <code class="docutils literal notranslate"><span class="pre">MPI_Bcast</span></code> from that root, but is
+implemented more efficiently.</p>
+<div class="figure align-center" id="id1">
+<img alt="../_images/MPI_Allgather.svg" src="../_images/MPI_Allgather.svg" /><p class="caption"><span class="caption-text">After the call, all ranks have one value from each other rank in
+the communicator, ordered by rank number.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">MPI_Allgather</span></code> is <cite>blocking</cite> and introduces <cite>collective
+synchronization</cite> into the program. Note that there is no root
+for this operation.</p>
+<p>This can be useful to allow all ranks to collect values from all other
+ranks in the communicator. For example, all ranks might compute some
+values, and then all ranks gather that content to use it in a
+subsequent stage.</p>
+<div class="admonition-term-mpi-allgather signature toggle-shown dropdown admonition">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Allgather"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Allgather</code></span></a></p>
+<p>Gathers data from all ranks and provides the same data to all ranks.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Allgather</span><span class="p">(</span><span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sendcount</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">sendtype</span><span class="p">,</span>
+                  <span class="kt">void</span> <span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">recvcount</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">recvtype</span><span class="p">,</span>
+                  <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition">
+<p class="admonition-title">Parameters</p>
+<p>All ranks receive the values send from each process.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sendbuf</span></code>, <code class="docutils literal notranslate"><span class="pre">sendcount</span></code> and <code class="docutils literal notranslate"><span class="pre">sendtype</span></code> describe the buffer on
+<strong>each</strong> process from which the data is sent. Only a buffer large
+enough to contain the data sent by that process is needed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recvbuf</span></code>, <code class="docutils literal notranslate"><span class="pre">recvcount</span></code> and <code class="docutils literal notranslate"><span class="pre">recvtype</span></code> describe the buffer on
+<strong>each</strong> process to which the data is sent. A buffer large
+enough to receive all the data for that process is needed.</p>
+<p>All ranks in the communicator must participate with valid receive
+buffers and consistent counts and types.</p>
+</div>
+</div>
+<div class="section" id="all-to-all">
+<h2>All-to-all<a class="headerlink" href="#all-to-all" title="Permalink to this headline">¶</a></h2>
+<p>An <code class="docutils literal notranslate"><span class="pre">MPI_Alltoall</span></code> call gathers data from all ranks and provides
+distinct data to all ranks. It is logically identical to making one
+call to <code class="docutils literal notranslate"><span class="pre">MPI_Gather</span></code> for each possible root rank, but is implemented
+more efficiently.</p>
+<div class="figure align-center" id="id2">
+<img alt="../_images/MPI_Alltoall.svg" src="../_images/MPI_Alltoall.svg" /><p class="caption"><span class="caption-text">After the call, all ranks have one value from each other rank in
+the communicator, ordered by rank number.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">MPI_Alltoall</span></code> is <cite>blocking</cite> and introduces <cite>collective
+synchronization</cite> into the program. Note that there is no root
+for this operation.</p>
+<p>This can be useful to allow all ranks to collect values from all other
+ranks in the communicator. For example, a 3D Fast Fourier Transform
+often uses an all-to-all operation to redistribute the working data
+set for each process to a new dimension.</p>
+<div class="admonition-term-mpi-alltoall signature toggle-shown dropdown admonition">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Alltoall"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Alltoall</code></span></a></p>
+<p>Gathers data from all ranks and provides distinct data to all ranks.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Alltoall</span><span class="p">(</span><span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sendcount</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">sendtype</span><span class="p">,</span>
+                 <span class="kt">void</span> <span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">recvcount</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">recvtype</span><span class="p">,</span>
+                 <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition">
+<p class="admonition-title">Parameters</p>
+<p>All ranks receive a subset of the values sent from each process.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sendbuf</span></code>, <code class="docutils literal notranslate"><span class="pre">sendcount</span></code> and <code class="docutils literal notranslate"><span class="pre">sendtype</span></code> describe the buffer on
+<strong>each</strong> process from which the data is sent. Only a buffer large
+enough to contain the data sent by that process is needed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recvbuf</span></code>, <code class="docutils literal notranslate"><span class="pre">recvcount</span></code> and <code class="docutils literal notranslate"><span class="pre">recvtype</span></code> describe the buffer on
+<strong>each</strong> process to which the data is sent. A buffer large
+enough to receive all the data for that process is needed.</p>
+<p>All ranks in the communicator must participate with valid receive
+buffers and consistent counts and types.</p>
+</div>
+</div>
+<div class="section" id="code-along-exercise-all-gather-and-all-to-all">
+<h2>Code-along exercise: all-gather and all-to-all<a class="headerlink" href="#code-along-exercise-all-gather-and-all-to-all" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-use-all-gather challenge admonition">
+<p class="admonition-title">3.1 Use all-gather</p>
+<ol class="arabic">
+<li><p>Download the <a class="reference download internal" download="" href="../_downloads/76a45be4d23142c4b371b22f430a6759/collective-communication-allgather.c"><code class="xref download docutils literal notranslate"><span class="pre">source</span> <span class="pre">code</span></code></a>. Open
+<code class="docutils literal notranslate"><span class="pre">collective-communication-allgather.c</span></code> and read
+through it. It’s similar to the broadcast code we saw
+earlier. Try to compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">collective</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">allgather</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">collective</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">allgather</span>
+</pre></div>
+</div>
+</li>
+<li><p>When you have the code compiling, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="mi">4</span> <span class="o">./</span><span class="n">collective</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">allgather</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use clues from the compiler and the comments in the code to
+change the code so it compiles and runs. Try to get all ranks to
+report success :-)</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution dropdown admonition">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>One correct call is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MPI_Allgather</span><span class="p">(</span><span class="n">values_to_all_gather</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span>
+              <span class="o">&amp;</span><span class="n">all_gathered_values</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span>
+              <span class="n">comm</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>What happened if you mistakenly used 4 or 12 for the counts? Why?</p></li>
+<li><p>Download a <a class="reference download internal" download="" href="../_downloads/544779db145aa54222eaae3a2ac721f2/collective-communication-allgather-solution.c"><code class="xref download docutils literal notranslate"><span class="pre">working</span> <span class="pre">solution</span></code></a></p></li>
+</ul>
+</div>
+<div class="admonition-use-all-to-all challenge admonition">
+<p class="admonition-title">3.2 Use all-to-all</p>
+<ol class="arabic">
+<li><p>Download the <a class="reference download internal" download="" href="../_downloads/bf4a27fe9c9454bef98857a83e154c8a/collective-communication-alltoall.c"><code class="xref download docutils literal notranslate"><span class="pre">source</span> <span class="pre">code</span></code></a>. Open
+<code class="docutils literal notranslate"><span class="pre">collective-communication-alltoall.c</span></code> and read
+through it. It’s similar to the broadcast code we saw
+earlier. Try to compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">collective</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">alltoall</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">collective</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">alltoall</span>
+</pre></div>
+</div>
+</li>
+<li><p>When you have the code compiling, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="mi">4</span> <span class="o">./</span><span class="n">collective</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">alltoall</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use clues from the compiler and the comments in the code to
+change the code so it compiles and runs. Try to get all ranks to
+report success :-)</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution dropdown admonition">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>One correct call is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MPI_Alltoall</span><span class="p">(</span><span class="n">values_to_all_to_all</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span>
+             <span class="o">&amp;</span><span class="n">result_values</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span>
+             <span class="n">comm</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>What happened if you mistakenly used 4 or 12 for the counts? Why?</p></li>
+<li><p>Download a <a class="reference download internal" download="" href="../_downloads/8fc60fff4e3ee73517b8fe80507f304b/collective-communication-alltoall-solution.c"><code class="xref download docutils literal notranslate"><span class="pre">working</span> <span class="pre">solution</span></code></a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="final-thoughts">
+<h2>Final thoughts<a class="headerlink" href="#final-thoughts" title="Permalink to this headline">¶</a></h2>
+<p>There are further generalizations available in MPI, including a
+combined scatter-gather, and versions of gather that permit different
+amounts of data to be sent to/from each rank. Check the existing
+options before rolling your own or giving up!</p>
+</div>
+<div class="section" id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mcs.anl.gov/~thakur/sc17-mpi-tutorial/slides.pdf">https://www.mcs.anl.gov/~thakur/sc17-mpi-tutorial/slides.pdf</a></p></li>
+<li><p><a class="reference external" href="https://www.rookiehpc.com/mpi/docs/mpi_allgather.php">https://www.rookiehpc.com/mpi/docs/mpi_allgather.php</a></p></li>
+<li><p><a class="reference external" href="https://www.rookiehpc.com/mpi/docs/mpi_alltoall.php">https://www.rookiehpc.com/mpi/docs/mpi_alltoall.php</a></p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>More complex distribution patterns are also optimized in MPI</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../non-blocking-communication-pt1/" class="btn btn-neutral float-right" title="Non-blocking point-to-point" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../collective-communication-pt2/" class="btn btn-neutral float-left" title="Scatter and gather" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, EuroCC National Competence Centre Sweden
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Setting up your system &mdash; Intermediate MPI</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/segment.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/menu.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/tab.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/togglebutton.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Communicators and groups" href="../communicators-groups/" />
+    <link rel="prev" title="INTERMEDIATE MPI" href="../" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../" class="icon icon-home" alt="Documentation Home"> Intermediate MPI
+          
+
+          
+            
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setting up your system</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#operating-systems">Operating systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-conda">Installing conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-a-c-compiler-and-mpi">Installing a C compiler and MPI</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">The lesson</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes/">Derived datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-pt1/">One-sided communication: basic concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-pt2/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Setting up your system</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/setup.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="setting-up-your-system">
+<h1>Setting up your system<a class="headerlink" href="#setting-up-your-system" title="Permalink to this headline">¶</a></h1>
+<p>In order to follow this workshop, you will need access to compilers
+and MPI libraries. You can either use a cluster or set things up on
+your local computer - the instructions here are for installing on your
+own computer.</p>
+<p>We recommend that participants create an isolated software environment
+on their computer and install a C compiler along with MPI libraries
+inside that environment. Root-level system installation is also
+possible but will not be covered here due to the risk of various
+conflicts (or worse).</p>
+<p>These instructions are based on installing compilers and MPI via the <a class="reference external" href="https://docs.conda.io/en/latest/">Conda
+package and enviroment manager</a>, as it
+provides a convenient way to install binary packages in an isolated software
+environment.</p>
+<div class="section" id="operating-systems">
+<h2>Operating systems<a class="headerlink" href="#operating-systems" title="Permalink to this headline">¶</a></h2>
+<p>The following steps are appropriate for Linux and MacOS systems. For
+Windows, it is necessary to first install the Windows Subsystem for
+Linux (see these <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">installation instructions for WSL</a>).
+Installing compilers and MPI natively on Windows is also possible
+through <a class="reference external" href="https://www.cygwin.com/">Cygwin</a> and the Microsoft
+Distribution of MPICH, but we recommend WSL which is available for
+Windows 10 and later.</p>
+</div>
+<div class="section" id="installing-conda">
+<h2>Installing conda<a class="headerlink" href="#installing-conda" title="Permalink to this headline">¶</a></h2>
+<p>Begin by installing Miniconda:</p>
+<ol class="arabic">
+<li><p>Download the 64-bit installer from <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">here</a> for your operating system:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>for MacOS and Linux, choose the bash installer</p></li>
+<li><p>on Windows, open a Linux-WSL terminal and type: <code class="docutils literal notranslate"><span class="pre">wget</span> <span class="pre">https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh</span></code>.
+If wget is not a recognised command, first install it by <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">wget</span></code> (provide the password you chose when installing WSL).</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>In a terminal, run the installer with <code class="docutils literal notranslate"><span class="pre">bash</span> <span class="pre">Miniconda3-latest-&lt;operating-system&gt;-x86_64.sh</span></code>
+(replace with correct name of installer)</p></li>
+<li><p>Agree to the terms of conditions, specify the installation directory (the default is
+usually fine), and answer “yes” to the questions “Do you wish the installer to
+initialize Miniconda3 by running conda init?”</p></li>
+</ol>
+<p>You now have miniconda and conda installed. Make sure that it works by
+typing <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">conda</span></code> and see that it points to where you installed
+miniconda (you may have to open a new terminal first).</p>
+<p>We recommend that you create an isolated conda environment (this is
+good practice in software development):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda create --name mpi
+$ conda activate mpi
+</pre></div>
+</div>
+<p>This should create a new empty environment and activate it, which
+might prepend your shell prompt with the name of the conda environment.</p>
+</div>
+<div class="section" id="installing-a-c-compiler-and-mpi">
+<h2>Installing a C compiler and MPI<a class="headerlink" href="#installing-a-c-compiler-and-mpi" title="Permalink to this headline">¶</a></h2>
+<p>Now install compilers and the OpenMPI
+implementation of MPI:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(mpi) $ conda install -c conda-forge compilers
+(mpi) $ conda install -c conda-forge openmpi
+</pre></div>
+</div>
+<p>If you prefer MPICH over OpenMPI (or you experience problems with OpenMPI), you can
+instead do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(mpi) $ conda install -c conda-forge compilers
+(mpi) $ conda install -c conda-forge mpich
+</pre></div>
+</div>
+<p><strong>Please also verify the installation.</strong></p>
+<p>The following commands should give version numbers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(mpi) $ mpicc --version
+(mpi) $ mpirun --version
+</pre></div>
+</div>
+<p>With OpenMPI you can also try the <code class="docutils literal notranslate"><span class="pre">-showme</span></code> flag to see what the <code class="docutils literal notranslate"><span class="pre">mpicc</span></code>
+compiler wrapper does under the hood:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(mpi) $ mpicc -showme
+</pre></div>
+</div>
+<p>To compile an MPI code <cite>hello_mpi.c</cite>, you should now be able to do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(mpi) $ mpicc -o hello_mpi.x hello_mpi.c
+(mpi) $ mpirun -n 2 hello_mpi.x
+</pre></div>
+</div>
+<p>To compile with OpenMP support for hybrid MPI+OpenMP codes, you need
+to add the <code class="docutils literal notranslate"><span class="pre">-fopenmp</span></code> flag:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(mpi) $ mpicc -fopenmp -o hello_omp_mpi.x hello_omp_mpi.c
+(mpi) $ export OMP_NUM_THREADS=2
+(mpi) $ mpirun -n 2 hello_omp_mpi.x
+</pre></div>
+</div>
+<p>You <em>might</em> also need to explicitly link against the OpenMP runtime library.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../communicators-groups/" class="btn btn-neutral float-right" title="Communicators and groups" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../" class="btn btn-neutral float-left" title="INTERMEDIATE MPI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, EuroCC National Competence Centre Sweden
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
