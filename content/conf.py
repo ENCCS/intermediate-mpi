@@ -39,6 +39,7 @@ extensions = [
     "sphinxcontrib.bibtex",
     "sphinx.ext.todo",
 ]
+bibtex_bibfiles = ['bibliography.bib']
 autosectionlabel_prefix_document = True
 
 # Settings for myst_nb:
