@@ -341,4 +341,5 @@ See also
 
 .. keypoints::
 
-   - MPI offers four levels of threading support, use the one that fits
+   - MPI offers four levels of threading support, use the one that fit
+   your needs.
