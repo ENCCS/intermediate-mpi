@@ -26,7 +26,7 @@ At first glance, this seems like a nonsense. However if a barrier is
 needed, then it can be quite useful to overlap work with the
 synchronization. Use cases are rare, but include highly unstructured
 work described by variable numbers of messages sent between ranks, or
-very latency-sensitive applications. Once all messages have been sent,
+very latency-sensitive applications.
 
 .. signature:: |term-MPI_Ibarrier|
 
@@ -36,13 +36,22 @@ very latency-sensitive applications. Once all messages have been sent,
                        MPI_Request *request)
 
 
+.. parameters::
+
+   A communicator ``comm`` and a ``request`` object that is a handler
+   for a later wait call.
+
 It is necessary to use blocking barrier only when communicating
 through a side channel, like a file or a socket.
 
 Non-blocking reduce
 -------------------
 
-TODO graphic and description of |term-MPI_Ireduce|
+|term-MPI_Ireduce| starts a reduction operation and generates a request in
+an ``MPI_Request`` object. The reduction process is completed only when a test
+is passed or a wait call is done. Upon completion, the reduced value is collected
+in the root process.
+
 
 .. signature:: |term-MPI_Ireduce|
 
@@ -57,6 +66,17 @@ TODO graphic and description of |term-MPI_Ireduce|
                       MPI_Comm comm,
                       MPI_Request *request)
 
+
+.. parameters::
+
+   ``sendbuf``, ``recvbuf``, and ``count`` are the buffer on **each**
+   process, the buffer on ``root``, and the number of elements to be
+   on each process. ``datatype`` is the type of the data to be reduced. 
+   ``op`` is the reduction operation to be applied on the distributed
+   data. The global result of the reduction operation is collected in
+   the ``root`` process in the communicator ``comm``. The
+   ``request`` object that is returned must be used to wait on the
+   communication later.
 
 
 Code-along exercise: non-blocking ireduce during stencil workflow
@@ -93,8 +113,10 @@ See also
 --------
 
 
-* TODO
-* TODO
+* Chapter 2 of the **Using Advanced MPI** book by William Gropp *et al.* show
+  examples of using the functions described in this episode.
+    :cite:`Gropp2014-dz`
+* https://www.codingame.com/playgrounds/349/introduction-to-mpi/non-blocking-communications
 
 
 
