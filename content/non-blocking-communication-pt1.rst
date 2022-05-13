@@ -69,8 +69,8 @@ come from the other process.
    process, and the ``ghost data`` or ``halo data`` in dark green is
    received from the other process.
 
-Inferior MPI workflows for stencil applications
------------------------------------------------
+Non-performant MPI workflows for stencil applications: blocking messages
+------------------------------------------------------------------------
 
 A possible workflow for the code on these two processes looks like
 
@@ -98,8 +98,8 @@ synchronization is problematic when the time to send messages is
 comparable with either the amounts of compute work involved, or the
 variation in those amounts.
 
-Performant non-blocking MPI workflows for stencil applications
---------------------------------------------------------------
+Performant MPI workflows for stencil applications: non-blocking messages
+------------------------------------------------------------------------
 
 .. figure:: img/non-blocking-stylestencilworkflow.svg
    :align: center
@@ -119,7 +119,7 @@ message request has been waited upon.
 Non-blocking MPI send calls
 ---------------------------
 
-An |term-MPI_Isend| is creates a send request and returns a request
+An |term-MPI_Isend| creates a send request and returns a request
 object. It may or may not have sent the message, or buffered it. The
 caller is responsible for not changing the buffer until after waiting
 upon the resulting request object.
@@ -323,13 +323,16 @@ See also
 --------
 
 
-* TODO
-* TODO
+* Chapter 1 of the **Using Advanced MPI** book by William Gropp *et al.* show
+  examples of using the functions described in this episode.
+    :cite:`Gropp2014-dz`
+* https://www.codingame.com/playgrounds/349/introduction-to-mpi/non-blocking-communications
 
 
 
 .. keypoints::
 
-   - TODO
-   - point 2
-   - ...
+   - Non-blocking point-to-point communications can be used to avoid deadlocks from blocking communications.
+   - Also, non-blocking messages can decrease idle times and allow for the possibility of interleaving
+   computation and communication.
+   - Be aware of not modifying the buffer used by |term-MPI_Isend|/|term-MPI_Irecv| prior to completion.
