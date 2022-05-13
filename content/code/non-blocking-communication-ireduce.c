@@ -1,5 +1,7 @@
 #include "mpi.h"
+#include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 void compute_row(int row_index, float input[6][8], float output[6][8])
 {
@@ -133,7 +135,7 @@ int main(int argc, char **argv)
         if (rank == total_root_rank)
         {
             const float expected_total_value = (step < 8) ? 0 : 300000;
-            if (total != expected_total_value)
+            if (fabs(total-expected_total_value) > 0.1e-8)
             {
                 success = 0;
                 printf("Failed on step %d with total %g not matching expected %g\n",
@@ -168,7 +170,7 @@ int main(int argc, char **argv)
     if (rank == total_root_rank)
     {
         const float expected_total_value = 9.375e+08;
-        if (total != expected_total_value)
+        if (fabs(total-expected_total_value) > 0.1e-8)
         {
             success = 0;
             printf("Failed on step %d with total %g not matching expected %g\n",

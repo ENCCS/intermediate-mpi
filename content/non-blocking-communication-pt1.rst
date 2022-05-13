@@ -325,7 +325,7 @@ See also
 
 * Chapter 1 of the **Using Advanced MPI** book by William Gropp *et al.* show
   examples of using the functions described in this episode.
-    :cite:`Gropp2014-dz`
+  :cite:`Gropp2014-dz`
 * https://www.codingame.com/playgrounds/349/introduction-to-mpi/non-blocking-communications
 
 
@@ -334,5 +334,5 @@ See also
 
    - Non-blocking point-to-point communications can be used to avoid deadlocks from blocking communications.
    - Also, non-blocking messages can decrease idle times and allow for the possibility of interleaving
-   computation and communication.
+     computation and communication.
    - Be aware of not modifying the buffer used by |term-MPI_Isend|/|term-MPI_Irecv| prior to completion.
