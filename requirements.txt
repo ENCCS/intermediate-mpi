@@ -1,4 +1,4 @@
-Sphinx
+sphinx
 sphinx_rtd_theme
 sphinx_rtd_theme_ext_color_contrast
 sphinx-lesson
