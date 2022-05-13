@@ -70,7 +70,7 @@ come from the other process.
    received from the other process.
 
 Non-performant MPI workflows for stencil applications: blocking messages
------------------------------------------------
+------------------------------------------------------------------------
 
 A possible workflow for the code on these two processes looks like
 
@@ -99,7 +99,7 @@ comparable with either the amounts of compute work involved, or the
 variation in those amounts.
 
 Performant MPI workflows for stencil applications: non-blocking messages
---------------------------------------------------------------
+------------------------------------------------------------------------
 
 .. figure:: img/non-blocking-stylestencilworkflow.svg
    :align: center
