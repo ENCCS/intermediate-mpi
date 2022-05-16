@@ -278,20 +278,19 @@ call |term-MPI_Is_thread_main|.
 Code-along exercise: run MPI with threading support
 ---------------------------------------------------
 
-.. challenge:: 1.1 Compile an MPI program and observe what thread
-               level is supported
+.. challenge:: Compile an MPI program and observe what thread level is supported
 
-   1. Download the :download:`source code
-      <code/threading-query.c>`. Open ``threading-query.c`` and read
-      through it. Try to compile with::
+   You can find a scaffold for the code in the
+   ``content/code/day-4/00_threading-query`` folder.  A working solution is in the
+   ``solution`` subfolder. Try to compile with::
 
         mpicc -g -Wall -fopenmp -std=c11 threading-query.c -o threading-query
 
-   2. When you have the code compiling, try to run with::
+   #. When you have the code compiling, try to run with::
 
         mpiexec -np 2 ./threading-query
 
-   3. Use clues from the compiler and the comments in the code to
+   #. Use clues from the compiler and the comments in the code to
       change the code so it compiles and runs.
 
 .. solution::
@@ -309,7 +308,6 @@ Code-along exercise: run MPI with threading support
 
    * There are other calls that work correctly. Is yours better or worse
      than this one? Why?
-   * Download a :download:`working solution <code/threading-query-solution.c>`
 
 
 Which threading level to use?

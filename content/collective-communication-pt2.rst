@@ -111,21 +111,20 @@ file.
 Code-along exercise: scatter and gather
 ---------------------------------------
 
-.. challenge:: 2.1 Use a scatter and gather
+.. challenge:: Use a scatter and gather
 
-   1. Download the :download:`source code
-      <code/collective-communication-scatter-and-gather.c>`. Open
-      ``collective-communication-scatter-and-gather.c`` and read
-      through it. It's similar to the broadcast code we saw
-      earlier. Try to compile with::
+   You can find a scaffold for the code in the
+   ``content/code/day-2/01_scatter-and-gather`` folder.  A working solution is
+   in the ``solution`` subfolder. It's similar to the broadcast code we saw
+   earlier. Try to compile with::
 
         mpicc -g -Wall -std=c11 collective-communication-scatter-and-gather.c -o collective-communication-scatter-and-gather
 
-   2. When you have the code compiling, try to run with::
+   #. When you have the code compiling, try to run with::
 
         mpiexec -np 4 ./collective-communication-scatter-and-gather
 
-   3. Use clues from the compiler and the comments in the code to
+   #. Use clues from the compiler and the comments in the code to
       change the code so it compiles and runs. Try to get all ranks to
       report success :-)
 
@@ -143,8 +142,6 @@ Code-along exercise: scatter and gather
 
    * What happened if you mistakenly used 4 for the scatter send count or
      the gather receive count. Why?
-   * Download a :download:`working solution <code/collective-communication-scatter-and-gather-solution.c>`
-
 
 See also
 --------

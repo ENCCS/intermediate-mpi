@@ -82,21 +82,20 @@ in the root process.
 Code-along exercise: non-blocking ireduce during stencil workflow
 -----------------------------------------------------------------
 
-.. challenge:: 1.1 Observe a running total during a stencil workflow
+.. challenge:: Observe a running total during a stencil workflow
 
-   1. Download the :download:`source code
-      <code/non-blocking-communication-ireduce.c>`. Open
-      ``non-blocking-communication-ireduce.c`` and read through it. It
-      is quite similar to that for the earlier non-blocking code-along
-      exercise. Compile with::
+   You can find a scaffold for the code in the ``content/code/day-2/05_ireduce``
+   folder. It is quite similar to that for the earlier non-blocking code-along
+   exercise. A working solution is in the ``solution`` subfolder. Try to compile
+   with::
 
         mpicc -g -Wall -std=c11 non-blocking-communication-ireduce.c -o non-blocking-communication-ireduce
 
-   2. When you have the code compiling, try to run with::
+   #. When you have the code compiling, try to run with::
 
         mpiexec -np 2 ./non-blocking-communication-ireduce
 
-   4. Try to fix the code TODO
+   #. Try to fix the code TODO
 
 .. solution::
 
@@ -106,8 +105,6 @@ Code-along exercise: non-blocking ireduce during stencil workflow
 
    * There are other approaches that work correctly. Is yours better
      or worse than this one? Why?
-   * Download a :download:`working solution <code/non-blocking-communication-ireduce-solution.c>`
-
 
 See also
 --------
