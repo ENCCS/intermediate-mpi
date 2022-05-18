@@ -93,6 +93,9 @@ Synchronization
    - Rank 1, will allocate a buffer and expose it as a window.
    - Rank 0, will get the values from this buffer.
 
+   You can find a full working solution in the
+   ``content/code/day-3/00_rma/solution`` folder.
+
    First of all, we create the buffer on all ranks. However, only rank 1 will
    fill it with some values. We will see that window creation is *collective*
    call for all ranks in the given communicator.
@@ -141,8 +144,6 @@ Synchronization
 
       MPI_Win_free(&win);
 
-   Download the full :download:`working source code <code/rma-vs-non-blocking-2.c>`.
-
 
 .. discussion::
 
@@ -152,8 +153,12 @@ Synchronization
 
 .. challenge:: Non-blocking vs RMA
 
-   Can you re-express the code shown in the type-along with |term-MPI_Isend|/|term-MPI_Recv|?
-   You can download the :download:`scaffold source code <code/rma-vs-non-blocking-1.c>` and also a :download:`working solution <code/rma-vs-non-blocking-1-solution.c>`.
+   Can you re-express the code shown in the type-along with
+   |term-MPI_Isend|/|term-MPI_Recv|?
+
+   You can find a scaffold for the code in the
+   ``content/code/day-3/01_rma-vs-nonblocking`` folder.  A working solution is in the
+   ``solution`` subfolder.
 
 
 Window creation
@@ -263,9 +268,9 @@ with |term-MPI_Alloc_mem|.
    an already allocated buffer as memory window. Use the examples above to
    figure out how to switch to using |term-MPI_Win_allocate|
 
-   You can download the :download:`scaffold source code
-   <code/rma-win-allocate.c>` and also a :download:`working solution
-   <code/rma-win-allocate-solution.c>`.
+   You can find a scaffold for the code in the
+   ``content/code/day-3/02_rma-win-allocate`` folder.  A working solution is in the
+   ``solution`` subfolder.
 
 
 RMA operations
@@ -339,10 +344,9 @@ RMA operations
    values into rank 0 memory window with |term-MPI_Put|, rather than rank 0
    *loading* them with |term-MPI_Get|.
 
-   Download the :download:`scaffold source code <code/rma-put.c>` to get started.
-
-   You can download a :download:`working solution <code/rma-put-solution.c>`.
-
+   You can find a scaffold for the code in the
+   ``content/code/day-3/03_rma-put`` folder.  A working solution is in the
+   ``solution`` subfolder.
 
 .. signature:: |term-MPI_Accumulate|
 
@@ -374,8 +378,9 @@ RMA operations
 
 .. challenge:: Using |term-MPI_Accumulate|
 
-   Download the :download:`scaffold source code <code/rma-accumulate.c>` and
-   complete the function calls to:
+   You can find a scaffold for the code in the
+   ``content/code/day-3/04_rma-accumulate`` folder.
+   Follow the prompts and complete the function calls to:
 
    1. Create a window object from an allocated buffer:
 
@@ -394,7 +399,7 @@ RMA operations
       [MPI process 1] I accumulate data 1 in MPI process 0 window via MPI_Accumulate.
       [MPI process 0] Value in my window_buffer after MPI_Accumulate: 43.
 
-   You can download a :download:`working solution <code/rma-accumulate-solution.c>`.
+   A working solution is in the ``solution`` subfolder.
 
 Other routines for RMA operations are:
 
