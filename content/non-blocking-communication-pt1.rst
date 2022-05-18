@@ -259,25 +259,23 @@ yet arrived.
 Code-along exercise: non-blocking stencil application
 -----------------------------------------------------
 
-.. challenge:: 1.1 Observe a deadlock
+.. challenge:: Observe a deadlock
 
-   1. Download the :download:`source code
-      <code/non-blocking-communication-deadlock.c>`. Open
-      ``non-blocking-communication-deadlock.c`` and read through it. Compile
-      with::
+   You can find a scaffold for the code in the
+   ``content/code/day-2/04_deadlock`` folder.  A working solution is in the
+   ``solution`` subfolder. Try to compile with::
 
         mpicc -g -Wall -std=c11 non-blocking-communication-deadlock.c -o non-blocking-communication-deadlock
 
-   2. When you have the code compiling, try to run with::
+   #. When you have the code compiling, try to run with::
 
         mpiexec -np 2 ./non-blocking-communication-deadlock
 
-   3. The communication may block. If it does, you will have to kill
+   #. The communication may block. If it does, you will have to kill
       the process to continue, e.g. with ``Ctrl-C``. If it doesn't,
       follow the first challenge to use a call to |term-MPI_Ssend|
       to make it block.
-
-   4. Try to fix the code so that one process sends before receiving
+   #. Try to fix the code so that one process sends before receiving
       and the other process does the opposite. Now it will work even
       if the runtime chooses to implement |term-MPI_Send| like
       |term-MPI_Ssend|.
@@ -316,9 +314,7 @@ Code-along exercise: non-blocking stencil application
 
    * There are other approaches that work correctly. Is yours better
      or worse than this one? Why?
-   * Download a :download:`working solution <code/non-blocking-communication-deadlock-solution.c>`
 
-     
 See also
 --------
 

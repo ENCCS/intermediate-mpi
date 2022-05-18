@@ -171,20 +171,19 @@ returned to the root rank. Often one simply wants a sum, and for that
 Code-along exercise: broadcast and reduce
 -----------------------------------------
 
-.. challenge:: 1.1 Use a broadcast and observe the results with reduce
+.. challenge:: Use a broadcast and observe the results with reduce
 
-   1. Download the :download:`source code
-      <code/collective-communication-broadcast.c>`. Open
-      ``collective-communication-broadcast.c`` and read through it. Try
-      to compile with::
+   You can find a scaffold for the code in the
+   ``content/code/day-2/00_broadcast`` folder.  A working solution is in the
+   ``solution`` subfolder. Try to compile with::
 
-        mpicc -g -Wall -std=c11 collective-communication-broadcast.c -o collective-communication-broadcast
+     mpicc -g -Wall -std=c11 collective-communication-broadcast.c -o collective-communication-broadcast
 
-   2. When you have the code compiling, try to run with::
+   #. When you have the code compiling, try to run with::
 
         mpiexec -np 2 ./collective-communication-broadcast
 
-   3. Use clues from the compiler and the comments in the code to
+   #. Use clues from the compiler and the comments in the code to
       change the code so it compiles and runs. Try to get all ranks to
       report success :-)
 
@@ -199,8 +198,6 @@ Code-along exercise: broadcast and reduce
 
    * There are other calls that work correctly. Is yours better or worse
      than this one? Why?
-   * Download a :download:`working solution <code/collective-communication-broadcast-solution.c>`
-
 
 Tips when using collective communication
 ----------------------------------------
@@ -218,7 +215,7 @@ However, it's fine to use point-to-point messages on the same
 communicator in any order; they work independently.
 
 
-.. challenge:: 1.2 Quiz: if one rank calls a reduce,
+.. challenge:: Quiz: if one rank calls a reduce,
    and another rank calls a broadcast, is it a problem?
 
    1. Yes, always.
@@ -232,7 +229,7 @@ communicator in any order; they work independently.
    3. Collectives *on the same communicator* must be called in the
       same order by all ranks of that communicator. Collectives on
       different communicators from disjoint groups of ranks don't
-      create problems for eachother.
+      create problems for each other.
 
 
 See also

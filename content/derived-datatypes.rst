@@ -275,7 +275,8 @@ MPI offers functions to query extent and size of its types: they all take a vari
          printf("For MPI_CHAR:\n  lowerbound = %ld; extent = %ld; size = %d\n", ..,
                  .., ..);
 
-      Download a :download:`working solution <code/basic-extent-size-solution.c>`
+      You can find the file with the complete source code in the
+      ``content/code/day-1/03_basic-extent-size/solution`` folder.
 
    #. Let's now look at the ``Pair`` data structure. We first need declare the
       data structure to MPI. The following code, which we will study
@@ -302,7 +303,8 @@ MPI offers functions to query extent and size of its types: they all take a vari
       What are the size and the extent? Do they match up with our pen-and-paper calculation?
       Try different combinations of datatypes and adding other fields to the ``struct``.
 
-      Download a :download:`working solution <code/struct-extent-size-solution.c>`
+      You can find the file with the complete source code in the
+      ``content/code/day-1/04_struct-extent-size/solution`` folder.
 
 
 .. typealong:: Extents and the ``count`` parameter
@@ -458,10 +460,14 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
 
       .. tab:: Pack and unpack
 
-         1. Download the :download:`scaffold source code <code/pokemon-pack-unpack.c>`.
-            Open it and read through it.
-         2. Pack the data in the ``message`` buffer.
-         3. Unpack the ``message`` buffer into its component data.
+         You can find a scaffold for the code in the
+         ``content/code/day-1/05_pokemon-pack-unpack`` folder. You will have to
+         complete the source code to compile and run correctly: follow the hints
+         in the source file.  A working solution is in the ``solution``
+         subfolder.
+
+         #. Pack the data in the ``message`` buffer.
+         #. Unpack the ``message`` buffer into its component data.
 
          Compile with::
 
@@ -471,9 +477,6 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
          - What is the purpose of the ``position`` variable? Print its value
            after each packing and unpacking. Do these values conform with your
            intuition?
-
-         Download a :download:`working solution <code/pokemon-pack-unpack-solution.c>`
-
          - Should packing and unpacking happen in the same order? What happens if not?
          - What happens when there is a mismatch of types between packing and unpacking?
          - We could have packed our data as ``char``, ``int``, ``double``, and
@@ -493,7 +496,8 @@ sort of heterogeneous collection of basic datatypes recognized by MPI.
          more appropriately.
          What could be problematic with the pack/unpack approach?
 
-         Download a :download:`working solution <code/pokemon-pack-unpack-size-solution.c>`
+         A working solution is in the
+         ``content/code/day-1/06_pokemon-pack-unpack-size/solution`` folder.
 
       .. tab:: Superbonus
 
@@ -666,6 +670,8 @@ constructor |term-MPI_Type_create_struct| will suit your needs:
 .. typealong:: The MPI version of the ``Pair`` datatype
 
    We saw code for this earlier on, but without explanation. Let's dive into it now!
+   You can find the file with the complete source code in the
+   ``content/code/day-1/04_struct-extent-size/solution`` folder.
 
    ``Pair`` has two fields, hence ``count = 2`` in the call to
    ``MPI_Type_create_struct``. All array arguments to this function will have
@@ -711,36 +717,36 @@ constructor |term-MPI_Type_create_struct| will suit your needs:
 
       MPI_Type_free(&mpi_pair);
 
-   Download the :download:`complete source code <code/struct-extent-size-solution.c>`
-
 
 .. challenge:: More message passing Pokémons
 
    We will revisit the Pokémon example from above using custom datatypes.
 
+   You can find a scaffold for the code in the
+   ``content/code/day-1/07_pokemon-type-create-struct`` folder.
+   You will have to complete the source code to compile and run correctly:
+   follow the hints in the source file.  A working solution is in the
+   ``solution`` subfolder.
+
    .. tabs::
 
       .. tab:: Pokémons, again!
 
-         1. Download the :download:`scaffold source code <code/pokemon-type-create-struct.c>`.
-            Open it and read through it.
-         2. Define the C ``struct`` for a pokémon. This has to contain:
+         #. Define the C ``struct`` for a pokémon. This has to contain:
 
             - The attacking pokémon's name: a ``char`` array.
             - How many life points it has: a ``double``.
             - The damage its attack will inflict: an ``int``.
             - A damage multiplier: a ``double``.
 
-         3. Create its corresponding MPI datatype.
-         4. Print it out on the receiving process.
+         #. Create its corresponding MPI datatype.
+         #. Print it out on the receiving process.
 
          Compile with::
 
            mpicc -g -Wall -std=c11 pokemon-type-create-struct.c -o pokemon-type-create-struct
 
          What happens if you don't commit the type?
-
-         Download a :download:`working solution <code/pokemon-type-create-struct-solution.c>`
 
       .. tab:: Superbonus
 
