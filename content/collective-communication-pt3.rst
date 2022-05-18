@@ -112,21 +112,19 @@ set for each process to a new dimension.
 Code-along exercise: all-gather and all-to-all
 ----------------------------------------------
 
-.. challenge:: 3.1 Use all-gather
+.. challenge:: Use all-gather
 
-   1. Download the :download:`source code
-      <code/collective-communication-allgather.c>`. Open
-      ``collective-communication-allgather.c`` and read
-      through it. It's similar to the broadcast code we saw
-      earlier. Try to compile with::
+   You can find a scaffold for the code in the
+   ``content/code/day-2/02_allgather`` folder.  A working solution is in the
+   ``solution`` subfolder. Try to compile with::
 
         mpicc -g -Wall -std=c11 collective-communication-allgather.c -o collective-communication-allgather
 
-   2. When you have the code compiling, try to run with::
+   #. When you have the code compiling, try to run with::
 
         mpiexec -np 4 ./collective-communication-allgather
 
-   3. Use clues from the compiler and the comments in the code to
+   #. Use clues from the compiler and the comments in the code to
       change the code so it compiles and runs. Try to get all ranks to
       report success :-)
 
@@ -139,15 +137,12 @@ Code-along exercise: all-gather and all-to-all
                        comm);
 
    * What happened if you mistakenly used 4 or 12 for the counts? Why?
-   * Download a :download:`working solution <code/collective-communication-allgather-solution.c>`
 
-.. challenge:: 3.2 Use all-to-all
+.. challenge:: Use all-to-all
 
-   1. Download the :download:`source code
-      <code/collective-communication-alltoall.c>`. Open
-      ``collective-communication-alltoall.c`` and read
-      through it. It's similar to the broadcast code we saw
-      earlier. Try to compile with::
+   You can find a scaffold for the code in the
+   ``content/code/day-2/03_alltoall`` folder.  A working solution is in the
+   ``solution`` subfolder. Try to compile with::
 
         mpicc -g -Wall -std=c11 collective-communication-alltoall.c -o collective-communication-alltoall
 
@@ -168,7 +163,6 @@ Code-along exercise: all-gather and all-to-all
                      comm);
 
    * What happened if you mistakenly used 4 or 12 for the counts? Why?
-   * Download a :download:`working solution <code/collective-communication-alltoall-solution.c>`
 
 Final thoughts
 --------------

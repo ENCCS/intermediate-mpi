@@ -125,6 +125,9 @@ A communicator consists of:
      mpirun -np 2 program
 
    Let's get reacquainted with some functions with communicators as parameters.
+   You can find the file with the complete source code in the
+   ``content/code/day-1/00_comms-groups-create`` folder.
+
    Probably the most basic ones are:
 
    - ``MPI_Comm_size``, to obtain the size of the group spanning the
@@ -235,13 +238,14 @@ A communicator consists of:
    Time for some practice! We will run with 4 processes, divide them evenly into two
    groups and create a new communicator out of them.
 
-   Download the :download:`scaffold source code
-   <code/comms-groups-divide-evenly.c>`.  Open it and read through it. Address
-   the ``FIXME`` points appropriately. Compile with::
+   You can find a scaffold for the code in the
+   ``content/code/day-1/01_comms-groups-divide-evanly`` folder.
+   You will have to complete the source code to compile and run correctly:
+   follow the hints in the source file. Compile with::
 
      mpicc -g -Wall -std=c11 comms-groups-divide-evenly.c -o comms-groups-divide-evenly
 
-   Download a :download:`working solution <code/comms-groups-divide-evenly-solution.c>`
+   A working solution is in the ``solution`` subfolder.
 
 
 .. challenge:: Calculating :math:`\pi`
@@ -257,8 +261,9 @@ A communicator consists of:
    To reduce communication traffic, this single process will fill and send a
    whole array of random numbers.
 
-   1. Download the :download:`scaffold source code <code/pi-monte-carlo.c>`.
-      Open it and read through it.
+   You can find a scaffold for the code in the
+   ``content/code/day-1/02_compute-pi`` folder.
+
    #. Only one process will generate random data. Define a ``checkers_g`` group
       including all other processes which will be acting as checkers.
    #. Define a communicator for the checker processes.
@@ -273,7 +278,7 @@ A communicator consists of:
 
      mpicc -g -Wall -std=c11 pi-monte-carlo.c -o pi-monte-carlo
 
-   Download a :download:`working solution <code/pi-monte-carlo-solution.c>`
+   A working solution is in the ``solution`` subfolder.
 
 
 See also
