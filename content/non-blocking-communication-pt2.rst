@@ -85,7 +85,6 @@ Code-along exercise: non-blocking ireduce during stencil workflow
 .. challenge:: Observe a running total during a stencil workflow
 
    You can find a scaffold for the code in the ``content/code/day-3/00_ireduce``
-   You can find a scaffold for the code in the ``content/code/day-2/05_ireduce``
    folder. It is quite similar to that for the earlier non-blocking code-along
    exercise. A working solution is in the ``solution`` subfolder. Try to compile
    with::
@@ -111,6 +110,10 @@ Code analysis
 -------------
 
 How can you know when a blocking or non-blocking communication is required?
+It is cumbersome to analyse code with printing out instructions (``printf``)
+embedded in the code. For this reason, analysis tools have been written that
+allow you to monitor the behavior of your code in more detail.
+Some of these tools are Extrae/Paraver, TAU, Scalasca, to cite only a few of them.
 
 See also
 --------
@@ -119,11 +122,16 @@ See also
 * Chapter 2 of the **Using Advanced MPI** book by William Gropp *et al.* show
   examples of using the functions described in this episode. :cite:`Gropp2014-dz`
 * https://www.codingame.com/playgrounds/349/introduction-to-mpi/non-blocking-communications
-
+* https://tools.bsc.es/
+* https://www.cs.uoregon.edu/research/tau/home.php
+* https://www.scalasca.org/
 
 
 .. keypoints::
 
-   - TODO
-   - point 2
-   - ...
+   - Non-blocking collectives take advantage of the efficiency of collective
+     communications and allow at the same time the possibility of interleaving
+     useful work.
+   - Although it sounds contradictory and unuseful, a non-blocking barrier is
+     sometimes handy, for instance in the case where only a notification from
+     the processses arriving to the barrier is needed.
