@@ -1,6 +1,8 @@
 Instructor's guide
 ------------------
 
+This training material covers intermediate-level aspects of MPI programming.
+
 Learning outcomes
 =================
 
@@ -18,7 +20,77 @@ Tips
 Timing
 ======
 
-This training material covers intermediate-level aspects of MPI programming.
+Second iteration: 2022-06-14/17
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Second iteration of this workshop was given as 4 x (almost) 4 hours, that is 4
+half days.
+We ran the workshop in collaboration with Xin Li (PDC) and Pedro Ojeda May (HPC2N).
+
+**Day 1 - Tuesday 14 June 2022 – Communicators, groups, derived datatypes**
+
+  .. csv-table::
+     :widths: auto
+     :align: center
+     :delim: ;
+
+      9:00 -  9:10 ; Welcome and introduction to the training course
+      9:10 -  9:50 ; **Communicators and groups**
+      9:50 - 10:00 ; Break
+     10:00 - 10:40 ; **Derived datatypes: pack-unpack**
+     10:40 - 10:50 ; Break
+     10:50 - 11:30 ; **Derived datatypes: ``MPI_Datatype``**
+     11:30 - 11:40 ; Break
+     11:40 - 12:20 ; **Simple collective communication**
+     12:20 - 12:30 ; Wrap-up
+
+
+**Day 2 - Wednesday 15 June 2022 - Collective communication (including nonblocking)**
+
+  .. csv-table::
+     :widths: auto
+     :align: center
+     :delim: ;
+
+      9:00 -  9:10 ; What did we cover yesterday?
+      9:10 - 09:55 ; **Scatter and gather**
+      9:55 - 10:05 ; Break
+     10:05 - 10:50 ; **Generalized forms of gather**
+     10:50 - 11:00 ; Break
+     11:00 - 12:10 : **Non-blocking point-to-point**
+     12:10 - 12:20 ; Wrap-up
+
+
+**Day 3 - Thursday 16 June 2022 – Non-blocking and one-sided communication**
+
+  .. csv-table::
+     :widths: auto
+     :align: center
+     :delim: ;
+
+      9:00 -  9:10 ; What did we cover yesterday?
+      9:10 -  9:50 ; **Non-blocking collective communication**
+      9:50 - 10:00 ; Break
+     10:00 - 10:40 ; **One-sided communication: concepts**
+     10:40 - 10:50 ; Break
+     10:50 - 11:40 ; **One-sided communication: functions**
+     11:40 - 12:00 ; Wrap-up
+
+
+**Day 4 - Friday 17 June 2022 - MPI and threads**
+
+  .. csv-table::
+     :widths: auto
+     :align: center
+     :delim: ;
+
+      9:00 -  9:10 ; What did we cover yesterday?
+      9:10 - 10:00 ; **One-sided communication: synchronization**
+     10:00 - 10:10 ; Break
+     10:10 - 11:20 ; **Introducing MPI and threads** 
+     11:20 - 11:30 ; Break
+     11:30 - 12:10 ; **MPI and threads in practice**
+     12:10 - 12:20 ; Wrap-up
 
 
 First iteration: 2020-12-08/11

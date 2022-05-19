@@ -43,7 +43,8 @@ for recommended prerequisite knowledge.
    :caption: The lesson
 
    communicators-groups
-   derived-datatypes
+   derived-datatypes-pt1
+   derived-datatypes-pt2
    collective-communication-pt1
    collective-communication-pt2
    collective-communication-pt3
@@ -61,18 +62,19 @@ for recommended prerequisite knowledge.
    :align: left
    :delim: ;
 
-   30 min ; :doc:`communicators-groups`
-   30 min ; :doc:`derived-datatypes`
-   35 min ; :doc:`collective-communication-pt1`
-   35 min ; :doc:`collective-communication-pt2`
-   35 min ; :doc:`collective-communication-pt3`
-   60 min ; :doc:`non-blocking-communication-pt1`
-   30 min ; :doc:`non-blocking-communication-pt2`
-   30 min ; :doc:`one-sided-concepts`
-   30 min ; :doc:`one-sided-routines`
-   45 min ; :doc:`one-sided-sync`
-   60 min ; :doc:`mpi-and-threads-pt1`
-   30 min ; :doc:`mpi-and-threads-pt2`
+   40 min ; :doc:`communicators-groups`
+   40 min ; :doc:`derived-datatypes-pt1`
+   40 min ; :doc:`derived-datatypes-pt2`
+   40 min ; :doc:`collective-communication-pt1`
+   45 min ; :doc:`collective-communication-pt2`
+   45 min ; :doc:`collective-communication-pt3`
+   70 min ; :doc:`non-blocking-communication-pt1`
+   40 min ; :doc:`non-blocking-communication-pt2`
+   40 min ; :doc:`one-sided-concepts`
+   50 min ; :doc:`one-sided-routines`
+   50 min ; :doc:`one-sided-sync`
+   70 min ; :doc:`mpi-and-threads-pt1`
+   40 min ; :doc:`mpi-and-threads-pt2`
 
 .. toctree::
    :maxdepth: 1
