@@ -85,6 +85,7 @@ Code-along exercise: non-blocking ireduce during stencil workflow
 .. challenge:: Observe a running total during a stencil workflow
 
    You can find a scaffold for the code in the ``content/code/day-3/00_ireduce``
+   You can find a scaffold for the code in the ``content/code/day-2/05_ireduce``
    folder. It is quite similar to that for the earlier non-blocking code-along
    exercise. A working solution is in the ``solution`` subfolder. Try to compile
    with::
@@ -105,7 +106,6 @@ Code-along exercise: non-blocking ireduce during stencil workflow
 
    * There are other approaches that work correctly. Is yours better
      or worse than this one? Why?
-
 
 Code analysis
 -------------
