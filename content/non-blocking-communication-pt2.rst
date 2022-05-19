@@ -110,7 +110,7 @@ Code analysis
 -------------
 
 How can you know when a blocking or non-blocking communication is required?
-It is cumbersome to analyse code with printing out instructions (|term-printf|)
+It is cumbersome to analyse code with printing out instructions (``printf``)
 embedded in the code. For this reason, analysis tools have been written that
 allow you to monitor the behavior of your code in more detail.
 Some of these tools are Extrae/Paraver, TAU, Scalasca, to cite only a few of them.
