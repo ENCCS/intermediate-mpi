@@ -115,6 +115,18 @@ embedded in the code. For this reason, analysis tools have been written that
 allow you to monitor the behavior of your code in more detail.
 Some of these tools are Extrae/Paraver, TAU, Scalasca, to cite only a few of them.
 
+.. figure:: img/extrae-deadlock.png
+   :align: center
+
+   MPI calls analysis for the deadlock example in the previous non-blocking
+   section.
+
+
+.. figure:: img/extrae-overlap.png
+   :align: center
+
+   MPI calls analysis for the overlap example.
+
 
 See also
 --------
@@ -126,7 +138,7 @@ See also
 * https://tools.bsc.es/
 * https://www.cs.uoregon.edu/research/tau/home.php
 * https://www.scalasca.org/
-
+* https://prace-ri.eu/wp-content/uploads/WP237.pdf
 
 .. keypoints::
 
