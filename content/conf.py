@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath("."))
 
 project = "Intermediate MPI"
 copyright = "2020, EuroCC National Competence Centre Sweden"
-author = "Mark Abraham, Roberto Di Remigio, Kjartan Thor Wikfeldt"
+author = "Mark Abraham, Roberto Di Remigio, Pedro Ojeda May, Xin Li, Kjartan Thor Wikfeldt"
 github_user = "ENCCS"
 github_repo_name = "intermediate-mpi"  # auto-detected from dirname if blank
 github_version = "master"
