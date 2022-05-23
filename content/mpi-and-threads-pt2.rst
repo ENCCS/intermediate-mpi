@@ -103,6 +103,39 @@ Using OpenMP tasking with MPI
       it entails. Do this only when you really need to!
 
 
+Setting the proper thread affinity
+----------------------------------
+
+Setting the affinity or the preferred location of threads in the hardware
+is crucial for the performance of hybrid MPI+OpenMP applications specially in
+modern architectures which are composed of several non-uniform memory access (NUMA)
+nodes. 
+
+
+.. figure:: img/kebnekaise.png
+   :align: center
+
+   Kebnekaise architecture contains two NUMA nodes and 14 cores per NUMA node.
+   Also several levels of cache L1,L2, and L3 can be seen in this architecture.
+
+In addition to the physical cores (28 per node on Kebnekaise), logical cores could be
+available in your system but this option is usually turned-off in HPC systems.
+In the case of Kebnekaise, only one thread can run on a physical core:
+
+
+.. signature:: |System information|
+
+   .. code-block:: c
+
+      lscpu | grep -i 'core\|thread\|Socket'
+      Thread(s) per core:              1
+      Core(s) per socket:              14
+      Socket(s):                       2
+
+
+
+
+
 Tips for implementing hybrid MPI+OpenMP
 ---------------------------------------
 
@@ -143,6 +176,7 @@ See also
 --------
 
 * `Hybrid MPI-OpenMP best practices <http://www.intertwine-project.eu/sites/default/files/images/INTERTWinE_Best_Practice_Guide_MPI%2BOpenMP_1.2.pdf>`_
+* `Kebnekaise https://www.hpc2n.umu.se/resources/hardware/kebnekaise`
 
 .. keypoints::
 
