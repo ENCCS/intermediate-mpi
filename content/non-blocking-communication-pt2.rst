@@ -188,3 +188,6 @@ See also
    - Although it sounds contradictory and unuseful, a non-blocking barrier is
      sometimes handy, for instance in the case where only a notification from
      the processses arriving to the barrier is needed.
+   - There are several available tools that can allow you to analyse your code in
+     detail. Here, we have described the Extrae and Paraver tools but there are
+     others in the market.
