@@ -115,18 +115,58 @@ embedded in the code. For this reason, analysis tools have been written that
 allow you to monitor the behavior of your code in more detail.
 Some of these tools are Extrae/Paraver, TAU, Scalasca, to cite only a few of them.
 
+Here, we will mention the combination of Extrae and Paraver tools that are
+developed at the Barcelona Supercomputing Center (BSC) and provide support
+for different architectures including CPUs and GPUs and also for different
+parallelisation levels, for instance, MPI, OpenMP, and MPI+OpenMP. Extrae is the
+tool used for producing trace files while Paraver is the visualiser/analyser
+tool.
+
+In order to use Extrae, one needs to compile the code with debugging flag
+(``-g``). Events that should be monitored by Extrae are included in a ``.xml``
+file (``extrae.xml``), for instance MPI or OpenMP:
+
+.. signature:: |``extrae.xml``|
+
+   .. code-block:: c
+
+      <?xml version='1.0'?>
+      
+        <trace enabled="yes"
+         home="/software/Extrae/3.8.0-gompi-2020b"
+         initial-mode="detail"
+         type="paraver" >
+      
+        <mpi enabled="yes">
+          <counters enabled="yes" />
+        </mpi>
+      
+        <openmp enabled="no">
+          <locks enabled="no" />
+          <counters enabled="no" />
+        </openmp>
+      
+      </trace>
+
+For the non-blocking deadlock and overlap cases discussed in the previous lecture,
+the MPI call events show the following patterns in Paraver:
+
 .. figure:: img/extrae-deadlock.png
    :align: center
 
-   MPI calls analysis for the deadlock example in the previous non-blocking
+   MPI calls analysis for the deadlock case in the previous non-blocking
    section.
 
 
 .. figure:: img/extrae-overlap.png
    :align: center
 
-   MPI calls analysis for the overlap example.
+   MPI calls analysis for the overlap case.
 
+Notice that the size in the horizontal axis for the grid was increased to 8000
+to make the visualisation clearer. From the overlap case, we can see that some
+work was interleaved (black region) between the |term-MPI_Isend| and 
+|term-MPI_Irecv| calls and the waiting call (red rectangles).
 
 See also
 --------
