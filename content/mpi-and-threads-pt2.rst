@@ -358,8 +358,9 @@ See also
 --------
 
 * `Hybrid MPI-OpenMP best practices <http://www.intertwine-project.eu/sites/default/files/images/INTERTWinE_Best_Practice_Guide_MPI%2BOpenMP_1.2.pdf>`_
-* `Kebnekaise https://www.hpc2n.umu.se/resources/hardware/kebnekaise`
-* `xthi.c code https://support.hpe.com/hpesc/public/docDisplay?docLocale=en_US&docId=a00114008en_us&page=Run_an_OpenMP_Application.html`
+* `Kebnekaise <https://www.hpc2n.umu.se/resources/hardware/kebnekaise>`
+* `xthi.c code <https://support.hpe.com/hpesc/public/docDisplay?docLocale=en_US&docId=a00114008en_us&page=Run_an_OpenMP_Application.html>`
+* `OpenMPI API specification 5.2 <https://www.openmp.org/wp-content/uploads/OpenMP-API-Specification-5-2.pdf>`
 
 .. keypoints::
 
