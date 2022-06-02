@@ -95,13 +95,33 @@ Code-along exercise: non-blocking ireduce during stencil workflow
 
         mpiexec -np 2 ./non-blocking-communication-ireduce
 
-   #. Try to fix the code TODO
+   #. Try to fix the code
 
 .. solution::
 
    * One correct approach is::
 
-        TODO
+            fprintf(stderr, "Doing an non-blocking reduction on step %d\n", step);
+            MPI_Ireduce(&local_total, &temporary_total, 1, MPI_FLOAT, MPI_SUM, total_root_rank, comm, &total_request);
+        }
+        /* Wait for the most recent total heat reduction, 4 steps after it was started */
+        if (step % 5 == 3 && total_request != MPI_REQUEST_NULL)
+        {
+            MPI_Wait(&total_request, MPI_STATUS_IGNORE);
+            total = temporary_total;
+            if (rank == total_root_rank)
+            {
+                fprintf(stderr, "Total after waiting at step %d was %g\n", step, total);
+            }
+        }
+
+           ... same code as in the original example 
+
+    /* Now that we have left the main loop, we should wait for
+     * the most recent total heat reduction to complete. */
+    if (total_request != MPI_REQUEST_NULL)
+    {
+        MPI_Wait(&total_request, MPI_STATUS_IGNORE);
 
    * There are other approaches that work correctly. Is yours better
      or worse than this one? Why?
