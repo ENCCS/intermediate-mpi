@@ -275,9 +275,6 @@ call |term-MPI_Is_thread_main|.
    ie. the one that called |term-MPI_Init_thread|.
 
 
-Code-along exercise: run MPI with threading support
----------------------------------------------------
-
 .. challenge:: Compile an MPI program and observe what thread level is supported
 
    You can find a scaffold for the code in the

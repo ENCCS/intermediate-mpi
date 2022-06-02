@@ -256,10 +256,8 @@ continue with unrelated computation because no message with work has
 yet arrived.
 
 
-Code-along exercise: non-blocking stencil application
------------------------------------------------------
 
-.. challenge:: Observe a deadlock
+.. challenge:: Observe a deadlock in a non-blocking stencil application
 
    You can find a scaffold for the code in the
    ``content/code/day-2/04_deadlock`` folder.  A working solution is in the
@@ -314,6 +312,51 @@ Code-along exercise: non-blocking stencil application
 
    * There are other approaches that work correctly. Is yours better
      or worse than this one? Why?
+
+
+.. challenge:: Ovelaping communication and computation 
+
+   You can find a scaffold for the code in the
+   ``content/code/day-2/05_overlap`` folder.  A working solution is in the
+   ``solution`` subfolder. Try to compile with::
+
+        mpicc -g -Wall -std=c11 non-blocking-communication-overlap.c -o non-blocking-communication-overlap
+
+   #. When you have the code compiling, try to run with::
+
+        mpiexec -np 2 ./non-blocking-communication-overlap
+
+   #. Try to fix the code so that local and non-local computations are overlapped between the the
+      send/recv  and wait calls.
+
+.. solution::
+
+   * One correct approach is::
+
+        MPI_Irecv(working_data_set[5], 8, MPI_INT, source_rank, send_up_tag, comm, &sent_from_source[0]);
+        MPI_Irecv(working_data_set[0], 8, MPI_INT, source_rank, send_down_tag, comm, &sent_from_source[1]);
+    
+        /* Prepare to send the border data */
+        int destination_rank = size-rank-1;
+        MPI_Request sent_to_destination[2];
+        MPI_Isend(working_data_set[1], 8, MPI_INT, destination_rank, send_up_tag, comm, &sent_to_destination[0]);
+        MPI_Isend(working_data_set[4], 8, MPI_INT, destination_rank, send_down_tag, comm, &sent_to_destination[1]);
+    
+        /* Do the local computation */
+        compute_row(2, working_data_set, next_working_data_set);
+        compute_row(3, working_data_set, next_working_data_set);
+    
+        /* Wait for the receives to complete */
+        MPI_Wait(&sent_from_source[0], MPI_STATUS_IGNORE);
+        MPI_Wait(&sent_from_source[1], MPI_STATUS_IGNORE);
+        
+        /* Do the non-local computation */
+        compute_row(1, working_data_set, next_working_data_set);
+        compute_row(4, working_data_set, next_working_data_set);
+    
+        /* Wait for the sends to complete */
+        MPI_Wait(&sent_to_destination[0], MPI_STATUS_IGNORE);
+        MPI_Wait(&sent_to_destination[1], MPI_STATUS_IGNORE);
 
 See also
 --------

@@ -42,12 +42,12 @@ the regions that are single-threaded.
 omp parallel``, so applications that already use MPI outside such loops
 can be converted to hybrid parallelism fairly easily.
 
-.. challenge::
+.. challenge:: Using the thread funneled MPI option
 
    You can find a scaffold for the code in the
    ``content/code/day-4/01_threading-funneled`` folder.  A working solution is
    in the ``solution`` subfolder. It is quite similar to that for the earlier
-   non-blocking code-along exercise. Try to compile with::
+   non-blocking exercise. Try to compile with::
 
         mpicc -g -fopenmp -Wall -std=c11 threading-funneled.c -o threading-funneled
 
@@ -86,7 +86,7 @@ Using OpenMP tasking with MPI
    time step, but how many threads to assign to each part might be
    able to be tuned over the duration of the program.
 
-.. challenge::
+.. challenge:: Using the thread multiple MPI option
 
    You can find a scaffold for the code in the
    ``content/code/day-4/02_threading-multiple`` folder.  A working solution is in the

@@ -79,10 +79,7 @@ in the root process.
    communication later.
 
 
-Code-along exercise: non-blocking ireduce during stencil workflow
------------------------------------------------------------------
-
-.. challenge:: Observe a running total during a stencil workflow
+.. challenge:: Using ``ireduce`` for computing a running total in a stencil workflow
 
    You can find a scaffold for the code in the ``content/code/day-3/00_ireduce``
    folder. It is quite similar to that for the earlier non-blocking code-along
