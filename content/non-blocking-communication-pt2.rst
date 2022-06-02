@@ -117,11 +117,11 @@ Code-along exercise: non-blocking ireduce during stencil workflow
 
            ... same code as in the original example 
 
-    /* Now that we have left the main loop, we should wait for
-     * the most recent total heat reduction to complete. */
-    if (total_request != MPI_REQUEST_NULL)
-    {
-        MPI_Wait(&total_request, MPI_STATUS_IGNORE);
+        /* Now that we have left the main loop, we should wait for
+         * the most recent total heat reduction to complete. */
+        if (total_request != MPI_REQUEST_NULL)
+        {
+            MPI_Wait(&total_request, MPI_STATUS_IGNORE);
 
    * There are other approaches that work correctly. Is yours better
      or worse than this one? Why?
