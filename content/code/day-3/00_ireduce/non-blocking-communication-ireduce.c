@@ -78,6 +78,7 @@ int main(int argc, char **argv)
      * and wait on those reductions only on steps 8 and at the end.
      */
 
+    /* Do the loop over heat-propagation steps */
     float next_working_data_set[6][8];
     float total, local_total, temporary_total;
     const int total_root_rank = 0;
@@ -102,7 +103,7 @@ int main(int argc, char **argv)
         compute_row(2, working_data_set, next_working_data_set);
         compute_row(3, working_data_set, next_working_data_set);
 
-        /* Wait for the receives to complete */
+        /* Wait for the halo-exchange receives to complete */
         MPI_Wait(&sent_from_source[0], MPI_STATUS_IGNORE);
         MPI_Wait(&sent_from_source[1], MPI_STATUS_IGNORE);
     
@@ -110,6 +111,7 @@ int main(int argc, char **argv)
         compute_row(1, working_data_set, next_working_data_set);
         compute_row(4, working_data_set, next_working_data_set);
 
+        /* Compute the total heat via non-blocking reduction */
         if (step % 5 == 4)
         {
             local_total = 0;
@@ -123,6 +125,7 @@ int main(int argc, char **argv)
             fprintf(stderr, "Doing an non-blocking reduction on step %d\n", step);
             /* MPI_xxx(xxx) */
         }
+        /* Wait for the most recent total heat reduction, 4 steps after it was started */
         if (step % 5 == 3 && total_request != MPI_REQUEST_NULL)
         {
             /* MPI_xxx(xxx) */
@@ -143,7 +146,7 @@ int main(int argc, char **argv)
             }
         }
 
-        /* Wait for the sends to complete */
+        /* Wait for the halo-exchange sends to complete */
         MPI_Wait(&sent_to_destination[0], MPI_STATUS_IGNORE);
         MPI_Wait(&sent_to_destination[1], MPI_STATUS_IGNORE);
 
@@ -157,6 +160,8 @@ int main(int argc, char **argv)
             }
         }
     }
+    /* Now that we have left the main loop, we should wait for
+     * the most recent total heat reduction to complete. */
     if (total_request != MPI_REQUEST_NULL)
     {
         /* MPI_xxx(xxx) */

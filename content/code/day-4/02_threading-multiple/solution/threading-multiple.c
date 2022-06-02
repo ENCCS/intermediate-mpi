@@ -1,6 +1,8 @@
 #include <omp.h>
 #include "mpi.h"
+#include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 void compute_row(int row_index, float input[6][8], float output[6][8])
 {
@@ -99,7 +101,8 @@ int main(int argc, char **argv)
     const int total_root_rank = 0;
     MPI_Request total_request = MPI_REQUEST_NULL;
     const int max_step = 10;
-    omp_set_nested(1);
+    //omp_set_nested(1);
+    omp_set_max_active_levels(2);
     report_thread_id("Before loop", -1, rank);
     for (int step = 0; step < max_step; step = step + 1)
     {
@@ -216,7 +219,7 @@ int main(int argc, char **argv)
         if (rank == total_root_rank)
         {
             const float expected_total_value = (step < 8) ? 0 : 300000;
-            if (total != expected_total_value)
+            if (fabs(total-expected_total_value) > 0.1e-8)
             {
                 success = 0;
                 printf("Failed on step %d with total %g not matching expected %g\n",
@@ -249,7 +252,7 @@ int main(int argc, char **argv)
     if (rank == total_root_rank)
     {
         const float expected_total_value = 9.375e+08;
-        if (total != expected_total_value)
+        if (fabs(total-expected_total_value) > 0.1e-8)
         {
             success = 0;
             printf("Failed on step %d with total %g not matching expected %g\n",
