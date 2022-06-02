@@ -136,19 +136,27 @@ Without specifying the location of threads, the OS decides where the threads
 are placed. Binding of OpenMP threads can be controlled with the enviroment variables:
 
 
-.. signature:: ``OMP_PROC_BIND=false,true,close,primary,spread``
+.. signature:: ``OMP_PROC_BIND``
 
    .. code-block:: c
 
-      |term-true| and ``false`` values tell the OS that threads are fixed or they
+      OMP_PROC_BIND=false,true,close,primary,spread
+
+   .. parameters::
+
+      ``true`` and ``false`` values tell the OS that threads are fixed or they
       are can move to a different core, respectively. ``primary`` will place all the threads
       on the same core where the primary thread for each rank will run. ``close`` and ``spread``
       are used to place the threads close to each other or well separated, respectively. 
 
 
-.. signature:: ``OMP_PLACES=cores,threads,sockets``
+.. signature:: ``OMP_PLACES``
 
    .. code-block:: c
+
+      OMP_PLACES=cores,threads,sockets
+
+   .. parameters::
 
       ``cores`` denotes a physical core location, ``threads`` is used to bind to hyperthreads 
       (if available), and ``sockets`` is used to denote a single socket per thread.
