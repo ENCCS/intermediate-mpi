@@ -140,7 +140,7 @@ are placed. Binding of OpenMP threads can be controlled with the enviroment vari
 
    .. code-block:: c
 
-      ``true`` and ``false`` values tell the OS that threads are fixed or they
+      |term-true| and ``false`` values tell the OS that threads are fixed or they
       are can move to a different core, respectively. ``primary`` will place all the threads
       on the same core where the primary thread for each rank will run. ``close`` and ``spread``
       are used to place the threads close to each other or well separated, respectively. 
@@ -161,7 +161,7 @@ at the bottom of this page.
 
 .. challenge::
 
-   Download the ``xthi.c` code and compile it with::
+   Download the ``xthi.c`` code and compile it with::
 
         mpicc -fopenmp -Wall -std=c11 xthi.c -o xthi_exe
 
@@ -358,9 +358,9 @@ See also
 --------
 
 * `Hybrid MPI-OpenMP best practices <http://www.intertwine-project.eu/sites/default/files/images/INTERTWinE_Best_Practice_Guide_MPI%2BOpenMP_1.2.pdf>`_
-* `Kebnekaise <https://www.hpc2n.umu.se/resources/hardware/kebnekaise>`
-* `xthi.c code <https://support.hpe.com/hpesc/public/docDisplay?docLocale=en_US&docId=a00114008en_us&page=Run_an_OpenMP_Application.html>`
-* `OpenMPI API specification 5.2 <https://www.openmp.org/wp-content/uploads/OpenMP-API-Specification-5-2.pdf>`
+* `Kebnekaise <https://www.hpc2n.umu.se/resources/hardware/kebnekaise>`_
+* `xthi.c code <https://support.hpe.com/hpesc/public/docDisplay?docLocale=en_US&docId=a00114008en_us&page=Run_an_OpenMP_Application.html>`_
+* `OpenMPI API specification 5.2 <https://www.openmp.org/wp-content/uploads/OpenMP-API-Specification-5-2.pdf>`_
 
 .. keypoints::
 
