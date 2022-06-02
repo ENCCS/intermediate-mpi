@@ -123,11 +123,11 @@ available in your system but this option is usually turned-off in HPC systems.
 In the case of Kebnekaise, only one thread can run on a physical core:
 
 
-.. signature:: |System information|
+.. signature:: System information
 
    .. code-block:: c
 
-      lscpu | grep -i 'core\|thread\|Socket'
+      $lscpu | grep -i 'core\|thread\|Socket'
       Thread(s) per core:              1
       Core(s) per socket:              14
       Socket(s):                       2
