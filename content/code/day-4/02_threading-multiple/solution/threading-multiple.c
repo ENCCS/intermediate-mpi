@@ -106,14 +106,20 @@ int main(int argc, char **argv)
     report_thread_id("Before loop", -1, rank);
     for (int step = 0; step < max_step; step = step + 1)
     {
-#pragma omp parallel num_threads(4)
+
+        MPI_Request sent_from_source[2];
+        MPI_Request sent_to_destination[2];
+        int send_up_tag = 0, send_down_tag = 1;
+#pragma omp parallel num_threads(2)
         {
             report_thread_id("First region", step, rank);
-#pragma omp parallel num_threads(2) /* Make a nested team */
-            {
-                report_thread_id("Second region", step, rank);
-                MPI_Request sent_to_destination[2];
-                int send_up_tag = 0, send_down_tag = 1;
+//#pragma omp parallel num_threads(2) /* Make a nested team */
+//            {
+//                report_thread_id("Second region", step, rank);
+//                MPI_Request sent_to_destination[2];
+//                int send_up_tag = 0, send_down_tag = 1;
+#pragma omp single
+{
 #pragma omp task
                 {
                     report_thread_id("isend", step, rank);
@@ -129,12 +135,12 @@ int main(int argc, char **argv)
                     report_thread_id("recv", step, rank);
                     /* Prepare to receive the halo data */
                     int source_rank = size-rank-1;
-                    MPI_Recv(working_data_set[5], 8, MPI_FLOAT, source_rank,
-                             send_up_tag, comm, MPI_STATUS_IGNORE);
-                    MPI_Recv(working_data_set[0], 8, MPI_FLOAT, source_rank,
-                             send_down_tag, comm, MPI_STATUS_IGNORE);
+                    MPI_Irecv(working_data_set[5], 8, MPI_FLOAT, source_rank,
+                             send_up_tag, comm, &sent_from_source[0]);
+                    MPI_Irecv(working_data_set[0], 8, MPI_FLOAT, source_rank,
+                             send_down_tag, comm, &sent_from_source[1]);
                 }
-#pragma omp barrier
+//#pragma omp barrier
                 /* Barrier to ensure receive has finished */
 
                 /* ==== CHALLENGE ====
@@ -149,25 +155,29 @@ int main(int argc, char **argv)
                  */
                 /* Do the non-local computation. OpenMP will distribute each
                  * iteration to a different thread. */
+}
+#pragma omp single
+{
+//#pragma omp task
+//                {
+                    /* Wait for the halo-exchange receives to complete */
+                    MPI_Wait(&sent_from_source[0], MPI_STATUS_IGNORE);
+                    MPI_Wait(&sent_from_source[1], MPI_STATUS_IGNORE);
+}
                 int non_local_work[] = {1, 4};
-#pragma omp parallel for
+#pragma omp for
                 for (int k = 0; k != 2; k = k + 1)
                 {
                     report_thread_id("non-local", step, rank);
                     compute_row(non_local_work[k], working_data_set, next_working_data_set);
                 }
                 /* Implied thread barrier here */
-#pragma omp task
-                {
-                    /* Wait for the halo-exchange sends to complete */
-                    MPI_Wait(&sent_to_destination[0], MPI_STATUS_IGNORE);
-                    MPI_Wait(&sent_to_destination[1], MPI_STATUS_IGNORE);
-                }
+//                }
                 /* No barrier needed at end of nested parallel region */
-            }
-#pragma omp parallel num_threads(2)
-            {            
-                report_thread_id("Third region", step, rank);
+            //}
+//#pragma omp parallel num_threads(2)
+//            {            
+//                report_thread_id("Third region", step, rank);
                 /* ==== CHALLENGE ====
                  *
                  * Uncomment and fix the arguments to the MPI call to make
@@ -188,7 +198,7 @@ int main(int argc, char **argv)
                     compute_row(local_work[k], working_data_set, next_working_data_set);
                 }
                 /* Implied thread barrier here */
-            }
+//            }
         }
         /* End thread-parallel region */
 
@@ -226,6 +236,10 @@ int main(int argc, char **argv)
                         step, total, expected_total_value);
             }
         }
+
+        /* Wait for the halo-exchange sends to complete */
+        MPI_Wait(&sent_to_destination[0], MPI_STATUS_IGNORE);
+        MPI_Wait(&sent_to_destination[1], MPI_STATUS_IGNORE);
 
         /* Prepare to iterate */
         for (int i = 1; i < 5; i = i + 1)
