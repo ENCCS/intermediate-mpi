@@ -21,14 +21,6 @@ void compute_row(int row_index, float input[6][8], float output[6][8])
     }
 }
 
-void report_thread_id(const char *prefix, int step, int rank)
-{
-    int thread_id = omp_get_thread_num();
-    int num_threads = omp_get_num_threads();
-    printf("Step %03d: %s: Working on thread id %d of %d on rank %d\n",
-           step, prefix, thread_id, num_threads, rank);
-}
-
 int main(int argc, char **argv)
 {
     /* ==== CHALLENGE ====
@@ -101,28 +93,17 @@ int main(int argc, char **argv)
     const int total_root_rank = 0;
     MPI_Request total_request = MPI_REQUEST_NULL;
     const int max_step = 10;
-    //omp_set_nested(1);
-    omp_set_max_active_levels(2);
-    report_thread_id("Before loop", -1, rank);
     for (int step = 0; step < max_step; step = step + 1)
     {
-
         MPI_Request sent_from_source[2];
         MPI_Request sent_to_destination[2];
         int send_up_tag = 0, send_down_tag = 1;
-#pragma omp parallel num_threads(2)
+#pragma omp parallel 
         {
-            report_thread_id("First region", step, rank);
-//#pragma omp parallel num_threads(2) /* Make a nested team */
-//            {
-//                report_thread_id("Second region", step, rank);
-//                MPI_Request sent_to_destination[2];
-//                int send_up_tag = 0, send_down_tag = 1;
 #pragma omp single
-{
+           {
 #pragma omp task
                 {
-                    report_thread_id("isend", step, rank);
                     /* Prepare to send the border data */
                     int destination_rank = size-rank-1;
                     MPI_Isend(working_data_set[1], 8, MPI_FLOAT, destination_rank,
@@ -132,7 +113,6 @@ int main(int argc, char **argv)
                 }
 #pragma omp task
                 {
-                    report_thread_id("recv", step, rank);
                     /* Prepare to receive the halo data */
                     int source_rank = size-rank-1;
                     MPI_Irecv(working_data_set[5], 8, MPI_FLOAT, source_rank,
@@ -140,8 +120,6 @@ int main(int argc, char **argv)
                     MPI_Irecv(working_data_set[0], 8, MPI_FLOAT, source_rank,
                              send_down_tag, comm, &sent_from_source[1]);
                 }
-//#pragma omp barrier
-                /* Barrier to ensure receive has finished */
 
                 /* ==== CHALLENGE ====
                  *
@@ -153,31 +131,24 @@ int main(int argc, char **argv)
                  * local_work, ie rows 1 and 4 of the working_data_set.  You
                  * may need to consult the parameter names of compute_row().
                  */
-                /* Do the non-local computation. OpenMP will distribute each
+#pragma omp task
+                {
+                int local_work[] = {2, 3};
+                /* Do the local computation. OpenMP will distribute each
                  * iteration to a different thread. */
-}
-#pragma omp single
-{
-//#pragma omp task
-//                {
+#pragma omp parallel for
+                for (int k = 0; k != 2; k = k + 1)
+                  {
+                    compute_row(local_work[k], working_data_set, next_working_data_set);
+                  }
+                }
+#pragma omp taskwait
+#pragma omp task
+                {
                     /* Wait for the halo-exchange receives to complete */
                     MPI_Wait(&sent_from_source[0], MPI_STATUS_IGNORE);
                     MPI_Wait(&sent_from_source[1], MPI_STATUS_IGNORE);
-}
-                int non_local_work[] = {1, 4};
-#pragma omp for
-                for (int k = 0; k != 2; k = k + 1)
-                {
-                    report_thread_id("non-local", step, rank);
-                    compute_row(non_local_work[k], working_data_set, next_working_data_set);
-                }
-                /* Implied thread barrier here */
-//                }
-                /* No barrier needed at end of nested parallel region */
-            //}
-//#pragma omp parallel num_threads(2)
-//            {            
-//                report_thread_id("Third region", step, rank);
+
                 /* ==== CHALLENGE ====
                  *
                  * Uncomment and fix the arguments to the MPI call to make
@@ -188,17 +159,17 @@ int main(int argc, char **argv)
                  * local_work, ie rows 2 and 3 of the working_data_set.  You
                  * may need to consult the parameter names of compute_row().
                  */
-                /* Do the local computation. OpenMP will distribute each
+                /* Do the non-local computation. OpenMP will distribute each
                  * iteration to a different thread. */
-                int local_work[] = {2, 3};
-#pragma omp for
+                int non_local_work[] = {1, 4};
+#pragma omp parallel for
                 for (int k = 0; k != 2; k = k + 1)
-                {
-                    report_thread_id("local", step, rank);
-                    compute_row(local_work[k], working_data_set, next_working_data_set);
+                  {
+                    compute_row(non_local_work[k], working_data_set, next_working_data_set);
+                  }
                 }
-                /* Implied thread barrier here */
-//            }
+
+           }
         }
         /* End thread-parallel region */
 

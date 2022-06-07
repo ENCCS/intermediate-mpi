@@ -9,7 +9,7 @@ Non-blocking point-to-point
 .. objectives::
 
    - Understand that messages can lead to deadlocks
-   - Implement an efficient stencil halo exchange
+   - Using non-blocking point-to-point messages in a stencil halo exchange application
 
 
 Introduction
@@ -362,7 +362,7 @@ See also
 --------
 
 
-* Chapter 1 of the **Using Advanced MPI** book by William Gropp *et al.* show
+* Chapter 1 of the **Using Advanced MPI** book by William Gropp *et al.* shows
   examples of using the functions described in this episode.
   :cite:`Gropp2014-dz`
 * https://www.codingame.com/playgrounds/349/introduction-to-mpi/non-blocking-communications

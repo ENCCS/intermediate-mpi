@@ -1,6 +1,8 @@
 #include <omp.h>
 #include "mpi.h"
+#include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 void compute_row(int row_index, float input[6][8], float output[6][8])
 {
@@ -19,14 +21,6 @@ void compute_row(int row_index, float input[6][8], float output[6][8])
     }
 }
 
-void report_thread_id(const char *prefix, int step, int rank)
-{
-    int thread_id = omp_get_thread_num();
-    int num_threads = omp_get_num_threads();
-    printf("Step %03d: %s: Working on thread id %d of %d on rank %d\n",
-           step, prefix, thread_id, num_threads, rank);
-}
-
 int main(int argc, char **argv)
 {
     /* ==== CHALLENGE ====
@@ -35,8 +29,8 @@ int main(int argc, char **argv)
      * We want to use general thread parallelism, so pick a more
      * suitable threading mode */
     /* Initialize the MPI environment and check */
-    int provided, required = MPI_THREAD_MULTIPLE;
-    MPI_Init_thread(NULL, NULL, required, &provided);
+    int provided, required /* = FIXME; */;
+    MPI_Init_thread(/* FIXME */);
     MPI_Comm comm = MPI_COMM_WORLD;
 
     /* If the program can't run, stop running */
@@ -99,21 +93,17 @@ int main(int argc, char **argv)
     const int total_root_rank = 0;
     MPI_Request total_request = MPI_REQUEST_NULL;
     const int max_step = 10;
-    omp_set_nested(1);
-    report_thread_id("Before loop", -1, rank);
     for (int step = 0; step < max_step; step = step + 1)
     {
-#pragma omp parallel num_threads(4)
+        MPI_Request sent_from_source[2];
+        MPI_Request sent_to_destination[2];
+        int send_up_tag = 0, send_down_tag = 1;
+#pragma omp parallel 
         {
-            report_thread_id("First region", step, rank);
-#pragma omp parallel num_threads(2) /* Make a nested team */
-            {
-                report_thread_id("Second region", step, rank);
-                MPI_Request sent_to_destination[2];
-                int send_up_tag = 0, send_down_tag = 1;
+#pragma omp single
+           {
 #pragma omp task
                 {
-                    report_thread_id("isend", step, rank);
                     /* Prepare to send the border data */
                     int destination_rank = size-rank-1;
                     MPI_Isend(working_data_set[1], 8, MPI_FLOAT, destination_rank,
@@ -123,16 +113,13 @@ int main(int argc, char **argv)
                 }
 #pragma omp task
                 {
-                    report_thread_id("recv", step, rank);
                     /* Prepare to receive the halo data */
                     int source_rank = size-rank-1;
-                    MPI_Recv(working_data_set[5], 8, MPI_FLOAT, source_rank,
-                             send_up_tag, comm, MPI_STATUS_IGNORE);
-                    MPI_Recv(working_data_set[0], 8, MPI_FLOAT, source_rank,
-                             send_down_tag, comm, MPI_STATUS_IGNORE);
+                    MPI_Irecv(working_data_set[5], 8, MPI_FLOAT, source_rank,
+                             send_up_tag, comm, &sent_from_source[0]);
+                    MPI_Irecv(working_data_set[0], 8, MPI_FLOAT, source_rank,
+                             send_down_tag, comm, &sent_from_source[1]);
                 }
-#pragma omp barrier
-                /* Barrier to ensure receive has finished */
 
                 /* ==== CHALLENGE ====
                  *
@@ -144,27 +131,24 @@ int main(int argc, char **argv)
                  * local_work, ie rows 1 and 4 of the working_data_set.  You
                  * may need to consult the parameter names of compute_row().
                  */
-                /* Do the non-local computation. OpenMP will distribute each
-                 * iteration to a different thread. */
-                int non_local_work[] = {1, 4};
-#pragma omp parallel for
-                for (int k = 0; k != 2; k = k + 1)
-                {
-                    report_thread_id("non-local", step, rank);
-                    compute_row(non_local_work[k], working_data_set, next_working_data_set);
-                }
-                /* Implied thread barrier here */
 #pragma omp task
                 {
-                    /* Wait for the halo-exchange sends to complete */
-                    MPI_Wait(&sent_to_destination[0], MPI_STATUS_IGNORE);
-                    MPI_Wait(&sent_to_destination[1], MPI_STATUS_IGNORE);
+                int local_work[] = /* FIXME */;
+                /* Do the local computation. OpenMP will distribute each
+                 * iteration to a different thread. */
+#pragma omp parallel for
+                for (int k = 0; k != 2; k = k + 1)
+                  {
+                    compute_row(/* FIXME */);
+                  }
                 }
-                /* No barrier needed at end of nested parallel region */
-            }
-#pragma omp parallel num_threads(2)
-            {            
-                report_thread_id("Third region", step, rank);
+#pragma omp taskwait
+#pragma omp task
+                {
+                    /* Wait for the halo-exchange receives to complete */
+                    MPI_Wait(/* FIXME */);
+                    MPI_Wait(/* FIXME */);
+
                 /* ==== CHALLENGE ====
                  *
                  * Uncomment and fix the arguments to the MPI call to make
@@ -175,17 +159,17 @@ int main(int argc, char **argv)
                  * local_work, ie rows 2 and 3 of the working_data_set.  You
                  * may need to consult the parameter names of compute_row().
                  */
-                /* Do the local computation. OpenMP will distribute each
+                /* Do the non-local computation. OpenMP will distribute each
                  * iteration to a different thread. */
-                int local_work[] = {2, 3};
-#pragma omp for
+                int non_local_work[] = /* FIXME */;
+#pragma omp parallel for
                 for (int k = 0; k != 2; k = k + 1)
-                {
-                    report_thread_id("local", step, rank);
-                    compute_row(local_work[k], working_data_set, next_working_data_set);
+                  {
+                    compute_row(/* FIXME */);
+                  }
                 }
-                /* Implied thread barrier here */
-            }
+
+           }
         }
         /* End thread-parallel region */
 
@@ -216,13 +200,17 @@ int main(int argc, char **argv)
         if (rank == total_root_rank)
         {
             const float expected_total_value = (step < 8) ? 0 : 300000;
-            if (total != expected_total_value)
+            if (fabs(total-expected_total_value) > 0.1e-8)
             {
                 success = 0;
                 printf("Failed on step %d with total %g not matching expected %g\n",
                         step, total, expected_total_value);
             }
         }
+
+        /* Wait for the halo-exchange sends to complete */
+        MPI_Wait(&sent_to_destination[0], MPI_STATUS_IGNORE);
+        MPI_Wait(&sent_to_destination[1], MPI_STATUS_IGNORE);
 
         /* Prepare to iterate */
         for (int i = 1; i < 5; i = i + 1)
@@ -249,7 +237,7 @@ int main(int argc, char **argv)
     if (rank == total_root_rank)
     {
         const float expected_total_value = 9.375e+08;
-        if (total != expected_total_value)
+        if (fabs(total-expected_total_value) > 0.1e-8)
         {
             success = 0;
             printf("Failed on step %d with total %g not matching expected %g\n",

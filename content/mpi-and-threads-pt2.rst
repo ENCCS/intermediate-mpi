@@ -53,7 +53,7 @@ can be converted to hybrid parallelism fairly easily.
 
    #. When you have the code compiling, try to run with::
 
-        mpiexec -np 2 ./threading-funneled
+        OMP_NUM_THREADS=2 mpiexec -np 2 ./threading-funneled
 
    #. Try to fix the code so that it compiles, runs, and reports success
 
@@ -96,11 +96,28 @@ Using OpenMP tasking with MPI
 
    #. When you have the code compiling, try to run with::
 
-        OMP_NUM_THREADS=4 mpiexec -np 2 ./threading-multiple
+        OMP_NUM_THREADS=2 mpiexec -np 2 ./threading-multiple
 
-   #. Unfortunately I haven't found the last bug in my use of OpenMP tasking,
       but you can see the kind of approach that can work, and the complexity
       it entails. Do this only when you really need to!
+
+.. solution::
+
+   * One correct approach is::
+
+        int provided, required = MPI_THREAD_MULTIPLE;
+        MPI_Init_thread(NULL, NULL, required, &provided);
+        /* ... */
+        int local_work[] = {2, 3};
+        /* ... */
+        compute_row(local_work[k], working_data_set, next_working_data_set);
+        /* ... */
+        MPI_Wait(&sent_from_source[0], MPI_STATUS_IGNORE);
+        MPI_Wait(&sent_from_source[1], MPI_STATUS_IGNORE);
+        /* ... */
+        int non_local_work[] = {1, 4};
+        /* ... */
+        compute_row(non_local_work[k], working_data_set, next_working_data_set);
 
 
 Setting the proper thread affinity
