@@ -208,11 +208,7 @@ all ranks in the communicator to contribute to the work before any
 rank will return from the call. There's no facility for more than one
 collective communication to run at a time on a communicator, so
 there's no need for a tag to clarify which communication is taking
-place. That's implied by the **order** of the collective communication
-calls.
-
-However, it's fine to use point-to-point messages on the same
-communicator in any order; they work independently.
+place.
 
 
 .. challenge:: Quiz: if one rank calls a reduce,
