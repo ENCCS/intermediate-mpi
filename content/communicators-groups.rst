@@ -6,12 +6,11 @@ Communicators and groups
 
 .. questions::
 
-   - How can we write safe parallel libraries?
+   - How can we write scalable and safe parallel libraries?
 
 .. objectives::
 
-   - Learn about tagging of messages and why it is an unsafe mechanism to
-     distinguish library and host messages.
+   - Learn about tagging of messages.
    - Learn the difference between :term:`intracommunicator` and
      :term:`intercommunicator`.
    - Learn how to create new communicators.
@@ -60,22 +59,22 @@ Let us have a look at the basic point-to-point communication routines
 
 
 Both accept a ``tag`` parameter, used to match messages sent and received.  As a
-library author, you might decide to reserve any range of integers for exclusive
-use as tags for messages originating from your code. This is however far from an
+library author, one might decide to reserve a certain range of integers for exclusive
+use as tags for messages originating from the code. This is however not an
 optimal solution:
 
-1. You are imposing a restrictive design onto your potential users. This is a
+1. It imposes a restrictive design onto potential users. This is a
    choice that is not intrinsic to the problem domain and usually suggests a bad
    design.
-2. The design is not *extensible*. What if you run out of tags and need to add a
-   new one to the reserved list? You will break your API or, worse, will
+2. The design is not extensible. What if one runs out of tags and need to add a
+   new one to the reserved list? One may break the API or, worse, 
    interfere with existing tagging in client code.
-3. You library is not, most likely, the only one used. How can you guarantee
-   that your choice of reserved tags is unique?
+3. The library is not, most likely, the only one used. How can one guarantee
+   that the choice of reserved tags is unique?
 
-Clearly, using tags to distinguish the origin of messages *does not scale* with
-the number of components involved in a software project and will reduce the
-extensibility and maintainability of the codebase.
+Clearly, using only tags to distinguish the origin of messages
+does not scale with the number of components involved in a software project
+and will reduce the extensibility and maintainability of the codebase.
 
 .. challenge:: What might happen if some other component uses your message tag?
 
@@ -95,7 +94,7 @@ extensibility and maintainability of the codebase.
 Note that ``MPI_Send`` and ``MPI_Recv`` also take a communicator as parameter
 and indeed the use of communicators is the solution offered by the MPI standard
 for the problems faced by library authors.
-Even if you are not writing parallel libraries, it is a good idea to get
+Even if one is not writing parallel libraries, it is a good idea to get
 acquainted with the concepts of **communicators** and **groups**.  Communicators
 come in two flavors:
 
@@ -120,7 +119,7 @@ A communicator consists of:
 .. typealong:: It's a wonderful ``MPI_COMM_WORLD``
 
    ``MPI_COMM_WORLD`` is the default communicator: it is spanned by the group of
-   processes specified when launching your program::
+   processes specified when launching the program::
 
      mpirun -np 2 program
 
@@ -185,7 +184,7 @@ A communicator consists of:
                              MPI_Comm *newcomm)
 
    The new communicator is an object of ``MPI_Comm`` type, which can be used in
-   any context where you would have used ``MPI_COMM_WORLD``.  You can clean up
+   any context where one would have used ``MPI_COMM_WORLD``.  You can clean up
    such an object with |term-MPI_Comm_free|.
 
    .. challenge:: What happens when you call |term-MPI_Comm_create|?
