@@ -6,7 +6,7 @@ Communicators and groups
 
 .. questions::
 
-   - How can we write scalable and safe parallel libraries?
+   - How can we write extensible and safe parallel libraries?
 
 .. objectives::
 
@@ -292,5 +292,5 @@ See also
 .. keypoints::
 
    - You can use tags to differentiate the source of messages, but this approach
-     is neither scalable nor safe.
+     is neither extensible nor safe.
    - You can create new communicators by splitting or grouping.
