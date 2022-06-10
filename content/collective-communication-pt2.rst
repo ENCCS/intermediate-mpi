@@ -114,7 +114,7 @@ Code-along exercise: scatter and gather
 .. challenge:: Use a scatter and gather
 
    You can find a scaffold for the code in the
-   ``content/code/day-2/01_scatter-and-gather`` folder.  A working solution is
+   ``content/code/day-2/00_scatter-and-gather`` folder.  A working solution is
    in the ``solution`` subfolder. It's similar to the broadcast code we saw
    earlier. Try to compile with::
 
