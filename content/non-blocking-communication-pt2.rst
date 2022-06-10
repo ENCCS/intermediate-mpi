@@ -7,7 +7,8 @@ Non-blocking collective communication
 
 .. objectives::
 
-   - Understand that a non-blocking barrier is useful
+   - Understand the utility of non-blocking collective communications
+   - Employ available profiling tools to monitor code behavior
 
 
 Introduction
@@ -41,14 +42,12 @@ very latency-sensitive applications.
    A communicator ``comm`` and a ``request`` object that is a handler
    for a later wait call.
 
-It is necessary to use blocking barrier only when communicating
-through a side channel, like a file or a socket.
 
 Non-blocking reduce
 -------------------
 
 |term-MPI_Ireduce| starts a reduction operation and generates a request in
-an ``MPI_Request`` object. The reduction process is completed only when a test
+a ``MPI_Request`` object. The reduction process is completed only when a test
 is passed or a wait call is done. Upon completion, the reduced value is collected
 in the root process.
 
@@ -70,7 +69,7 @@ in the root process.
 .. parameters::
 
    ``sendbuf``, ``recvbuf``, and ``count`` are the buffer on **each**
-   process, the buffer on ``root``, and the number of elements to be
+   process, the buffer on ``root``, and the number of elements to be allocated
    on each process. ``datatype`` is the type of the data to be reduced. 
    ``op`` is the reduction operation to be applied on the distributed
    data. The global result of the reduction operation is collected in
@@ -82,7 +81,7 @@ in the root process.
 .. challenge:: Using ``ireduce`` for computing a running total in a stencil workflow
 
    You can find a scaffold for the code in the ``content/code/day-3/00_ireduce``
-   folder. It is quite similar to that for the earlier non-blocking code-along
+   folder. It is quite similar to that for the earlier non-blocking
    exercise. A working solution is in the ``solution`` subfolder. Try to compile
    with::
 
