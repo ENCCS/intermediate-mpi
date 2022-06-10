@@ -2,69 +2,86 @@
  * https://github.com/UoB-HPC/hpc-course-examples/blob/master/mpi/advanced/example10/group_to_comm.c
  */
 
+#include <mpi.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <mpi.h>
+int main(int argc, char *argv[])
+{
+    MPI_Init(&argc, &argv);
 
-#define NPROCS 4
+    // rank and size from global communicator
 
-int main(int argc, char *argv[]) {
-  int rank;
-  int size;
-  int new_rank;
-  int sendbuf;
-  int recvbuf;
-  int count;
-  // list of process ranks in first and second groups
-  int ranks1[2] = {0, 1};
-  int ranks2[2] = {2, 3};
+    int global_rank, global_size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &global_rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &global_size);
+ 
+    // global group
 
-  MPI_Group world_group;
-  MPI_Group new_group;
-  MPI_Comm new_comm;
+    MPI_Group global_group;
+    MPI_Comm_group(MPI_COMM_WORLD, &global_group);
 
-  MPI_Init(&argc, &argv);
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
+    // incl_ranks
 
-  // check that the size of MPI_COMM_WORLD matches with our grouping expecations
-  // NOTE it is bad practice to do this!
-  if (size != NPROCS) {
-    fprintf(stderr, "Error: Must have %d processes in MPI_COMM_WORLD\n",
-            NPROCS);
-    MPI_Abort(MPI_COMM_WORLD, 1);
-  }
+    int num_incl_ranks_1 = global_size / 2;
+    int num_incl_ranks_2 = global_size - num_incl_ranks_1;
 
-  // I will be sending my rank as message
-  sendbuf = rank;
-  count = 1;
+    int* incl_ranks_1 = (int*)(malloc(sizeof(int) * num_incl_ranks_1));
+    int* incl_ranks_2 = (int*)(malloc(sizeof(int) * num_incl_ranks_2));
 
-  // get the group of MPI_COMM_WORLD
-  MPI_Comm_group(MPI_COMM_WORLD, &world_group);
+    int i;
+    for (i = 0; i < num_incl_ranks_1; i++)
+    {
+        incl_ranks_1[i] = i;
+    }
+    for (i = 0; i < num_incl_ranks_2; i++)
+    {
+        incl_ranks_2[i] = num_incl_ranks_1 + i;
+    }
 
-  // split the processes in half, one half goes to ranks1 the other to ranks2
-  if (rank < NPROCS / 2) {
-    MPI_Group_excl(world_group, NPROCS / 2, ranks1, &new_group);
-  } else {
-    MPI_Group_excl(world_group, NPROCS / 2, ranks2, &new_group);
-  }
+    // local group
 
-  MPI_Comm_create(MPI_COMM_WORLD, new_group, &new_comm);
+    MPI_Group local_group;
+    if (global_rank < num_incl_ranks_1)
+    {
+        MPI_Group_incl(global_group, num_incl_ranks_1, incl_ranks_1, &local_group);
+    }
+    else
+    {
+        MPI_Group_incl(global_group, num_incl_ranks_2, incl_ranks_2, &local_group);
+    }
 
-  // compute total of ranks in MPI_COMM_WORLD in the newer, smaller communicator
-  MPI_Allreduce(&sendbuf, &recvbuf, count, MPI_INT, MPI_SUM, new_comm);
+    // local communicator
+ 
+    MPI_Comm local_comm;
+    MPI_Comm_create(MPI_COMM_WORLD, local_group, &local_comm);
 
-  // rank in the new group
-  MPI_Group_rank(new_group, &new_rank);
+    // rank in local communicator
+ 
+    int local_rank;
+    MPI_Comm_rank(local_comm, &local_rank);
+ 
+    // send global rank as message
 
-  printf("rank= %d newrank= %d recvbuf= %d\n", rank, new_rank, recvbuf);
+    int sendbuf = global_rank;
+    int recvbuf;
+    int count = 1;
+ 
+    // compute sum of global ranks in local communicator
+ 
+    MPI_Allreduce(&sendbuf, &recvbuf, count, MPI_INT, MPI_SUM, local_comm);
+ 
+    printf("global_rank= %d local_rank= %d recvbuf= %d\n", global_rank, local_rank, recvbuf);
 
-  MPI_Group_free(&world_group);
-  MPI_Group_free(&new_group);
-  MPI_Comm_free(&new_comm);
-
-  MPI_Finalize();
-
-  return EXIT_SUCCESS;
+    free(incl_ranks_1);
+    free(incl_ranks_2);
+ 
+    MPI_Comm_free(&local_comm);
+    MPI_Group_free(&local_group);
+    MPI_Group_free(&global_group);
+ 
+    MPI_Finalize();
+ 
+    return 0;
 }

@@ -72,7 +72,7 @@ optimal solution:
 3. The library is not, most likely, the only one used. How can one guarantee
    that the choice of reserved tags is unique?
 
-Clearly, using only tags to distinguish the origin of messages
+Clearly, using hard-coded tags to distinguish the origin of messages
 does not scale with the number of components involved in a software project
 and will reduce the extensibility and maintainability of the codebase.
 

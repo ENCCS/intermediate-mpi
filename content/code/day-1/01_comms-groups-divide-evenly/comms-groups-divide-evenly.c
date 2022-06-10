@@ -7,62 +7,83 @@
 
 #include <mpi.h>
 
-#define NPROCS 4
+int main(int argc, char *argv[])
+{
+    MPI_Init(&argc, &argv);
 
-int main(int argc, char *argv[]) {
-  int rank;
-  int size;
-  int new_rank;
-  int sendbuf;
-  int recvbuf;
-  int count;
+    // get rank and size from global communicator
 
-  /* FIXME define lists of processed in first and second group */
-  int ranks1[2] = ..;
-  int ranks2[2] = ..;
+    int global_rank, global_size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &global_rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &global_size);
+ 
+    // FIXME: create global group
 
-  /* FIXME define group and communicator variables */
-  MPI_Group ..;
-  MPI_Comm ..;
+    MPI_Group global_group;
+    MPI_Comm_group( ... );
 
-  MPI_Init(&argc, &argv);
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
+    // FIXME: create and initialize incl_ranks_1 and incl_ranks_2
 
-  /* FIXME check that the size of MPI_COMM_WORLD matches with NPROCS
-   * NOTE it is bad practice to do this, but it's fine for the sake of an exercise!
-   */
-  if (size != NPROCS) {
-      ..
-  }
+    int num_incl_ranks_1 = ...
+    int num_incl_ranks_2 = ...
 
-  // I will be sending my rank as message
-  sendbuf = rank;
-  count = 1;
+    int* incl_ranks_1 = (int*)(malloc(sizeof(int) * num_incl_ranks_1));
+    int* incl_ranks_2 = (int*)(malloc(sizeof(int) * num_incl_ranks_2));
 
-  /* FIXME get the group of MPI_COMM_WORLD */
-  // get the group of MPI_COMM_WORLD
-  MPI_Comm_group(.., ..);
+    int i;
+    for (i = 0; i < num_incl_ranks_1; i++)
+    {
+        incl_ranks_1[i] = ...
+    }
+    for (i = 0; i < num_incl_ranks_2; i++)
+    {
+        incl_ranks_2[i] = ...
+    }
 
-  /* FIXME  split the processes in half, one half goes to ranks1 the other to ranks2
-   * call MPI_Group_incl to do this
-   */
+    // FIXME: create local group using MPI_Group_incl
 
-  /* FIXME create new communicator */
-  MPI_Comm_create(.., .., ..);
+    MPI_Group local_group;
+    if (global_rank < num_incl_ranks_1)
+    {
+        MPI_Group_incl( ... );
+    }
+    else
+    {
+        MPI_Group_incl( ... );
+    }
 
-  // compute total of ranks in MPI_COMM_WORLD in the newer, smaller communicator
-  // we will discuss collective operations later on in the lesson!
-  MPI_Allreduce(&sendbuf, &recvbuf, count, MPI_INT, MPI_SUM, new_comm);
+    // FIXME: create local communicator
+ 
+    MPI_Comm local_comm;
+    MPI_Comm_create( ... );
 
-  /* FIXME get rank in the new group */
-  MPI_Group_rank(.., ..);
+    // FIXME: get rank in local communicator
+ 
+    int local_rank;
+    MPI_Comm_rank( ... );
+ 
+    // send global rank as message
 
-  printf("rank= %d newrank= %d recvbuf= %d\n", rank, new_rank, recvbuf);
+    int sendbuf = global_rank;
+    int recvbuf;
+    int count = 1;
+ 
+    // compute sum of global ranks in local communicator
+ 
+    MPI_Allreduce(&sendbuf, &recvbuf, count, MPI_INT, MPI_SUM, local_comm);
+ 
+    printf("global_rank= %d local_rank= %d recvbuf= %d\n", global_rank, local_rank, recvbuf);
 
-  /* FIXME clean up groups and communicators */
+    free(incl_ranks_1);
+    free(incl_ranks_2);
 
-  MPI_Finalize();
-
-  return EXIT_SUCCESS;
+    // FIXME: complete MPI_Comm_free and MPI_Group_free
+ 
+    MPI_Comm_free( ... );
+    MPI_Group_free( ... );
+    MPI_Group_free( ... );
+ 
+    MPI_Finalize();
+ 
+    return 0;
 }
