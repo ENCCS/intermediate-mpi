@@ -10,8 +10,6 @@
 
 #define CHUNKSIZE 1000
 
-#define PI 3.141592653589793238462643
-
 /* message tags */
 #define REQUEST 1
 #define REPLY 2
@@ -114,7 +112,7 @@ int main(int argc, char *argv[]) {
       Pi = (4.0 * totalin) / (totalin + totalout);
 
       // check error
-      error = fabs(Pi - PI);
+      error = fabs(Pi - M_PI);
 
       // are we done?
       done = (error < epsilon || (totalin + totalout) > 100000000);
