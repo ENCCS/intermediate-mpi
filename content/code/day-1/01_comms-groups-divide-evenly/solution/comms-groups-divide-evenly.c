@@ -2,10 +2,10 @@
  * https://github.com/UoB-HPC/hpc-course-examples/blob/master/mpi/advanced/example10/group_to_comm.c
  */
 
-#include <mpi.h>
-
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <mpi.h>
 
 int main(int argc, char *argv[])
 {

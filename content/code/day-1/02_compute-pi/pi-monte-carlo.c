@@ -60,9 +60,9 @@ int main(int argc, char *argv[]) {
   // the collective operation will be discussed later on
   MPI_Bcast(&epsilon, 1, MPI_DOUBLE, 0, world);
 
-  /* FIXME create checkers_g group */
+  /* FIXME create checkers group */
 
-  /* FIXME create checker communicator */
+  /* FIXME create checkers communicator */
 
   // handle the random number generation
   if (rank == rng) { /* I am the random number generator */
@@ -89,16 +89,17 @@ int main(int argc, char *argv[]) {
     // check the random samples
     while (!done) {
       n_samples++;
-      request = 1;
       /* FIXME receive the random data */
       MPI_Recv(rands, .., .., .., .., .., ..);
-      for (int i = 0; i < CHUNKSIZE;) {
-        x = rands[i++];
-        y = rands[i++];
-        if (x * x + y * y < 1.0)
+      int i;
+      for (i = 0; i < CHUNKSIZE-1; i+=2) {
+        x = rands[i];
+        y = rands[i+1];
+        if (x * x + y * y < 1.0) {
           in++;
-        else
+        } else {
           out++;
+        }
       }
 
       // total tally of points inside the circle
@@ -125,9 +126,10 @@ int main(int argc, char *argv[]) {
         /* FIXME send request for random data */
         MPI_Send(&request, .., .., .., .., ..);
       } else {
-        if (request)
+        if (request) {
           /* FIXME send request for random data */
           MPI_Send(&request, .., .., .., .., ..);
+        }
       }
     }
 
@@ -143,5 +145,5 @@ int main(int argc, char *argv[]) {
 
   MPI_Finalize();
 
-  return EXIT_SUCCESS;
+  return 0;
 }
