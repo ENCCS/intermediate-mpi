@@ -181,9 +181,7 @@ and returns values to all ranks.
 
 ``MPI_Allreduce`` is `blocking` and introduces `collective
 synchronization` into the program.
-
 The pre-defined operation is the same as in ``MPI_Reduce``.
-
 ``MPI_Allreduce`` is useful when the result of ``MPI_Reduce`` is 
 needed on all ranks.
 
@@ -239,13 +237,20 @@ Exercise: calculating :math:`\pi` using numerical integration
    :math:`\pi = 4 \int_{0}^{1} \frac{1}{1+x^2} dx`.
 
    You can find a scaffold for the code in the
-   ``content/code/day-1/09_compute-pi`` folder.
+   ``content/code/day-1/09_integrate-pi`` folder.
 
    Compile with::
 
      mpicc -g -Wall -std=c11 pi-integration.c -o pi-integration
 
    A working solution is in the ``solution`` subfolder.
+
+   #. When you have the code compiling, try to run with::
+
+        mpiexec -np 4 ./pi-integration 10000
+
+   #. You can try different number of points and see how it affects
+      the result.
 
 
 Tips when using collective communication
