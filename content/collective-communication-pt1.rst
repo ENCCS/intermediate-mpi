@@ -185,7 +185,7 @@ The pre-defined operation is the same as in ``MPI_Reduce``.
 ``MPI_Allreduce`` is useful when the result of ``MPI_Reduce`` is 
 needed on all ranks.
 
-.. signature:: |term-MPI_Allreduce|
+.. signature:: |MPI_Allreduce|
 
    Combines data from all ranks using an operation and returns values
    to all ranks.

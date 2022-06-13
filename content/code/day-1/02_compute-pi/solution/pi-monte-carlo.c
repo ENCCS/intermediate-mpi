@@ -8,6 +8,8 @@
 
 #include <mpi.h>
 
+#define PI 3.141592653589793238462643
+
 #define CHUNKSIZE 1000
 
 /* message tags */
@@ -116,7 +118,7 @@ int main(int argc, char *argv[]) {
             Pi = (4.0 * totalin) / (totalin + totalout);
            
             // check error
-            error = fabs(Pi - M_PI);
+            error = fabs(Pi - PI);
            
             // are we done?
             done = (error < epsilon || (totalin + totalout) > 100000000);

@@ -4,6 +4,8 @@
 
 #include <mpi.h>
 
+#define PI 3.141592653589793238462643
+
 int main(int argc, char *argv[]) {
 
     MPI_Init(&argc, &argv);
@@ -54,7 +56,7 @@ int main(int argc, char *argv[]) {
     MPI_Reduce( ... );
 
     if (rank == 0) {
-        printf("pi = %22.12f (error: %.3e)\n", global_pi, fabs(global_pi - M_PI));
+        printf("pi = %22.12f (error: %.3e)\n", global_pi, fabs(global_pi - PI));
     }
 
     MPI_Finalize();
