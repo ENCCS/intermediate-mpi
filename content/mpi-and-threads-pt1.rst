@@ -137,7 +137,8 @@ cases, OpenMP is implemented using ``pthreads``.
 
 This workshop will use simple OpenMP for illustrative purposes. For
 more information on OpenMP check out `these tutorials
-<https://www.openmp.org/resources/tutorials-articles/>`_.
+<https://www.openmp.org/resources/tutorials-articles/>`_ and 
+`OpenMP training materials <https://github.com/hpc2n/OpenMP-Collaboration>`_.
 
 MPI support for threading
 -------------------------
@@ -328,10 +329,45 @@ first, then see if performance is not as good as you expect, and then
 analyse if you can use a less costly MPI threading level.
 
 
+.. challenge:: Calculating :math:`\pi` with a hybrid MPI+OpenMP code
+
+   This example is based on the :math:`\pi` computation exercise 
+   (``content/code/day-1/02_compute-pi``). You can find a scaffold for 
+   the code in the ``content/code/day-4/10_integrate-pi`` folder.  
+   A working solution is in the ``solution`` subfolder. Try to compile with::
+
+        mpicc -g -Wall -fopenmp -std=c11 pi-integration.c -o pi-integration
+
+   #. Use clues from the compiler and the comments in the code to
+      change the code so it compiles and runs.
+
+   #. When you have the code compiled, try to run with::
+
+        export OMP_NUM_THREADS=2 
+        mpiexec -np 2 ./pi-integration 10000000
+
+.. solution::
+
+   * One series of correct calls is::
+
+         /* ... */
+         int provided, required = MPI_THREAD_FUNNELED;
+         MPI_Init_thread(NULL, NULL, required, &provided);
+         /* ... */
+         if (required != provided)
+         /* ... */
+         #pragma omp parallel for reduction(+:local_pi)
+         /* ... */
+         MPI_Reduce(&local_pi, &global_pi, 1, MPI_DOUBLE, MPI_SUM, 0, comm);
+         /* ... */
+         
+
+
+
 See also
 --------
 
-* https://wgropp.cs.illinois.edu/courses/cs598-s15/lectures/lecture36.pdf
+* `William Gropp slides <https://wgropp.cs.illinois.edu/courses/cs598-s15/lectures/lecture36.pdf>`_
 
 
 .. keypoints::
