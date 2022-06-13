@@ -8,7 +8,7 @@ MPI and threads in practice
 
 .. objectives::
 
-   - Know to estimate the benefits before trying to write code for hybrid parallelism
+   - Estimate the benefits before trying to write code for hybrid parallelism
 
 Using fork-join parallelism
 ---------------------------
@@ -51,7 +51,7 @@ can be converted to hybrid parallelism fairly easily.
 
         mpicc -g -fopenmp -Wall -std=c11 threading-funneled.c -o threading-funneled
 
-   #. When you have the code compiling, try to run with::
+   #. When you have the code compiled, try to run with::
 
         OMP_NUM_THREADS=2 mpiexec -np 2 ./threading-funneled
 
@@ -94,7 +94,7 @@ Using OpenMP tasking with MPI
 
         mpicc -g -fopenmp -Wall -std=c11 threading-multiple.c -o threading-multiple
 
-   #. When you have the code compiling, try to run with::
+   #. When you have the code compiled, try to run with::
 
         OMP_NUM_THREADS=2 mpiexec -np 2 ./threading-multiple
 
@@ -178,7 +178,7 @@ are placed. Binding of OpenMP threads can be controlled with the enviroment vari
 
 
 There are several programs available that allow you to see the binding
-scheme that is being used for instance the ``xthi.c`` program from HPE(Cray) cited
+scheme that is being used, for instance the ``xthi.c`` program from HPE(Cray) cited
 at the bottom of this page.
 
 
@@ -188,7 +188,7 @@ at the bottom of this page.
 
         mpicc -fopenmp -Wall -std=c11 xthi.c -o xthi_exe
 
-   #. When you have the code compiling, try to run with::
+   #. When you have the code compiled, try to run with::
 
         export OMP_NUM_THREADS=(Nr. threads)
         export OMP_DISPLAY_ENV=true
