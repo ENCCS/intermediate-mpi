@@ -142,27 +142,25 @@ In order to use Extrae, one needs to compile the code with debugging flag
 (``-g``). Events that should be monitored by Extrae are included in a ``.xml``
 file (``extrae.xml``), for instance MPI or OpenMP:
 
-.. signature:: |``extrae.xml``|
+.. code-block:: xml
 
-   .. code-block:: c
+   <?xml version='1.0'?>
 
-      <?xml version='1.0'?>
-      
-        <trace enabled="yes"
-         home="/software/Extrae/3.8.0-gompi-2020b"
-         initial-mode="detail"
-         type="paraver" >
-      
-        <mpi enabled="yes">
-          <counters enabled="yes" />
-        </mpi>
-      
-        <openmp enabled="no">
-          <locks enabled="no" />
-          <counters enabled="no" />
-        </openmp>
-      
-      </trace>
+     <trace enabled="yes"
+      home="/software/Extrae/3.8.0-gompi-2020b"
+      initial-mode="detail"
+      type="paraver" >
+
+     <mpi enabled="yes">
+       <counters enabled="yes" />
+     </mpi>
+
+     <openmp enabled="no">
+       <locks enabled="no" />
+       <counters enabled="no" />
+     </openmp>
+
+   </trace>
 
 For the non-blocking deadlock and overlap cases discussed in the previous lecture,
 the MPI call events show the following patterns in Paraver:

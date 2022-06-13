@@ -139,15 +139,13 @@ In addition to the physical cores (28 per node on Kebnekaise), logical cores cou
 available in your system but this option is usually turned-off in HPC systems.
 In the case of Kebnekaise, only one thread can run on a physical core:
 
+.. code-block:: shell
 
-.. signature:: System information
+   $ lscpu | grep -i 'core\|thread\|Socket'
 
-   .. code-block:: c
-
-      $lscpu | grep -i 'core\|thread\|Socket'
-      Thread(s) per core:              1
-      Core(s) per socket:              14
-      Socket(s):                       2
+   Thread(s) per core:              1
+   Core(s) per socket:              14
+   Socket(s):                       2
 
 Without specifying the location of threads, the OS decides where the threads
 are placed. Binding of OpenMP threads can be controlled with the enviroment variables:
@@ -161,8 +159,8 @@ are placed. Binding of OpenMP threads can be controlled with the enviroment vari
 
    .. parameters::
 
-      ``true`` and ``false`` values tell the OS that threads are fixed or they
-      are can move to a different core, respectively. ``primary`` will place all the threads
+      ``true`` and ``false`` values tell the OS whether threads are fixed or they
+      can move to a different core, respectively. ``primary`` will place all the threads
       on the same core where the primary thread for each rank will run. ``close`` and ``spread``
       are used to place the threads close to each other or well separated, respectively. 
 
@@ -219,8 +217,8 @@ at the bottom of this page.
           [host] OMP_NESTED: deprecated; max-active-levels-var=1
           [host] OMP_NUM_TEAMS='0'
           [host] OMP_NUM_THREADS='7'
-          ``[host] OMP_PLACES: value is not defined``
-          ``[host] OMP_PROC_BIND='false'``
+          [host] OMP_PLACES: value is not defined
+          [host] OMP_PROC_BIND='false'
           [host] OMP_SCHEDULE='static'
           [host] OMP_STACKSIZE='4M'
           [host] OMP_TARGET_OFFLOAD=DEFAULT
@@ -260,7 +258,7 @@ at the bottom of this page.
         Hello from rank 3, thread 6, on b-cn1045.hpc2n.umu.se. (core affinity = 21-27)
 
      In this case, the OS has the freedom to decide the location of threads
-     (``OMP_PROC_BIND='false'``). For instance, threads 0-6 of the rank 0 can move accross
+     (``OMP_PROC_BIND=false``). For instance, threads 0-6 of the rank 0 can move accross
      cores 0-6 during a simulation.
 
 
@@ -300,8 +298,8 @@ at the bottom of this page.
           [host] OMP_NESTED: deprecated; max-active-levels-var=1
           [host] OMP_NUM_TEAMS='0'
           [host] OMP_NUM_THREADS='7'
-          ``[host] OMP_PLACES='cores'``
-          ``[host] OMP_PROC_BIND='close'``
+          [host] OMP_PLACES='cores'
+          [host] OMP_PROC_BIND='close'
           [host] OMP_SCHEDULE='static'
           [host] OMP_STACKSIZE='4M'
           [host] OMP_TARGET_OFFLOAD=DEFAULT

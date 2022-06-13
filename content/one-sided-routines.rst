@@ -196,7 +196,7 @@ We can expose an array of 10 ``double``-s for RMA with:
        in bytes. The use of displacement units can help with code readability
        and is essential for correctness on heterogeneous systems, where the
        sizes of the basic types might differ between processes.  See also
-       :ref:`derived-datatypes`.
+       :ref:`derived-datatypes-pt2`.
    ``info``
        An info object, which can be used to provide optimization hints to the
        MPI implementation. Using ``MPI_INFO_NULL`` is always correct.
@@ -244,7 +244,7 @@ with |term-MPI_Alloc_mem|.
        in bytes. The use of displacement units can help with code readability
        and is essential for correctness on heterogeneous systems, where the
        sizes of the basic types might differ between processes.  See also
-       :ref:`derived-datatypes`.
+       :ref:`derived-datatypes-pt2`.
    ``info``
        An info object, which can be used to provide optimization hints to the
        MPI implementation. Using ``MPI_INFO_NULL`` is always correct.
