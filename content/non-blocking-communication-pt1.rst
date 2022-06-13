@@ -365,7 +365,7 @@ See also
 * Chapter 1 of the **Using Advanced MPI** book by William Gropp *et al.* shows
   examples of using the functions described in this episode.
   :cite:`Gropp2014-dz`
-* https://www.codingame.com/playgrounds/349/introduction-to-mpi/non-blocking-communications
+* `Codin Game: non-blocking communications <https://www.codingame.com/playgrounds/349/introduction-to-mpi/non-blocking-communications>`_
 
 
 
