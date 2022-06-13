@@ -167,14 +167,49 @@ returned to the root rank. Often one simply wants a sum, and for that
    All ranks in the communicator must participate with valid send
    buffers and consistent counts and types.
 
+Allreduce
+---------
 
-Code-along exercise: broadcast and reduce
------------------------------------------
+An ``MPI_Reduce`` call combines data from all ranks using an operation
+and returns values to all ranks.
+
+.. figure:: img/MPI_Allreduce.png
+   :align: center
+
+   After the call, every rank has a value computed by combining a
+   value from all ranks in the communicator with an operation.
+
+``MPI_Allreduce`` is `blocking` and introduces `collective
+synchronization` into the program.
+
+The pre-defined operation is the same as in ``MPI_Reduce``.
+
+``MPI_Allreduce`` is useful when the result of ``MPI_Reduce`` is 
+needed on all ranks.
+
+.. signature:: |term-MPI_Allreduce|
+
+   Combines data from all ranks using an operation and returns values
+   to all ranks.
+
+   .. code-block:: c
+
+      int MPI_Allreduce(const void *sendbuf, void *recvbuf, int count,
+                        MPI_Datatype datatype, MPI_Op op, MPI_Comm comm)
+
+.. parameters::
+
+   ``sendbuf``, ``recvbuf``, ``count`` and ``datatype`` are the same as
+   in ``MPI_Reduce``.
+
+
+Exercise: broadcast and reduce
+------------------------------
 
 .. challenge:: Use a broadcast and observe the results with reduce
 
    You can find a scaffold for the code in the
-   ``content/code/day-2/00_broadcast`` folder.  A working solution is in the
+   ``content/code/day-1/08_broadcast`` folder.  A working solution is in the
    ``solution`` subfolder. Try to compile with::
 
      mpicc -g -Wall -std=c11 collective-communication-broadcast.c -o collective-communication-broadcast
@@ -189,15 +224,29 @@ Code-along exercise: broadcast and reduce
 
 .. solution::
 
-   * One correct pair of calls is::
+   * One example of correct calls is::
 
          MPI_Bcast(values_to_broadcast, 2, MPI_INT, rank_of_root, comm);
          /* ... */
          MPI_Reduce(values_to_broadcast, reduced_values, 2, MPI_INT,
                     MPI_SUM, rank_of_root, comm);
 
-   * There are other calls that work correctly. Is yours better or worse
-     than this one? Why?
+Exercise: calculating :math:`\pi` using numerical integration
+-------------------------------------------------------------
+
+.. challenge:: Use broadcast and reduce to compute :math:`\pi`
+
+   :math:`\pi = 4 \int_{0}^{1} \frac{1}{1+x^2} dx`.
+
+   You can find a scaffold for the code in the
+   ``content/code/day-1/09_compute-pi`` folder.
+
+   Compile with::
+
+     mpicc -g -Wall -std=c11 pi-integration.c -o pi-integration
+
+   A working solution is in the ``solution`` subfolder.
+
 
 Tips when using collective communication
 ----------------------------------------
