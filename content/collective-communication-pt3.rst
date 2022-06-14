@@ -268,7 +268,7 @@ Exercise: scatterv and gatherv
 
    #. When you have the code compiling, try to run with different number of processes.
 
-   #. Try to get the root rank to report success :-)
+   #. Try to get rank 0 to report success :-)
 
 
 Final thoughts

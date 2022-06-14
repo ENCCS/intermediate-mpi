@@ -151,14 +151,14 @@ Exercise: scatter and gather (2)
 
 .. challenge:: Use scatter and gather on more data
 
-   You can find a scaffold for the code ``scatter-and-gather-2.c`` in the
-   ``content/code/day-2/00_scatter-and-gather`` folder.
-
    In this exercise you'll use ``MPI_Scatter`` to split a matrix into row
    vectors. The number of rows in the matrix is equal to the number of
    processes, and each vector will be stored on the individual processes.
    After scatter, you can also use ``MPI_Gather`` to assemble the vectors
    into a matrix.
+
+   You can find a scaffold for the code ``scatter-and-gather-2.c`` in the
+   ``content/code/day-2/00_scatter-and-gather`` folder.
 
    A working solution is
    in the ``solution`` subfolder. It's similar to the broadcast code we saw
@@ -188,13 +188,13 @@ Exercise: scatter and gather (3)
 
 .. challenge:: Use scatter and gather to compute inner product of vectors
 
-   You can find a scaffold for the code ``scatter-and-gather-3.c`` in the
-   ``content/code/day-2/00_scatter-and-gather`` folder.
-
    In this exercise you'll use ``MPI_Scatter`` to split two vectors into
    segments and compute their inner product in parallel.
    After scatter, you can use ``MPI_Reduce`` to collect the final result,
    and use ``MPI_Gather`` to collect timing information.
+
+   You can find a scaffold for the code ``scatter-and-gather-3.c`` in the
+   ``content/code/day-2/00_scatter-and-gather`` folder.
 
    A working solution is
    in the ``solution`` subfolder. It's similar to the broadcast code we saw
@@ -205,7 +205,7 @@ Exercise: scatter and gather (3)
    #. When you have the code compiling, try to run with different number of
       MPI processes.
 
-   #. Try to rank 0 to report success :-)
+   #. Try to get rank 0 to report success :-)
 
 
 See also
