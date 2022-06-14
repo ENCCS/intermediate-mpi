@@ -164,12 +164,117 @@ Exercise: all-gather and all-to-all
 
    * What happened if you mistakenly used 4 or 12 for the counts? Why?
 
+
+Scatterv
+--------
+
+An ``MPI_Scatterv`` call scatters a buffer in parts to all ranks.
+It uses ``sendcounts`` and ``displs`` to determine the number of
+elements to be sent to each rank.
+
+``MPI_Scatterv`` is `blocking` and introduces `collective
+synchronization` into the program.
+
+This can be useful to when we want to distribute different amount of
+data to different processes.
+
+.. signature:: |MPI_Scatterv|
+
+   Scatters data in parts to all ranks.
+
+   .. code-block:: c
+
+      int MPI_Scatterv(const void *sendbuf, const int *sendcounts, const int *displs,
+                       MPI_Datatype sendtype, void *recvbuf, int recvcount,
+                       MPI_Datatype recvtype,
+                       int root, MPI_Comm comm)
+
+.. parameters::
+
+   ``sendbuf``, ``sendcounts``, ``displs`` and ``sendtype`` describe the
+   buffer on the root process from which the data is sent. ``sendcounts``
+   is an integer array that holds the number of elements to be sent to
+   each process. ``displs`` is an integer array that holds the 
+   displacement of the elements to be sent to each process.
+
+   ``recvbuf``, ``recvcount`` and ``recvtype`` describe the buffer on
+   each process to which the data is sent. A buffer large
+   enough to receive the data for that process is needed.
+
+   All ranks in the communicator must participate with valid receive
+   buffers and consistent counts and types.
+
+
+Gatherv
+-------
+
+An ``MPI_Gatherv`` call gathers info with variable size from all
+ranks. It uses ``recvcounts`` and ``displs`` to determine the number of
+elements to be collected from each rank.
+
+``MPI_Gatherv`` is `blocking` and introduces `collective
+synchronization` into the program.
+
+This can be useful to when we want to collect different amount of
+data from different processes.
+
+.. signature:: |MPI_Gatherv|
+
+   Gathers data with variable size from all ranks.
+
+   .. code-block:: c
+
+      int MPI_Gatherv(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
+                      void *recvbuf, const int *recvcounts, const int *displs,
+                      MPI_Datatype recvtype, int root, MPI_Comm comm)
+
+.. parameters::
+
+   ``sendbuf``, ``sendcount`` and ``sendtype`` describe the buffer on
+   each process from which the data is collected.
+
+   ``recvbuf``, ``recvcounts``, ``displs`` and ``recvtype`` describe the
+   buffer on the root process on which the data is collected. ``recvcounts``
+   is an integer array that holds the number of elements to be collected
+   from each process. ``displs`` is an integer array that holds the 
+   displacement of the elements to be collected from each process.
+
+   All ranks in the communicator must participate. The root process 
+   must have a valid receive buffer with consistent size and type.
+
+
+Exercise: scatterv and gatherv
+------------------------------
+
+.. challenge:: Use scatterv and gatherv to compute matrix vector multiplication
+
+   In this exercise we compute matrix vector multiplication using ``MPI_Scatterv``
+   and ``MPI_Gatherv``. One would need to scatter the row vectors of the matrix
+   to the individual processes, broadcast the vector, and then calculate the
+   local contribution to the matrix vector product. After that the local
+   contributions are collected to the root process to form the final result.
+
+   .. figure:: img/mat-vec.png
+      :align: center
+
+   You can find a scaffold for the code in the
+   ``content/code/day-2/03_scatterv-and-gatherv`` folder.
+   A working solution is in the
+   ``solution`` subfolder. Try to compile with::
+
+        mpicc -g -Wall -std=c11 scatterv-and-gatherv.c -o scatterv-and-gatherv
+
+   #. When you have the code compiling, try to run with different number of
+         processes.
+
+   #. Try to get the root rank to report success :-)
+
+
 Final thoughts
 --------------
 
-There are further generalizations available in MPI, including a
-combined scatter-gather, and versions of gather that permit different
-amounts of data to be sent to/from each rank. Check the existing
+There are further generalizations available in MPI (e.g.
+combined scatter-gather). Check the existing
 options before rolling your own or giving up!
 
 

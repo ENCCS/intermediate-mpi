@@ -26,14 +26,14 @@ int main(int argc, char *argv[])
         values_to_scatter[1] = initial_values[1];
         values_to_scatter[2] = initial_values[2];
         values_to_scatter[3] = initial_values[3];
-    }
 
-    /* Report the state before the scatter */
-    printf("On rank %d, pre-scatter values were [%f, %f, %f, %f]\n", rank,
-            values_to_scatter[0],
-            values_to_scatter[1],
-            values_to_scatter[2],
-            values_to_scatter[3]);
+        /* Report the state before the scatter */
+        printf("On rank %d, pre-scatter values were [%f, %f, %f, %f]\n", rank,
+                values_to_scatter[0],
+                values_to_scatter[1],
+                values_to_scatter[2],
+                values_to_scatter[3]);
+    }
 
     /* Do the scatter */
     float scattered_value;
