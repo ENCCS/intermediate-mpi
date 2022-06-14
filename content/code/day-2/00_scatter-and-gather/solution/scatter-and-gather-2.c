@@ -32,11 +32,22 @@ int main(int argc, char *argv[])
         }
     }
 
-    int* vector = (int*)(malloc(sizeof(int) * size));
-
     /* Do the scatter */
 
+    int* vector = (int*)(malloc(sizeof(int) * size));
+
     MPI_Scatter(matrix, size, MPI_INT, vector, size, MPI_INT, 0, comm);
+
+    /* Do the gather */
+
+    int* matrix_2;
+
+    if (rank == 0)
+    {
+        matrix_2 = (int*)(malloc(sizeof(int) * size * size));
+    }
+
+    MPI_Gather(vector, size, MPI_INT, matrix_2, size, MPI_INT, 0, comm);
 
     /* Check the result */
 
@@ -46,6 +57,20 @@ int main(int argc, char *argv[])
         if (vector[i] != i + rank)
         {
             success = 0;
+        }
+    }
+
+    if (rank == 0)
+    {
+        for (i = 0; i < size; i++)
+        {
+            for (j = 0; j < size; j++)
+            {
+                if (matrix_2[i * size + j] != i + j)
+                {
+                    success = 0;
+                }
+            }
         }
     }
 
@@ -63,6 +88,7 @@ int main(int argc, char *argv[])
     if (rank == 0)
     {
         free(matrix);
+        free(matrix_2);
     }
     free(vector);
 

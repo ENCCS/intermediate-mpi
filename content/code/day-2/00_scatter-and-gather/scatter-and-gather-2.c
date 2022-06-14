@@ -28,22 +28,49 @@ int main(int argc, char *argv[])
         ...
     }
 
-    int* vector = (int*)(malloc(sizeof(int) * size));
-
     /* Do the scatter */
+
+    int* vector = (int*)(malloc(sizeof(int) * size));
 
     /* FIXME: complete MPI_Scatter */
     MPI_Scatter( ... );
+
+    /* Do the gather */
+
+    int* matrix_2;
+
+    if (rank == 0)
+    {
+        matrix_2 = (int*)(malloc(sizeof(int) * size * size));
+    }
+
+    /* FIXME: complete MPI_Gather */
+    MPI_Gather( ... );
 
     /* Check the result */
 
     int success = 1;
     for (i = 0; i < size; i++)
     {
-        /* FIXME: check the value */
+        /* FIXME: check the values in vector */
         if (vector[i] != ...)
         {
             success = 0;
+        }
+    }
+
+    if (rank == 0)
+    {
+        for (i = 0; i < size; i++)
+        {
+            for (j = 0; j < size; j++)
+            {
+                /* FIXME: check the values in matrix_2 */
+                if (matrix_2[i * size + j] != ...)
+                {
+                    success = 0;
+                }
+            }
         }
     }
 
@@ -61,6 +88,7 @@ int main(int argc, char *argv[])
     /* FIXME: complete the code for cleaning up */
     if (rank == 0)
     {
+        free( ... );
         free( ... );
     }
     free( ... );

@@ -108,21 +108,21 @@ file.
    buffers and consistent counts and types.
 
  
-Code-along exercise: scatter and gather
----------------------------------------
+Exercise: scatter and gather (1)
+--------------------------------
 
-.. challenge:: Use a scatter and gather
+.. challenge:: Use scatter and gather
 
-   You can find a scaffold for the code in the
+   You can find a scaffold for the code ``scatter-and-gather-1.c`` in the
    ``content/code/day-2/00_scatter-and-gather`` folder.  A working solution is
    in the ``solution`` subfolder. It's similar to the broadcast code we saw
    earlier. Try to compile with::
 
-        mpicc -g -Wall -std=c11 collective-communication-scatter-and-gather.c -o collective-communication-scatter-and-gather
+        mpicc -g -Wall -std=c11 scatter-and-gather-1.c -o scatter-and-gather-1
 
    #. When you have the code compiling, try to run with::
 
-        mpiexec -np 4 ./collective-communication-scatter-and-gather
+        mpiexec -np 4 ./scatter-and-gather-1
 
    #. Use clues from the compiler and the comments in the code to
       change the code so it compiles and runs. Try to get all ranks to
@@ -140,8 +140,48 @@ Code-along exercise: scatter and gather
                     gathered_values, 1, MPI_FLOAT,
                     rank_of_gather_root, comm);
 
-   * What happened if you mistakenly used 4 for the scatter send count or
-     the gather receive count. Why?
+   * What would happen if you mistakenly used 4 for the scatter send count
+     or the gather receive count. Why?
+
+   * What would happen if you mistakenly used more (or fewer) MPI proccesses
+     to run the code (e.g. ``mpiexec -np 5 ...``)?
+
+Exercise: scatter and gather (2)
+--------------------------------
+
+.. challenge:: Use scatter and gather on more data
+
+   You can find a scaffold for the code ``scatter-and-gather-2.c`` in the
+   ``content/code/day-2/00_scatter-and-gather`` folder.
+
+   In this exercise you'll be using scatter to split a square matrix
+   into vectors. The number of rows in the matrix is equal to the number
+   of processes, and each vector will be stored on individual processes.
+   After scatter, you can also try to use gather to assemble the vectors
+   into a matrix.
+
+   A working solution is
+   in the ``solution`` subfolder. It's similar to the broadcast code we saw
+   earlier. Try to compile with::
+
+        mpicc -g -Wall -std=c11 scatter-and-gather-2.c -o scatter-and-gather-2
+
+   #. When you have the code compiling, try to run with different number of
+      MPI processes.
+
+   #. Try to get all ranks to report success :-)
+
+.. solution::
+
+   * One correct pair of calls is::
+
+         MPI_Scatter(matrix, size, MPI_FLOAT,
+                     vector, 1, MPI_FLOAT,
+                     0, comm);
+         /* ... */
+         MPI_Gather(matrix_2, size, MPI_FLOAT,
+                    vector, size, MPI_FLOAT,
+                    0, comm);
 
 See also
 --------
@@ -153,3 +193,4 @@ See also
 .. keypoints::
 
    - MPI applications can scatter and gather data to suit common application patterns.
+
