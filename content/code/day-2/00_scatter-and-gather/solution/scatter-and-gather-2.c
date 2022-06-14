@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     MPI_Comm_rank(comm, &rank);
     MPI_Comm_size(comm, &size);
 
-    /* Prepare the matrix and vector */
+    /* Prepare the data */
 
     int* matrix;
     int i, j;

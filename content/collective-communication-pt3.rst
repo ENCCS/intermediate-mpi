@@ -109,8 +109,8 @@ set for each process to a new dimension.
    buffers and consistent counts and types.
 
 
-Code-along exercise: all-gather and all-to-all
-----------------------------------------------
+Exercise: all-gather and all-to-all
+-----------------------------------
 
 .. challenge:: Use all-gather
 

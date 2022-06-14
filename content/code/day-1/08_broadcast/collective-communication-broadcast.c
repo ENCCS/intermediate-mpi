@@ -55,9 +55,12 @@ int main(int argc, char **argv)
     /* MPI_xxx(xxx); */
 
     /* Report the state after the reduction */
-    printf("On rank %d, reduced values were [%d, %d]\n", rank,
-            reduced_values[0],
-            reduced_values[1]);
+    if (rank == rank_of_root)
+    {
+        printf("On rank %d, reduced values were [%d, %d]\n", rank,
+                reduced_values[0],
+                reduced_values[1]);
+    }
 
     /* Report whether the code is correct */
     int success = ((values_to_broadcast[0] == expected_values[0]) &&
