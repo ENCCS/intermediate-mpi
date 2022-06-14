@@ -154,11 +154,11 @@ Exercise: scatter and gather (2)
    You can find a scaffold for the code ``scatter-and-gather-2.c`` in the
    ``content/code/day-2/00_scatter-and-gather`` folder.
 
-   In this exercise you'll be using scatter to split a square matrix
-   into vectors. The number of rows in the matrix is equal to the number
-   of processes, and each vector will be stored on individual processes.
-   After scatter, you can also try to use gather to assemble the vectors
-   into a matrix.
+   In this exercise you'll be using ``MPI_Scatter`` to split a matrix into row
+   vectors.  The number of rows in the matrix is equal to the number of
+   processes, and each vector will be stored on the individual processes.
+   After scatter, you can also try to use ``MPI_Gather`` to assemble the
+   vectors into a matrix.
 
    A working solution is
    in the ``solution`` subfolder. It's similar to the broadcast code we saw

@@ -1,17 +1,21 @@
-#include "mpi.h"
 #include <stdio.h>
+
+#include <mpi.h>
 
 int main(int argc, char **argv)
 {
     /* Initialize the MPI environment and report */
     MPI_Init(&argc, &argv);
+
     MPI_Comm comm = MPI_COMM_WORLD;
+
     int rank, size;
     MPI_Comm_rank(comm, &rank);
     MPI_Comm_size(comm, &size);
 
     /* Prepare the values to all-gather */
     int initial_values[3] = { 100, -1000, 3 };
+
     int values_to_all_gather[3];
     values_to_all_gather[0] = initial_values[0] * (rank + 1);
     values_to_all_gather[1] = initial_values[1] * (rank + 1);
@@ -31,9 +35,7 @@ int main(int argc, char **argv)
      */
     /* Do the all-gather */
     int result_values[12];
-    MPI_Allgather(values_to_all_gather, 3, MPI_INT,
-                  &result_values, 3, MPI_INT,
-                  comm);
+    /* MPI_xxx(xxx); */
 
     /* Report the state after the all-gather */
     printf("On rank %d, all-gathered values were:\n  [", rank);
@@ -62,5 +64,6 @@ int main(int argc, char **argv)
 
     /* Clean up and exit */
     MPI_Finalize();
+
     return 0;
 }

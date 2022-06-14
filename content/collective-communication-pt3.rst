@@ -115,7 +115,7 @@ Code-along exercise: all-gather and all-to-all
 .. challenge:: Use all-gather
 
    You can find a scaffold for the code in the
-   ``content/code/day-2/02_allgather`` folder.  A working solution is in the
+   ``content/code/day-2/01_allgather`` folder.  A working solution is in the
    ``solution`` subfolder. Try to compile with::
 
         mpicc -g -Wall -std=c11 collective-communication-allgather.c -o collective-communication-allgather
@@ -141,7 +141,7 @@ Code-along exercise: all-gather and all-to-all
 .. challenge:: Use all-to-all
 
    You can find a scaffold for the code in the
-   ``content/code/day-2/03_alltoall`` folder.  A working solution is in the
+   ``content/code/day-2/02_alltoall`` folder.  A working solution is in the
    ``solution`` subfolder. Try to compile with::
 
         mpicc -g -Wall -std=c11 collective-communication-alltoall.c -o collective-communication-alltoall

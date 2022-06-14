@@ -1,17 +1,21 @@
-#include "mpi.h"
 #include <stdio.h>
+
+#include <mpi.h>
 
 int main(int argc, char **argv)
 {
     /* Initialize the MPI environment and report */
     MPI_Init(&argc, &argv);
+
     MPI_Comm comm = MPI_COMM_WORLD;
+
     int rank, size;
     MPI_Comm_rank(comm, &rank);
     MPI_Comm_size(comm, &size);
 
     /* Prepare the values to all-to-all */
     int initial_values[3] = { 100, -1000, 3 };
+
     int values_to_all_to_all[12];
     for(int i = 0; i < 12; i = i + 1)
     {
@@ -26,15 +30,11 @@ int main(int argc, char **argv)
     }
     printf("%d]\n", values_to_all_to_all[11]);
 
-    /* ==== CHALLENGE ====
-     *
-     * Uncomment and fix the MPI call to make this code work!
-     * We want the values_to_all_to_all to end up in
-     * result_values on all ranks.
-     */
     /* Do the all-to-all */
     int result_values[12];
-    /* MPI_xxx(xxx); */
+    MPI_Alltoall(values_to_all_to_all, 3, MPI_INT,
+                 &result_values, 3, MPI_INT,
+                 comm);
 
     /* Report the state after the all-to-all */
     printf("On rank %d, values after the all-to-all were:\n  [", rank);
@@ -63,5 +63,6 @@ int main(int argc, char **argv)
 
     /* Clean up and exit */
     MPI_Finalize();
+
     return 0;
 }
