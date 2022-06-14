@@ -178,7 +178,7 @@ synchronization` into the program.
 This can be useful to when we want to distribute different amount of
 data to different processes.
 
-.. signature:: |MPI_Scatterv|
+.. signature:: MPI_Scatterv
 
    Scatters data in parts to all ranks.
 
@@ -218,7 +218,7 @@ synchronization` into the program.
 This can be useful to when we want to collect different amount of
 data from different processes.
 
-.. signature:: |MPI_Gatherv|
+.. signature:: MPI_Gatherv
 
    Gathers data with variable size from all ranks.
 
@@ -257,6 +257,8 @@ Exercise: scatterv and gatherv
    .. figure:: img/mat-vec.png
       :align: center
 
+      Matrix vector multiplication in parallel
+
    You can find a scaffold for the code in the
    ``content/code/day-2/03_scatterv-and-gatherv`` folder.
    A working solution is in the
@@ -264,8 +266,7 @@ Exercise: scatterv and gatherv
 
         mpicc -g -Wall -std=c11 scatterv-and-gatherv.c -o scatterv-and-gatherv
 
-   #. When you have the code compiling, try to run with different number of
-         processes.
+   #. When you have the code compiling, try to run with different number of processes.
 
    #. Try to get the root rank to report success :-)
 
