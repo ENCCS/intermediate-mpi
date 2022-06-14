@@ -57,7 +57,7 @@ We ran the workshop in collaboration with Xin Li (PDC) and Pedro Ojeda May (HPC2
       9:55 - 10:05 ; Break
      10:05 - 10:50 ; **Generalized forms of gather**
      10:50 - 11:00 ; Break
-     11:00 - 12:10 : **Non-blocking point-to-point**
+     11:00 - 12:10 ; **Non-blocking point-to-point**
      12:10 - 12:20 ; Wrap-up
 
 
