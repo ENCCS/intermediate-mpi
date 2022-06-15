@@ -133,7 +133,7 @@ Exercise: all-gather and all-to-all
    * One correct call is::
 
          MPI_Allgather(values_to_all_gather, 3, MPI_INT,
-                       &all_gathered_values, 3, MPI_INT,
+                       result_values, 3, MPI_INT,
                        comm);
 
    * What happened if you mistakenly used 4 or 12 for the counts? Why?
