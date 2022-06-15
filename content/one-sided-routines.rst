@@ -63,7 +63,7 @@ Synchronization
 
   - |term-MPI_Win_fence| this achieves synchronization in the **active target**
     communication paradigm.
-  - |term-MPI_Win_start|, |term-MPI_Win_complete|, |term-MPI_Win_post|,
+  - |term-MPI_Win_post|, |term-MPI_Win_start|, |term-MPI_Win_complete|,
     |term-MPI_Win_wait| are also used in the **active target** communication
     paradigm.
   - |term-MPI_Win_lock|, |term-MPI_Win_unlock| which enables synchronization in
@@ -83,8 +83,7 @@ Synchronization
    Note that **any** interaction with the memory window **must** be protected by
    calls to synchronization routines: even local load/store and/or two-sided
    communication.
-   The events in between synchronization calls are said to happen in *epochs*.
-
+   The events in between synchronization calls are said to happen in **epochs**.
 
 .. typealong:: RMA in action
 
@@ -97,7 +96,7 @@ Synchronization
    ``content/code/day-3/00_rma/solution`` folder.
 
    First of all, we create the buffer on all ranks. However, only rank 1 will
-   fill it with some values. We will see that window creation is *collective*
+   fill it with some values. We will see that window creation is **collective**
    call for all ranks in the given communicator.
 
    .. code-block:: c
@@ -110,8 +109,12 @@ Synchronization
           window_buffer[3] = 3;
       }
       MPI_Win win;
-      MPI_Win_create(&window_buffer, (MPI_Aint)4 * sizeof(int), sizeof(int),
-                     MPI_INFO_NULL, comm, &win);
+      MPI_Win_create(&window_buffer, /* pre-allocated buffer */
+                     (MPI_Aint)4 * sizeof(int), /* size in bytes */
+                     sizeof(int), /* displacement units */
+                     MPI_INFO_NULL, /* info object */
+                     comm, /* communicator */
+                     &win /* window object */);
 
    Every rank has now a window, but only the window on rank 1 has values
    different from 0. Before doing anything on the window, we need to start an
@@ -119,7 +122,8 @@ Synchronization
 
    .. code-block:: c
 
-      MPI_Win_fence(0, win);
+      MPI_Win_fence(0, /* assertion */
+                    win /* window object */);
 
    Process 0 can now load the values into its local memory:
 
@@ -128,7 +132,14 @@ Synchronization
       int getbuf[4];
       if (rank == 0) {
         // Fetch the value from the MPI process 1 window
-        MPI_Get(&getbuf, 4, MPI_INT, 1, 0, 4, MPI_INT, win);
+        MPI_Get(&getbuf, /* pre-allocated buffer on RMA origin process */
+                4, /* count on RMA origin process */
+                MPI_INT, /* type on RMA origin process */
+                1, /* rank of RMA target process */
+                0, /* displacement on RMA target process */
+                4, /* count on RMA target process */
+                MPI_INT, /* type on RMA target process */
+                win /* window object */);
       }
 
    We synchronize again once we are done with RMA operations: this access epoch
@@ -136,7 +147,8 @@ Synchronization
 
    .. code-block:: c
 
-      MPI_Win_fence(0, win);
+      MPI_Win_fence(0, /* assertion */
+                    win /* window object */);
 
    Remember to free the window object!
 
@@ -144,22 +156,63 @@ Synchronization
 
       MPI_Win_free(&win);
 
+Non-blocking vs. RMA
+^^^^^^^^^^^^^^^^^^^^
 
-.. discussion::
+At a first glance, one-sided and non-blocking communication appear similar.
+The key difference is in the mechanism to use for synchronization.
 
-   - Are there similarities between one-sided and non-blocking communication? In
-     which contexts would you prefer one over the other?
+.. typealong::
 
+   We can you re-express the code shown in the type-along in terms of
+   |term-MPI_Isend|/|term-MPI_Recv|.  A full working example is in
+   ``content/code/day-3/01_rma-vs-nonblocking/solution`` folder.
 
-.. challenge:: Non-blocking vs RMA
+   .. tabs::
 
-   Can you re-express the code shown in the type-along with
-   |term-MPI_Isend|/|term-MPI_Recv|?
+      .. tab:: Non-blocking
 
-   You can find a scaffold for the code in the
-   ``content/code/day-3/01_rma-vs-nonblocking`` folder.  A working solution is in the
-   ``solution`` subfolder.
+         .. code:: c
 
+            if (rank == 0) {
+              int sendbuf[4] = {42, 88, 12, 3};
+              MPI_Request request;
+              printf("MPI process %d sends values:", rank);
+              for (int i = 0; i < 4; ++i) {
+                printf(" %d", sendbuf[i]);
+              }
+              printf("\n");
+              MPI_Isend(&sendbuf, 4, MPI_INT, 1, 0, comm, &request);
+
+              /* Here you might do other useful computational work */
+
+              // Let's wait for the MPI_Isend to complete before progressing further.
+              MPI_Wait(&request, MPI_STATUS_IGNORE);
+            } else if (rank == 1) {
+              int recvbuf[4];
+              MPI_Recv(&recvbuf, 4, MPI_INT, 0, 0, comm, MPI_STATUS_IGNORE);
+              printf("MPI process %d receives values:", rank);
+              for (int i = 0; i < 4; ++i) {
+                printf(" %d", recvbuf[i]);
+              }
+              printf("\n");
+            }
+
+      .. tab:: RMA
+
+         .. code:: c
+
+            // start access epoch
+            MPI_Win_fence(0, win);
+
+            int getbuf[4];
+            if (rank == 0) {
+              // Fetch the value from the MPI process 1 window
+              MPI_Get(&getbuf, 4, MPI_INT, 1, 0, 4, MPI_INT, win);
+            }
+
+            // end access epoch
+            MPI_Win_fence(0, win);
 
 Window creation
 ---------------
@@ -223,16 +276,6 @@ We can expose an array of 10 ``double``-s for RMA with:
                          MPI_Comm comm,
                          MPI_Win *win)
 
-What if the memory is not allocated? We advise to use |term-MPI_Alloc_mem|:
-
-.. literalinclude:: code/snippets/alloc_mem+win_create.c
-   :language: c
-   :lines: 6-21
-   :dedent: 2
-
-You must explicitly call |term-MPI_Free_mem| to deallocate memory obtained
-with |term-MPI_Alloc_mem|.
-
 .. parameters::
 
    ``base``
@@ -253,13 +296,23 @@ with |term-MPI_Alloc_mem|.
    ``win``
        The window object.
 
+What if the memory is not allocated? We advise to use |term-MPI_Alloc_mem|:
+
+.. literalinclude:: code/snippets/alloc_mem+win_create.c
+   :language: c
+   :lines: 6-21
+   :dedent: 2
+
+You must explicitly call |term-MPI_Free_mem| to deallocate memory obtained
+with |term-MPI_Alloc_mem|.
+
 .. note::
 
-   - The memory window is usually a single array: the size of the window object
-     then coincides with the size of the array.  If the base type of the array
-     is a simple type, then the displacement unit is the size of that type,
-     *e.g.* ``double`` and ``sizeof(double)``.  You should use a displacement
-     unit of 1 otherwise.
+   The memory window is usually a single array: the size of the window object
+   then coincides with the size of the array.  If the base type of the array
+   is a simple type, then the displacement unit is the size of that type,
+   *e.g.* ``double`` and ``sizeof(double)``.  You should use a displacement
+   unit of 1 otherwise.
 
 
 .. challenge:: Window creation
@@ -401,26 +454,6 @@ RMA operations
 
    A working solution is in the ``solution`` subfolder.
 
-Other routines for RMA operations are:
-
-Request-based variants
-   These routines return a handle of type ``MPI_Request`` and synchronization
-   can be achieved with ``MPI_Wait``.
-
-     - ``MPI_Rget``
-     - ``MPI_Rput``
-     - ``MPI_Raccumulate``
-     - ``MPI_Rget_accumulate``
-
-Specialized accumulation variants
-   These functions perform specialized accumulations, but are conceptually
-   similar to |term-MPI_Accumulate|.
-
-     - ``MPI_Get_accumulate``
-     - ``MPI_Fetch_and_op``
-     - ``MPI_Compare_and_swap``
-
-
 .. challenge:: Describe the sequence MPI calls connecting the before and after schemes.
 
    #. .. figure:: img/E02-win_allocate.svg
@@ -451,6 +484,29 @@ Specialized accumulation variants
       remote *store* operation. The call |term-MPI_Put| is issued by process 2,
       the *origin* process, to store its ``C`` variable to the memory window of
       process 1, the *target* process.
+
+
+.. note::
+
+   There are other routines for RMA operations. We give here a list
+   without going into details:
+
+   Request-based variants
+      These routines return a handle of type ``MPI_Request`` and synchronization
+      can be achieved with ``MPI_Wait``.
+
+        - ``MPI_Rget``
+        - ``MPI_Rput``
+        - ``MPI_Raccumulate``
+        - ``MPI_Rget_accumulate``
+
+   Specialized accumulation variants
+      These functions perform specialized accumulations, but are conceptually
+      similar to |term-MPI_Accumulate|.
+
+        - ``MPI_Get_accumulate``
+        - ``MPI_Fetch_and_op``
+        - ``MPI_Compare_and_swap``
 
 See also
 --------

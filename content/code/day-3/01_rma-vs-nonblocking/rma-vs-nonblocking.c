@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
       printf(" %d", sendbuf[i]);
     }
     printf("\n");
-    /* FIXME Non-blocking send of sendbug to rank 1 */
+    /* FIXME Non-blocking send of sendbuf to rank 1 */
     MPI_Isend( .. );
 
     /* Here you might do other useful computational work */

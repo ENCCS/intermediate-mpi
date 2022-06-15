@@ -35,12 +35,6 @@ resembles an email. Your message will sit in your friend's inbox, but you are
 immediately free to do other things after hitting the send button! Your friend
 will read the email at their leisure.
 
-.. discussion::
-
-   - What would be the advantages of using one-sided communication?
-   - What would be the disadvantages?
-
-
 At a glance: how does it work?
 ------------------------------
 
@@ -203,7 +197,7 @@ object.
    Note that **any** interaction with the memory window **must** be protected by
    calls to synchronization routines: even local load/store and/or two-sided
    communication.
-   The events in between synchronization calls are said to happen in *epochs*.
+   The events in between synchronization calls are said to happen in **epochs**.
 
 
 See also
