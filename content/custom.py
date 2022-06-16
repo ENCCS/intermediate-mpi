@@ -93,7 +93,7 @@ lesson_threads = [
     ["MPI_Init_thread", 303],
     ["MPI_Query_thread", 303],
     ["MPI_Is_thread_main", 303],
-#    ["MPI_", 303],
+    #    ["MPI_", 303],
 ]
 # functions mentioned in passing in the lesson
 other = [
