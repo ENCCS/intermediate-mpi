@@ -172,39 +172,6 @@
            id="text1064">One-sided or local</text>
       </switch>
     </g>
-    <g
-       transform="translate(32.966228,-22.614749)"
-       id="g1068-3">
-      <switch
-         id="switch1066-6">
-        <foreignObject
-           style="overflow: visible; text-align: left;"
-           pointer-events="none"
-           width="100%"
-           height="100%"
-           requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
-          <xhtml:div
-             style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 149px; height: 1px; padding-top: 121px; margin-left: 2px;">
-            <xhtml:div
-               style="box-sizing: border-box; font-size: 0; text-align: center; ">
-              <xhtml:div
-                 style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
-                <xhtml:font
-                   style="font-size: 14px">One-sided or local</xhtml:font>
-              </xhtml:div>
-            </xhtml:div>
-          </xhtml:div>
-        </foreignObject>
-        <text
-           x="76"
-           y="125"
-           fill="#000000"
-           font-family="Helvetica"
-           font-size="12px"
-           text-anchor="middle"
-           id="text1064-7">One-sided or local</text>
-      </switch>
-    </g>
     <text
        x="276.19681"
        y="96.998856"
@@ -615,6 +582,7 @@
                    style="font-size: 14px"><xhtml:font
    face="Fira Code"
    data-font-src="https://fonts.googleapis.com/css?family=Fira+Code">MPI_Win</xhtml:font>
+
  created</xhtml:span>
               </xhtml:div>
             </xhtml:div>
@@ -660,6 +628,7 @@
                    style="font-size: 14px"><xhtml:font
    face="Fira Code"
    data-font-src="https://fonts.googleapis.com/css?family=Fira+Code">MPI_Win</xhtml:font>
+
  freed</xhtml:span>
               </xhtml:div>
             </xhtml:div>

@@ -14,14 +14,14 @@ One-sided communication: synchronization
    - Learn about active target communication and how to achieve it.
    - Learn about passive target communication and how to achieve it.
 
+What could go wrong?
+--------------------
 
-.. challenge:: What could go wrong?
+.. figure:: img/E03-race_MPI_Put.svg
+   :align: center
 
-   .. figure:: img/E03-race_MPI_Put.svg
-      :align: center
-
-      Steve and Alice are joined by Martha. It is not really clear which value
-      Alice will find in the memory window!
+   Steve and Alice are joined by Martha. It is not really clear which value
+   Alice will find in the memory window!
 
 
 Epochs
@@ -42,11 +42,11 @@ performance downsides of synchronization operations.
    in an application which uses MPI one-sided communication.
    The creation of ``MPI_Win`` objects in each process in the communicator
    allows the execution of RMA routines. Each access to the window must be
-   synchronized: to ensure safety and correctness of the application.
+   synchronized to ensure safety and correctness of the application.
    Note that **any** interaction with the memory window **must** be protected by
    calls to synchronization routines: even local load/store and/or two-sided
    communication.
-   The events in between synchronization calls are said to happen in *epochs*,
+   The events in between synchronization calls are said to happen in **epochs**,
    here represented by vertical purple lines.
 
 
@@ -139,10 +139,45 @@ During an exposure epoch:
 
    ``assert``
        Use this argument to provide optimization *hints* to the MPI library.
+       Values described in the MPI standard:
+
+       - ``MPI_MODE_NOSTORE`` the local window was not updated by local stores
+         (or local get or receive calls) since last synchronization.
+       - ``MPI_MODE_NOPUT`` the local window will not be updated by put or
+         accumulate calls after the fence call, until the ensuing (fence)
+         synchronization.
+       - ``MPI_MODE_NOPRECEDE`` the fence does not complete any sequence of
+         locally issued RMA calls. If this assertion is given by any process in
+         the window group, then it must be given by all processes in the group.
+       - ``MPI_MODE_NOSUCCEED`` the fence does not start any sequence of locally
+         issued RMA calls. If the assertion is given by any process in the
+         window group, then it must be given by all processes in the group.
+
        Setting this argument to ``0`` is always correct.
+
    ``win``
        The window object.
 
+.. challenge:: Fences
+
+   In this exercise, you will have to use active target synchronization with
+   fences to perform a ``MPI_Get`` operation. We have seen this strategy in
+   previous examples.
+
+   You can find a scaffold for the code in the
+   ``content/code/day-4/03_rma-fence`` folder:
+
+   1. Create a window and attach to a previously allocated buffer with
+      |term-MPI_Win_create|
+   2. Synchronize with |term-MPI_Win_fence| before calling |term-MPI_Get|. There
+      were no previous RMA calls, which assertion could be used?
+   3. Issue a |term-MPI_Get| call on all ranks greater than 0. You want to
+      obtain all of the contents of the buffer on rank 0.
+   4. Synchronize again with a fence. Which assertion could be used, knowing
+      that there will be no more RMA calls after?
+   5. Don't forget to free up the window!
+
+   A working solution in the ``solution`` folder.
 
 Post/Start/Complete/Wait
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -173,11 +208,11 @@ while opening and closing of access epochs on origin processes is enabled by:
    epoch for a specific group of processes.  The access epoch starts with a call
    to |term-MPI_Win_start| and end with a call to |term-MPI_Win_complete|.
    The exposure epoch is closed with |term-MPI_Win_wait| (or |term-MPI_Win_test|).
-   Exposure and access epochs must pertain to *matching* process groups.  The
+   Exposure and access epochs must pertain to **matching process groups**.  The
    programmer has to explicitly manage the pairing of exposure and access epochs
    in this model: all communications partners should be known.
    With the Post/Start/Complete/Wait calls, MPI lets you implement active target
-   communication with *weak synchronization*: the call to |term-MPI_Win_start|
+   communication with **weak synchronization**: the call to |term-MPI_Win_start|
    is not required to happen chronologically before the call to
    |term-MPI_Win_post|.
 
@@ -203,6 +238,20 @@ while opening and closing of access epochs on origin processes is enabled by:
    ``assert``
        Use this argument to provide optimization *hints* to the MPI library.
        Setting this argument to ``0`` is always correct.
+       Values described in the MPI standard:
+
+       - ``MPI_MODE_NOCHECK`` the matching calls to |term-MPI_Win_start| have
+         not yet occurred on any origin processes when the call to |term-MPI_Win_post|
+         is made.  The nocheck option can be specified by a post call if and
+         only if it is specified by each matching start call.
+       - ``MPI_MODE_NOSTORE`` the local window was not updated by local stores
+         (or local get or receive calls) since last synchronization. This may
+         avoid the need for cache synchronization at the post call.
+       - ``MPI_MODE_NOPUT`` the local window will not be updated by put or
+         accumulate calls after the post call, until the ensuing (wait)
+         synchronization. This may avoid the need for cache synchronization at
+         the wait call.
+
    ``win``
        The window object.
 
@@ -211,7 +260,7 @@ while opening and closing of access epochs on origin processes is enabled by:
 
    Start an *access* epoch for the given window object. Only the processes in
    the given group can be targeted by RMA calls.
-   Each process in the origin group has to issue a matching |term-MPI_Win_post|
+   Each process in the target group has to issue a matching |term-MPI_Win_post|
    call.
 
    .. code-block:: c
@@ -228,6 +277,13 @@ while opening and closing of access epochs on origin processes is enabled by:
    ``assert``
        Use this argument to provide optimization *hints* to the MPI library.
        Setting this argument to ``0`` is always correct.
+       Values described by the MPI standard:
+
+       - ``MPI_MODE_NOCHECK`` the matching calls to |term-MPI_Win_post| have
+         already completed on all target processes when the call to
+         |term-MPI_Win_start| is made. The nocheck option can be specified in a
+         start call if and only if it is specified in each matching post call.
+
    ``win``
        The window object.
 
@@ -270,6 +326,60 @@ while opening and closing of access epochs on origin processes is enabled by:
        Whether the exposure epoch has ended.
 
 
+.. challenge:: Post/Start/Complete/Wait
+
+   In this exercise, you will have to use active target synchronization with
+   Post/Start/Complete/Wait set of calls to perform a series of |term-MPI_Put|
+   operations.
+   We first create a buffer ``buf`` with size equal to that of the communicator.
+   On each rank, we initialize it with a rank-dependent value, *e.g.* ``rank *
+   11``.
+   The goal is to use |term-MPI_Put| such that at index ``rank`` of ``buf`` on
+   rank 0 we will find the correct rank-dependent value. As an example, using 4
+   processes the final ``buf`` on rank 0 should contain:
+
+   .. code:: shell
+
+      [0.0, 11.0, 22.0, 33.0]
+
+   Post/Start/Complete/Wait offers more granular control over which processes
+   synchronize with each other. To achieve this, we will be using *groups* of
+   processes within the communicator that spans the window object.  Thus, we
+   also save the ranks of each process in the communicator in an appropriately
+   sized array ``ranks``. This will be used for creating groups.
+
+   You can find a scaffold for the code in the
+   ``content/code/day-4/04_rma-pswc`` folder:
+
+   1. Create a window and attach to a previously allocated buffer with
+      |term-MPI_Win_create|
+   2. Obtain the group corresponding to the communicator with
+      |term-MPI_Comm_group|.
+   3. On rank 0:
+
+      - Create the group of RMA origin processes. This group contains all
+        processes whose rank is greater than 0. Use |term-MPI_Group_incl| and the
+        ``ranks`` array.
+      - Use |term-MPI_Win_post| and |term-MPI_Win_wait| to initialize the
+        exposure epoch of the window on rank 0 (the target) for the group of
+        origin processes.
+
+   4. On ranks > 0:
+
+      - Create the group of RMA target processes, which only includes rank 0.
+        Use |term-MPI_Group_incl|.
+      - Initialize access epoch with |term-MPI_Win_start| for the group of
+        target processes.
+      - Issue the correct |term-MPI_Put| call to store the element at index
+        ``rank`` from ``buf`` on the origin process into ``buf`` on the target
+        process.
+      - Terminate the access epoch with |term-MPI_Win_complete|.
+
+   5. Don't forget to free window(s) and group(s).
+
+   A working solution in the ``solution`` folder.
+
+
 Passive target communication
 ----------------------------
 
@@ -293,7 +403,7 @@ with:
 
 - |term-MPI_Alloc_mem|,
 - |term-MPI_Win_allocate|,
-- ``MPI_Win_attach``.
+- |term-MPI_Win_attach|.
 
 
 
@@ -323,6 +433,14 @@ with:
    ``assert``
        Use this argument to provide optimization *hints* to the MPI library.
        Setting this argument to ``0`` is always correct.
+       Values described in the MPI standard:
+
+       - ``MPI_MODE_NOCHECK`` no other process holds, or will attempt to acquire
+         a conflicting lock, while the caller holds the window lock. This is
+         useful when mutual exclusion is achieved by other means, but the
+         coherence operations that may be attached to the lock and unlock calls
+         are still required.
+
    ``win``
        The window object.
 
@@ -342,16 +460,176 @@ with:
        The window object.
 
 
-.. discussion:: How could synchronization be performed?
+.. challenge:: Lock and unlock
 
-   .. figure:: img/sync_quiz_q1.svg
+   In this exercise, you will have to use passive target synchronization to
+   perform a series of |term-MPI_Put| operations. The final result is similar to
+   that of the previous exercise.
+
+   We first create a buffer ``buf`` with size equal to that of the communicator.
+   On each rank, we initialize it with a rank-dependent value, *e.g.* ``rank *
+   11``.
+   The goal is to use |term-MPI_Put| such that at index ``rank`` of ``buf`` on
+   rank 0 we will find the correct rank-dependent value. As an example, using 4
+   processes the final ``buf`` on rank 0 should contain:
+
+   .. code:: shell
+
+      [0.0, 11.0, 22.0, 33.0]
+
+   You can find a scaffold for the code in the
+   ``content/code/day-4/05_rma-lock-unlock`` folder:
+
+   1. Create a window and attach to a previously allocated buffer with
+      |term-MPI_Win_create|
+   2. The origin processes are those of rank > 0:
+
+      - Create a lock on the target process (rank 0). What type of lock should
+        you ask?
+      - Issue the correct |term-MPI_Put| call to store the element at index
+        ``rank`` from ``buf`` on the origin process into ``buf`` on the target
+        process.
+      - Release the lock.
+
+   5. Don't forget to free the window.
+
+   Should you do synchronization also on the target process?
+
+   A working solution in the ``solution`` folder.
 
 
-.. solution::
+.. challenge:: Computation of :math:`\pi`
 
-   A possible solution is to use |term-MPI_Win_fence|. Operations on a remote
-   memory window must be encapsulated within an access epoch. A fence is the
-   most common form of active target communication.
+   As a final RMA exercise, we will rework the calculation of :math:`\pi`
+   proposed in the exercise ``content/code/day-1/09_integrate-pi``, which used
+   |term-MPI_Bcast| and |term-MPI_Reduce|.
+
+   We want to use |term-MPI_Accumulate|:
+
+   - We designate a *manager process* that will be the **target** of the
+     one-sided reduction.
+   - All processes in the communicator will work on their own chunk of
+     the integration.
+   - Worker processes, *i.e.* not the manager, are the **origin** of the
+     one-sided reduction and will accumulate their result on the manager
+     process.
+
+   .. tabs::
+
+      .. group-tab:: Post/Start/Complete/Wait
+
+         We can use active target synchronization. It's not a great idea to use
+         a fence: because the communication will be between a pair of processes
+         and a fence forces *all* processes to synchronize after each call to
+         |term-MPI_Accumulate|.
+
+         You can find a scaffold in the ``content/code/day-4/06_rma-pi-pscw``
+         folder, which uses Post/Start/Complete/Wait instead.
+
+         The general flow is:
+
+         - The process designed as manager holds the number of integration
+           points and performs Post-Wait.
+         - All worker processes use Start-Complete to retrieve the number of
+           integration points.
+         - All processes work on their chunk of the integration points.
+         - All worker processes use Start-Complete to accumulate their result on
+           the manager process.
+         - The manager process uses Post-Wait.
+
+         Follow the prompts in the scaffold to get your slice of :math:`\pi`:
+
+         1. Create two windows, one to hold the number of integration points,
+            the other for the value of :math:`\pi` computed on each rank.
+         2. Create two groups of processes: one only containing rank 0 (the
+            manager process), the other with all other processes in the
+            communicator (the workers).
+         3. Obtain the number of points on the worker processes:
+
+            - On the manager process, use Post-Wait.
+            - On the worker processes, use |term-MPI_Get|, correctly interleaved
+              with Start-Complete.
+
+         4. Aggregate the results:
+
+            - On the worker processes, use |term-MPI_Accumulate|, correctly
+              interleaved with Start-Complete.
+            - On the manager process, use Post-Wait
+
+         5. Don't forget to free the windows!
+
+         Find a working solution in the ``solution`` folder.
+
+      .. group-tab:: Lock and unlock
+
+         Since all communication between manager and workers is point-to-point,
+         it's feasible and more readable to use passive target synchronization
+         with locks.
+
+         You can find a scaffold in the ``content/code/day-4/07_rma-pi-lock-unlock``
+         folder.
+
+         Follow the prompts in the scaffold to get your slice of :math:`\pi`:
+
+         1. Create two windows, one to hold the number of integration points,
+            the other for the value of :math:`\pi` computed on each rank.
+         2. Obtain the number of integration points on the worker processes:
+
+            - Acquire a lock on the manager process.
+            - Use |term-MPI_Get|
+            - Which lock type should you use?
+
+         3. Aggregate the results:
+
+            - Acquire a lock on the manager process.
+            - Use |term-MPI_Accumulate|
+            - Which lock type should you use?
+
+         4. Use a collective barrier to ensure that the manager process is done
+            with its chunk of the calculation. What happens if you forget to do
+            this?
+         5. Don't forget to free the windows!
+
+         Find a working solution in the ``solution`` folder.
+
+
+Final thoughts
+--------------
+
+One-sided communication and its use are a bit more complicated than standard
+two-sided communication in MPI. When and why should one think about using
+:term:`RMA`?
+
+- We can achieve better performance using one-sided communication. This is due
+  mostly to the fact that we can have more granular control over synchronization
+  and data movements.
+- Though the synchronization mechanisms may appear quite convoluted, they're a
+  more natural fit for cases where one wants to overlap computation and
+  communication.
+
+As a general rule of thumb, you should beware whenever a performance claim is
+made without showing any numbers. One-sided communication can be efficient, with some caveats:
+
+1. **Software**: the quality of its implementation in the MPI library you're
+   using can be rather poor.
+2. **Hardware**: the interconnect might have high latency and/or not support RMA
+   natively.
+3. **Usage anti-patterns**: using the synchronization methods appropriately is
+   key to performance. For example:
+
+   - Using a fence on many processes when only a few of those need to
+     communicate is inefficient (and wasteful).
+   - Using locks on many procesess will be poses correctness *and* efficiency
+     issues.
+
+Some advice in case you decide to use one-sided communication in your code:
+
+* Run a microbenchmark test suite, for example the `OSU suite
+  <http://mvapich.cse.ohio-state.edu/benchmarks/>`_ to check that hardware and
+  software will not be an issue.
+* :term:`RMA` can lead to improved performance especially when *many*
+  communication calls can be made within a pair of synchronization calls. If you
+  want to capitalize on this, make sure to group your calls accordingly!
 
 
 See also

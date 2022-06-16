@@ -55,6 +55,7 @@ lesson_rma = [
     ["MPI_Win_unlock", 282],
     ["MPI_Win_free", 265],
     ["MPI_Win_test", 281],
+    ["MPI_Win_attach", 264],
 ]
 # collectives
 lesson_coll = [
