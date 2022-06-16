@@ -304,8 +304,6 @@ call |term-MPI_Is_thread_main|.
          /* ... */
          
 
-   * There are other calls that work correctly. Is yours better or worse
-     than this one? Why?
 
 
 Which threading level to use?
