@@ -1,8 +1,8 @@
 .. _one-sided-routines:
 
 
-One-sided communications: functions
-===================================
+One-sided communication: functions
+==================================
 
 .. questions::
 
