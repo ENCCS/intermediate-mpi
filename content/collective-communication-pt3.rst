@@ -283,8 +283,9 @@ See also
 --------
 
 * https://www.mcs.anl.gov/~thakur/sc17-mpi-tutorial/slides.pdf
-* https://www.rookiehpc.com/mpi/docs/mpi_allgather.php
-* https://www.rookiehpc.com/mpi/docs/mpi_alltoall.php
+* https://rookiehpc.github.io/mpi/docs/mpi_allgather/index.html
+* https://rookiehpc.github.io/mpi/docs/mpi_alltoall/index.html
+
 
 
 .. keypoints::
