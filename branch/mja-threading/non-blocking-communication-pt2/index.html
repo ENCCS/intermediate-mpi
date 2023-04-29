@@ -1,0 +1,368 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Non-blocking collective communication &mdash; Intermediate MPI</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/segment.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/menu.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/tab.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/togglebutton.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="One-sided communication: concepts" href="../one-sided-concepts/" />
+    <link rel="prev" title="Non-blocking point-to-point" href="../non-blocking-communication-pt1/" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../" class="icon icon-home" alt="Documentation Home"> Intermediate MPI
+          
+
+          
+            
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes/">Derived datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Non-blocking collective communication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#non-blocking-barrier-synchronization">Non-blocking barrier synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#non-blocking-reduce">Non-blocking reduce</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-along-exercise-non-blocking-ireduce-during-stencil-workflow">Code-along exercise: non-blocking ireduce during stencil workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communications: functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Non-blocking collective communication</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/non-blocking-communication-pt2.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="non-blocking-collective-communication">
+<h1>Non-blocking collective communication<a class="headerlink" href="#non-blocking-collective-communication" title="Permalink to this headline">¶</a></h1>
+<div class="admonition-questions questions admonition">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>Is the synchronization of collective communications avoidable?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Understand that a non-blocking barrier is useful</p></li>
+</ul>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Just like for point-to-point messages, applications that use
+non-blocking collectives can be more efficient than blocking
+ones. This is because the latency of communication can overlap with
+unrelated computation.</p>
+</div>
+<div class="section" id="non-blocking-barrier-synchronization">
+<h2>Non-blocking barrier synchronization<a class="headerlink" href="#non-blocking-barrier-synchronization" title="Permalink to this headline">¶</a></h2>
+<p>At first glance, this seems like a nonsense. However if a barrier is
+needed, then it can be quite useful to overlap work with the
+synchronization. Use cases are rare, but include highly unstructured
+work described by variable numbers of messages sent between ranks, or
+very latency-sensitive applications. Once all messages have been sent,</p>
+<div class="admonition-term-mpi-ibarrier signature toggle-shown dropdown admonition">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Ibarrier"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Ibarrier</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Ibarrier</span><span class="p">(</span><span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">,</span>
+                 <span class="n">MPI_Request</span> <span class="o">*</span><span class="n">request</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>It is necessary to use blocking barrier only when communicating
+through a side channel, like a file or a socket.</p>
+</div>
+<div class="section" id="non-blocking-reduce">
+<h2>Non-blocking reduce<a class="headerlink" href="#non-blocking-reduce" title="Permalink to this headline">¶</a></h2>
+<p>TODO graphic and description of <a class="reference internal" href="../quick-reference/index.html#term-MPI_Ireduce"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Ireduce</code></span></a></p>
+<div class="admonition-term-mpi-ireduce signature toggle-shown dropdown admonition">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Ireduce"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Ireduce</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Ireduce</span><span class="p">(</span><span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="n">sendbuf</span><span class="p">,</span>
+                <span class="kt">void</span><span class="o">*</span> <span class="n">recvbuf</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">count</span><span class="p">,</span>
+                <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span>
+                <span class="n">MPI_Op</span> <span class="n">op</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">root</span><span class="p">,</span>
+                <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">,</span>
+                <span class="n">MPI_Request</span> <span class="o">*</span><span class="n">request</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="code-along-exercise-non-blocking-ireduce-during-stencil-workflow">
+<h2>Code-along exercise: non-blocking ireduce during stencil workflow<a class="headerlink" href="#code-along-exercise-non-blocking-ireduce-during-stencil-workflow" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-observe-a-running-total-during-a-stencil-workflow challenge admonition">
+<p class="admonition-title">1.1 Observe a running total during a stencil workflow</p>
+<ol class="arabic">
+<li><p>Download the <a class="reference download internal" download="" href="../_downloads/bbbdff1851a25c11c6575a1f0f007655/non-blocking-communication-ireduce.c"><code class="xref download docutils literal notranslate"><span class="pre">source</span> <span class="pre">code</span></code></a>. Open
+<code class="docutils literal notranslate"><span class="pre">non-blocking-communication-ireduce.c</span></code> and read through it. It
+is quite similar to that for the earlier non-blocking code-along
+exercise. Compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">non</span><span class="o">-</span><span class="n">blocking</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">ireduce</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">non</span><span class="o">-</span><span class="n">blocking</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">ireduce</span>
+</pre></div>
+</div>
+</li>
+<li><p>When you have the code compiling, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="mi">2</span> <span class="o">./</span><span class="n">non</span><span class="o">-</span><span class="n">blocking</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">ireduce</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<ol class="arabic simple" start="4">
+<li><p>Try to fix the code TODO</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution dropdown admonition">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>One correct approach is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TODO</span>
+</pre></div>
+</div>
+</li>
+<li><p>There are other approaches that work correctly. Is yours better
+or worse than this one? Why?</p></li>
+<li><p>Download a <a class="reference download internal" download="" href="../_downloads/8cc865d63711abcdf4331cd4d3ce7978/non-blocking-communication-ireduce-solution.c"><code class="xref download docutils literal notranslate"><span class="pre">working</span> <span class="pre">solution</span></code></a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>TODO</p></li>
+<li><p>TODO</p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>TODO</p></li>
+<li><p>point 2</p></li>
+<li><p>…</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../one-sided-concepts/" class="btn btn-neutral float-right" title="One-sided communication: concepts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../non-blocking-communication-pt1/" class="btn btn-neutral float-left" title="Non-blocking point-to-point" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, EuroCC National Competence Centre Sweden
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One-sided communication: synchronization &mdash; Intermediate MPI</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script src="../_static/tabs.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script data-domain="enccs.github.io/intermediate-mpi" defer="defer" src="https://plausible.io/js/script.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Introducing MPI and threads" href="../mpi-and-threads-pt1/" />
+    <link rel="prev" title="One-sided communication: functions" href="../one-sided-routines/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../" class="icon icon-home">
+            Intermediate MPI
+              <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt1/">Derived datatypes: pack and unpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt2/">Derived datatypes: <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communication: functions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">One-sided communication: synchronization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-could-go-wrong">What could go wrong?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#epochs">Epochs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#active-target-communication">Active target communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fence">Fence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#post-start-complete-wait">Post/Start/Complete/Wait</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#passive-target-communication">Passive target communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#final-thoughts">Final thoughts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">One-sided communication: synchronization</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/one-sided-sync.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="one-sided-communication-synchronization">
+<span id="one-sided-sync"></span><h1>One-sided communication: synchronization<a class="headerlink" href="#one-sided-communication-synchronization" title="Permalink to this heading"></a></h1>
+<div class="admonition-questions questions admonition" id="questions-0">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>What are the pitfalls of RMA?</p></li>
+<li><p>How can we make RMA safe and correct?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition" id="objectives-0">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Learn about active target communication and how to achieve it.</p></li>
+<li><p>Learn about passive target communication and how to achieve it.</p></li>
+</ul>
+</div>
+<section id="what-could-go-wrong">
+<h2>What could go wrong?<a class="headerlink" href="#what-could-go-wrong" title="Permalink to this heading"></a></h2>
+<figure class="align-center" id="id2">
+<img alt="../_images/E03-race_MPI_Put.svg" src="../_images/E03-race_MPI_Put.svg" /><figcaption>
+<p><span class="caption-text">Steve and Alice are joined by Martha. It is not really clear which value
+Alice will find in the memory window!</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="epochs">
+<h2>Epochs<a class="headerlink" href="#epochs" title="Permalink to this heading"></a></h2>
+<p>In the last episode, we introduced the concept of <em>epochs</em> in one-sided
+communication.  Recall that an <strong>epoch</strong> is the execution span occurring between
+calls to MPI synchronization functions.
+Calls to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a>, <a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a>, and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Accumulate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Accumulate</code></span></a> must be
+encapsulated within an <strong>access epoch</strong> for the memory window.
+Multiple data transfers can occur within the same epoch, amortizing the
+performance downsides of synchronization operations.</p>
+<figure class="align-center" id="id3">
+<img alt="../_images/E02-RMA_timeline-coarse.svg" src="../_images/E02-RMA_timeline-coarse.svg" /><figcaption>
+<p><span class="caption-text">The timeline of window creation, calls to RMA routines, and synchronization
+in an application which uses MPI one-sided communication.
+The creation of <code class="docutils literal notranslate"><span class="pre">MPI_Win</span></code> objects in each process in the communicator
+allows the execution of RMA routines. Each access to the window must be
+synchronized to ensure safety and correctness of the application.
+Note that <strong>any</strong> interaction with the memory window <strong>must</strong> be protected by
+calls to synchronization routines: even local load/store and/or two-sided
+communication.
+The events in between synchronization calls are said to happen in <strong>epochs</strong>,
+here represented by vertical purple lines.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Some general rules:</p>
+<ul class="simple">
+<li><p><em>Any</em> call to RMA communication functions that take a <code class="docutils literal notranslate"><span class="pre">MPI_Win</span></code> object as
+argument, <em>must</em> occur within an access epoch.</p></li>
+<li><p>Memory windows at a given process can be featured in multiple epochs, as long
+as the epochs <em>do not</em> overlap. Conversely, epochs on distinct memory windows
+can overlap.</p></li>
+<li><p>Local and non-RMA MPI operations are safe within an epoch.</p></li>
+</ul>
+</section>
+<section id="active-target-communication">
+<h2>Active target communication<a class="headerlink" href="#active-target-communication" title="Permalink to this heading"></a></h2>
+<p>In active target communication, the synchronization happens both on the origin
+and the target process.</p>
+<figure class="align-center" id="id4">
+<img alt="../_images/E03-active_target_communication.svg" src="../_images/E03-active_target_communication.svg" /><figcaption>
+<p><span class="caption-text">The origin process issues both synchronization and data movement calls. The
+target also issues synchronization calls, hence the name active target
+communication.  Synchronization on the target process starts the <strong>exposure
+epoch</strong> of its memory window.  Synchronization on the origin process starts
+the <strong>access epoch</strong> on the target’s memory window.  Once the origin process
+has completed its RMA operations, the programmer must take care to
+synchronize once more on the origin to  close the access epoch. The exposure
+epoch is closed by yet another synchronization call on the target process.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>The structure of an epoch assumes more fine-grained detail:</p>
+<ul class="simple">
+<li><p>An <strong>exposure epoch</strong> is enclosed within synchronization calls by the target
+process. The target process makes known to potential origin processes the
+availability of its memory window.</p></li>
+<li><p>An <strong>access epoch</strong> is enclosed within synchronization calls by the origin
+process. There can be <em>multiple</em> access epochs within the same exposure epoch.</p></li>
+</ul>
+<p>Exposure and access epochs can be interleaved and overlapped, with few <em>caveats</em>:</p>
+<ul class="simple">
+<li><p>A process’ memory window can be in multiple exposure epochs, as long as these
+are disjoint.</p></li>
+<li><p>An exposure epoch for a process’ memory window may overlap with exposure
+epochs on other windows.</p></li>
+<li><p>An exposure epoch for a process’ memory window may overlap with access epochs
+for the same or other <code class="docutils literal notranslate"><span class="pre">MPI_Win</span></code> window objects.</p></li>
+</ul>
+<section id="fence">
+<h3>Fence<a class="headerlink" href="#fence" title="Permalink to this heading"></a></h3>
+<p>Using a fence is possibly the easiest way to realize the active target
+communication paradigm. These synchronization calls are collective within the
+communicator underlying the window object.</p>
+<figure class="align-center" id="id5">
+<img alt="../_images/E03-fence.svg" src="../_images/E03-fence.svg" /><figcaption>
+<p><span class="caption-text">You can enclose RMA communication within calls to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_fence"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_fence</code></span></a>. This
+is a collective operation on the window object: on the origin process, it
+opens (closes) the <em>access</em> epoch; on the target process, it opens (closes)
+the <em>exposure</em> epoch.</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>RMA communication calls are surrounded by <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_fence"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_fence</code></span></a> calls.  This
+collective operation opens <em>and</em> closes an access epoch at an origin process and
+an exposure epoch at a target process.  Calls to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_fence"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_fence</code></span></a> act
+similarly to barriers: the MPI implementation will synchronize the sequence of
+RMA calls occurring between two fences.</p>
+<p>During an exposure epoch:</p>
+<ul class="simple">
+<li><p>You should <em>not</em> perform local accesses to the memory window.</p></li>
+<li><p>Only one remote process can issue <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a>.</p></li>
+<li><p>There can be mutiple <a class="reference internal" href="../quick-reference/index.html#term-MPI_Accumulate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Accumulate</code></span></a> function calls.</p></li>
+</ul>
+<div class="admonition-term-mpi-win-fence signature toggle-shown dropdown admonition" id="signature-0">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_fence"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_fence</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_fence</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">assert</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-0">
+<p class="admonition-title">Parameters</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">assert</span></code></dt><dd><p>Use this argument to provide optimization <em>hints</em> to the MPI library.
+Values described in the MPI standard:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_MODE_NOSTORE</span></code> the local window was not updated by local stores
+(or local get or receive calls) since last synchronization.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_MODE_NOPUT</span></code> the local window will not be updated by put or
+accumulate calls after the fence call, until the ensuing (fence)
+synchronization.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_MODE_NOPRECEDE</span></code> the fence does not complete any sequence of
+locally issued RMA calls. If this assertion is given by any process in
+the window group, then it must be given by all processes in the group.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_MODE_NOSUCCEED</span></code> the fence does not start any sequence of locally
+issued RMA calls. If the assertion is given by any process in the
+window group, then it must be given by all processes in the group.</p></li>
+</ul>
+<p>Setting this argument to <code class="docutils literal notranslate"><span class="pre">0</span></code> is always correct.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">win</span></code></dt><dd><p>The window object.</p>
+</dd>
+</dl>
+</div>
+<div class="admonition-fences exercise important admonition" id="exercise-0">
+<p class="admonition-title">Fences</p>
+<p>In this exercise, you will have to use active target synchronization with
+fences to perform a <code class="docutils literal notranslate"><span class="pre">MPI_Get</span></code> operation. We have seen this strategy in
+previous examples.</p>
+<p>You can find a scaffold for the code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-4/03_rma-fence</span></code> folder:</p>
+<ol class="arabic simple">
+<li><p>Create a window and attach to a previously allocated buffer with
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create</code></span></a></p></li>
+<li><p>Synchronize with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_fence"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_fence</code></span></a> before calling <a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a>. There
+were no previous RMA calls, which assertion could be used?</p></li>
+<li><p>Issue a <a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a> call on all ranks greater than 0. You want to
+obtain all of the contents of the buffer on rank 0.</p></li>
+<li><p>Synchronize again with a fence. Which assertion could be used, knowing
+that there will be no more RMA calls after?</p></li>
+<li><p>Don’t forget to free up the window!</p></li>
+</ol>
+<p>A working solution in the <code class="docutils literal notranslate"><span class="pre">solution</span></code> folder.</p>
+</div>
+</section>
+<section id="post-start-complete-wait">
+<h3>Post/Start/Complete/Wait<a class="headerlink" href="#post-start-complete-wait" title="Permalink to this heading"></a></h3>
+<p>The use of <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_fence"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_fence</code></span></a> can pose constraints on RMA communication and,
+since it’s a collective operation, might incur performance penalties.  Imagine,
+for example, that you created a window object in a communicator with <span class="math notranslate nohighlight">\(N\)</span>
+processes, but that only pairs of processes do RMA operations. Fencing these
+operations will force the <em>whole</em> communicator to synchronize, even though in
+reality only the interacting pairs should do so.</p>
+<p>MPI enables you to have more fine-grained control than fences over synchronization.
+Exposure epochs on target processes can be opened and closed with:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_post"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_post</code></span></a>,</p></li>
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_wait"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_wait</code></span></a> or <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_test"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_test</code></span></a>,</p></li>
+</ul>
+<p>while opening and closing of access epochs on origin processes is enabled by:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_start"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_start</code></span></a>,</p></li>
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_complete"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_complete</code></span></a>.</p></li>
+</ul>
+<figure class="align-center" id="id6">
+<img alt="../_images/E03-pscw.svg" src="../_images/E03-pscw.svg" /><figcaption>
+<p><span class="caption-text">Any process can issue a call to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_post"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_post</code></span></a> to initiate an exposure
+epoch for a specific group of processes.  The access epoch starts with a call
+to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_start"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_start</code></span></a> and end with a call to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_complete"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_complete</code></span></a>.
+The exposure epoch is closed with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_wait"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_wait</code></span></a> (or <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_test"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_test</code></span></a>).
+Exposure and access epochs must pertain to <strong>matching process groups</strong>.  The
+programmer has to explicitly manage the pairing of exposure and access epochs
+in this model: all communications partners should be known.
+With the Post/Start/Complete/Wait calls, MPI lets you implement active target
+communication with <strong>weak synchronization</strong>: the call to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_start"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_start</code></span></a>
+is not required to happen chronologically before the call to
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_post"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_post</code></span></a>.</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition-term-mpi-win-post signature toggle-shown dropdown admonition" id="signature-1">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_post"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_post</code></span></a></p>
+<p>Start an <em>exposure</em> epoch for the memory window on the local calling process.
+Only the processes in the given group should originate RMA calls.
+Each process in the origin group has to issue a matching <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_start"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_start</code></span></a>
+call.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_post</span><span class="p">(</span><span class="n">MPI_Group</span><span class="w"> </span><span class="n">group</span><span class="p">,</span>
+<span class="w">                 </span><span class="kt">int</span><span class="w"> </span><span class="n">assert</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-1">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">group</span></code></dt><dd><p>The group of <strong>origin</strong> processes in this exposure epoch.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">assert</span></code></dt><dd><p>Use this argument to provide optimization <em>hints</em> to the MPI library.
+Setting this argument to <code class="docutils literal notranslate"><span class="pre">0</span></code> is always correct.
+Values described in the MPI standard:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_MODE_NOCHECK</span></code> the matching calls to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_start"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_start</code></span></a> have
+not yet occurred on any origin processes when the call to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_post"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_post</code></span></a>
+is made.  The nocheck option can be specified by a post call if and
+only if it is specified by each matching start call.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_MODE_NOSTORE</span></code> the local window was not updated by local stores
+(or local get or receive calls) since last synchronization. This may
+avoid the need for cache synchronization at the post call.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_MODE_NOPUT</span></code> the local window will not be updated by put or
+accumulate calls after the post call, until the ensuing (wait)
+synchronization. This may avoid the need for cache synchronization at
+the wait call.</p></li>
+</ul>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">win</span></code></dt><dd><p>The window object.</p>
+</dd>
+</dl>
+</div>
+<div class="admonition-term-mpi-win-start signature toggle-shown dropdown admonition" id="signature-2">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_start"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_start</code></span></a></p>
+<p>Start an <em>access</em> epoch for the given window object. Only the processes in
+the given group can be targeted by RMA calls.
+Each process in the target group has to issue a matching <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_post"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_post</code></span></a>
+call.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_start</span><span class="p">(</span><span class="n">MPI_Group</span><span class="w"> </span><span class="n">group</span><span class="p">,</span>
+<span class="w">                  </span><span class="kt">int</span><span class="w"> </span><span class="n">assert</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-2">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">group</span></code></dt><dd><p>The group of <strong>target</strong> processes in this access epoch.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">assert</span></code></dt><dd><p>Use this argument to provide optimization <em>hints</em> to the MPI library.
+Setting this argument to <code class="docutils literal notranslate"><span class="pre">0</span></code> is always correct.
+Values described by the MPI standard:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_MODE_NOCHECK</span></code> the matching calls to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_post"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_post</code></span></a> have
+already completed on all target processes when the call to
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_start"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_start</code></span></a> is made. The nocheck option can be specified in a
+start call if and only if it is specified in each matching post call.</p></li>
+</ul>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">win</span></code></dt><dd><p>The window object.</p>
+</dd>
+</dl>
+</div>
+<div class="admonition-term-mpi-win-complete signature toggle-shown dropdown admonition" id="signature-3">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_complete"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_complete</code></span></a></p>
+<p>Calling this function, we can end the access epoch.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_complete</span><span class="p">(</span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-term-mpi-win-wait signature toggle-shown dropdown admonition" id="signature-4">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_wait"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_wait</code></span></a></p>
+<p>This function finalizes the exposure epoch.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_wait</span><span class="p">(</span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-term-mpi-win-test signature toggle-shown dropdown admonition" id="signature-5">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_test"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_test</code></span></a></p>
+<p>Non-blocking version of <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_wait"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_wait</code></span></a>. The output parameter <code class="docutils literal notranslate"><span class="pre">flag</span></code>
+will be set to true if a call to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_wait"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_wait</code></span></a> would return, thus
+finalizing the exposure epoch.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_test</span><span class="p">(</span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">,</span>
+<span class="w">                 </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">flag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-3">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">win</span></code></dt><dd><p>The window object.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">flag</span></code></dt><dd><p>Whether the exposure epoch has ended.</p>
+</dd>
+</dl>
+</div>
+<div class="admonition-post-start-complete-wait exercise important admonition" id="exercise-1">
+<p class="admonition-title">Post/Start/Complete/Wait</p>
+<p>In this exercise, you will have to use active target synchronization with
+Post/Start/Complete/Wait set of calls to perform a series of <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a>
+operations.
+We first create a buffer <code class="docutils literal notranslate"><span class="pre">buf</span></code> with size equal to that of the communicator.
+On each rank, we initialize it with a rank-dependent value, <em>e.g.</em> <code class="docutils literal notranslate"><span class="pre">rank</span> <span class="pre">*</span>
+<span class="pre">11</span></code>.
+The goal is to use <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a> such that at index <code class="docutils literal notranslate"><span class="pre">rank</span></code> of <code class="docutils literal notranslate"><span class="pre">buf</span></code> on
+rank 0 we will find the correct rank-dependent value. As an example, using 4
+processes the final <code class="docutils literal notranslate"><span class="pre">buf</span></code> on rank 0 should contain:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span><span class="m">0</span>.0,<span class="w"> </span><span class="m">11</span>.0,<span class="w"> </span><span class="m">22</span>.0,<span class="w"> </span><span class="m">33</span>.0<span class="o">]</span>
+</pre></div>
+</div>
+<p>Post/Start/Complete/Wait offers more granular control over which processes
+synchronize with each other. To achieve this, we will be using <em>groups</em> of
+processes within the communicator that spans the window object.  Thus, we
+also save the ranks of each process in the communicator in an appropriately
+sized array <code class="docutils literal notranslate"><span class="pre">ranks</span></code>. This will be used for creating groups.</p>
+<p>You can find a scaffold for the code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-4/04_rma-pswc</span></code> folder:</p>
+<ol class="arabic simple">
+<li><p>Create a window and attach to a previously allocated buffer with
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create</code></span></a></p></li>
+<li><p>Obtain the group corresponding to the communicator with
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_group"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_group</code></span></a>.</p></li>
+<li><p>On rank 0:</p>
+<ul class="simple">
+<li><p>Create the group of RMA origin processes. This group contains all
+processes whose rank is greater than 0. Use <a class="reference internal" href="../quick-reference/index.html#term-MPI_Group_incl"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Group_incl</code></span></a> and the
+<code class="docutils literal notranslate"><span class="pre">ranks</span></code> array.</p></li>
+<li><p>Use <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_post"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_post</code></span></a> and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_wait"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_wait</code></span></a> to initialize the
+exposure epoch of the window on rank 0 (the target) for the group of
+origin processes.</p></li>
+</ul>
+</li>
+<li><p>On ranks &gt; 0:</p>
+<ul class="simple">
+<li><p>Create the group of RMA target processes, which only includes rank 0.
+Use <a class="reference internal" href="../quick-reference/index.html#term-MPI_Group_incl"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Group_incl</code></span></a>.</p></li>
+<li><p>Initialize access epoch with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_start"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_start</code></span></a> for the group of
+target processes.</p></li>
+<li><p>Issue the correct <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a> call to store the element at index
+<code class="docutils literal notranslate"><span class="pre">rank</span></code> from <code class="docutils literal notranslate"><span class="pre">buf</span></code> on the origin process into <code class="docutils literal notranslate"><span class="pre">buf</span></code> on the target
+process.</p></li>
+<li><p>Terminate the access epoch with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_complete"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_complete</code></span></a>.</p></li>
+</ul>
+</li>
+<li><p>Don’t forget to free window(s) and group(s).</p></li>
+</ol>
+<p>A working solution in the <code class="docutils literal notranslate"><span class="pre">solution</span></code> folder.</p>
+</div>
+</section>
+</section>
+<section id="passive-target-communication">
+<h2>Passive target communication<a class="headerlink" href="#passive-target-communication" title="Permalink to this heading"></a></h2>
+<p>This communication paradigm is conceptually close to the shared memory model:
+the memory managed by the window object is globally accessible to all process in
+the communicator. This is also called a “billboard” model.</p>
+<figure class="align-center" id="id7">
+<img alt="../_images/E03-passive_target_communication.svg" src="../_images/E03-passive_target_communication.svg" /><figcaption>
+<p><span class="caption-text">In passive target communication, data movement and synchronization are
+orchestrated by the origin process alone. The programmer will use
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_lock"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_lock</code></span></a> and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_unlock"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_unlock</code></span></a> to achieve passive target
+communication.  Calls to these functions delimit the access epochs. There are
+no exposure epochs in passive target communication.</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Passive target communication can pose challenges for program portability and
+should only be used when the memory managed by window object has been allocated
+with:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Alloc_mem"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Alloc_mem</code></span></a>,</p></li>
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_allocate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_allocate</code></span></a>,</p></li>
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_attach"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_attach</code></span></a>.</p></li>
+</ul>
+<div class="admonition-term-mpi-win-lock signature toggle-shown dropdown admonition" id="signature-6">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_lock"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_lock</code></span></a></p>
+<p>This function starts an RMA access epoch by locking access to the memory
+window on the given rank.
+We can have exclusive access to the memory window on <code class="docutils literal notranslate"><span class="pre">rank</span></code> by using a
+<code class="docutils literal notranslate"><span class="pre">MPI_LOCK_EXCLUSIVE</span></code> lock. With <code class="docutils literal notranslate"><span class="pre">MPI_LOCK_SHARED</span></code> multiple processes can
+access the rank’s memory window: this is unsafe in combination with multiple
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a> calls.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_lock</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">lock_type</span><span class="p">,</span>
+<span class="w">                 </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span>
+<span class="w">                 </span><span class="kt">int</span><span class="w"> </span><span class="n">assert</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-4">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">lock_type</span></code></dt><dd><p>Which lock to apply. Can be either <code class="docutils literal notranslate"><span class="pre">MPI_LOCK_EXCLUSIVE</span></code> or <code class="docutils literal notranslate"><span class="pre">MPI_LOCK_SHARED</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">rank</span></code></dt><dd><p>The rank whose memory window should be locked.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">assert</span></code></dt><dd><p>Use this argument to provide optimization <em>hints</em> to the MPI library.
+Setting this argument to <code class="docutils literal notranslate"><span class="pre">0</span></code> is always correct.
+Values described in the MPI standard:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_MODE_NOCHECK</span></code> no other process holds, or will attempt to acquire
+a conflicting lock, while the caller holds the window lock. This is
+useful when mutual exclusion is achieved by other means, but the
+coherence operations that may be attached to the lock and unlock calls
+are still required.</p></li>
+</ul>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">win</span></code></dt><dd><p>The window object.</p>
+</dd>
+</dl>
+</div>
+<div class="admonition-term-mpi-win-unlock signature toggle-shown dropdown admonition" id="signature-7">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_unlock"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_unlock</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_unlock</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span>
+<span class="w">                   </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-5">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">rank</span></code></dt><dd><p>The rank whose memory window should be unlocked.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">win</span></code></dt><dd><p>The window object.</p>
+</dd>
+</dl>
+</div>
+<div class="admonition-lock-and-unlock exercise important admonition" id="exercise-2">
+<p class="admonition-title">Lock and unlock</p>
+<p>In this exercise, you will have to use passive target synchronization to
+perform a series of <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a> operations. The final result is similar to
+that of the previous exercise.</p>
+<p>We first create a buffer <code class="docutils literal notranslate"><span class="pre">buf</span></code> with size equal to that of the communicator.
+On each rank, we initialize it with a rank-dependent value, <em>e.g.</em> <code class="docutils literal notranslate"><span class="pre">rank</span> <span class="pre">*</span>
+<span class="pre">11</span></code>.
+The goal is to use <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a> such that at index <code class="docutils literal notranslate"><span class="pre">rank</span></code> of <code class="docutils literal notranslate"><span class="pre">buf</span></code> on
+rank 0 we will find the correct rank-dependent value. As an example, using 4
+processes the final <code class="docutils literal notranslate"><span class="pre">buf</span></code> on rank 0 should contain:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span><span class="m">0</span>.0,<span class="w"> </span><span class="m">11</span>.0,<span class="w"> </span><span class="m">22</span>.0,<span class="w"> </span><span class="m">33</span>.0<span class="o">]</span>
+</pre></div>
+</div>
+<p>You can find a scaffold for the code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-4/05_rma-lock-unlock</span></code> folder:</p>
+<ol class="arabic simple">
+<li><p>Create a window and attach to a previously allocated buffer with
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create</code></span></a></p></li>
+<li><p>The origin processes are those of rank &gt; 0:</p>
+<ul class="simple">
+<li><p>Create a lock on the target process (rank 0). What type of lock should
+you ask?</p></li>
+<li><p>Issue the correct <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a> call to store the element at index
+<code class="docutils literal notranslate"><span class="pre">rank</span></code> from <code class="docutils literal notranslate"><span class="pre">buf</span></code> on the origin process into <code class="docutils literal notranslate"><span class="pre">buf</span></code> on the target
+process.</p></li>
+<li><p>Release the lock.</p></li>
+</ul>
+</li>
+</ol>
+<ol class="arabic simple" start="5">
+<li><p>Don’t forget to free the window.</p></li>
+</ol>
+<p>Should you do synchronization also on the target process?</p>
+<p>A working solution in the <code class="docutils literal notranslate"><span class="pre">solution</span></code> folder.</p>
+</div>
+<div class="admonition-computation-of-math-pi exercise important admonition" id="exercise-3">
+<p class="admonition-title">Computation of <span class="math notranslate nohighlight">\(\pi\)</span></p>
+<p>As a final RMA exercise, we will rework the calculation of <span class="math notranslate nohighlight">\(\pi\)</span>
+proposed in the exercise <code class="docutils literal notranslate"><span class="pre">content/code/day-1/09_integrate-pi</span></code>, which used
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Bcast"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Bcast</code></span></a> and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Reduce"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Reduce</code></span></a>.</p>
+<p>We want to use <a class="reference internal" href="../quick-reference/index.html#term-MPI_Accumulate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Accumulate</code></span></a>:</p>
+<ul class="simple">
+<li><p>We designate a <em>manager process</em> that will be the <strong>target</strong> of the
+one-sided reduction.</p></li>
+<li><p>All processes in the communicator will work on their own chunk of
+the integration.</p></li>
+<li><p>Worker processes, <em>i.e.</em> not the manager, are the <strong>origin</strong> of the
+one-sided reduction and will accumulate their result on the manager
+process.</p></li>
+</ul>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-UG9zdC9TdGFydC9Db21wbGV0ZS9XYWl0" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-UG9zdC9TdGFydC9Db21wbGV0ZS9XYWl0" name="UG9zdC9TdGFydC9Db21wbGV0ZS9XYWl0" role="tab" tabindex="0">Post/Start/Complete/Wait</button><button aria-controls="panel-0-TG9jayBhbmQgdW5sb2Nr" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-TG9jayBhbmQgdW5sb2Nr" name="TG9jayBhbmQgdW5sb2Nr" role="tab" tabindex="-1">Lock and unlock</button></div><div aria-labelledby="tab-0-UG9zdC9TdGFydC9Db21wbGV0ZS9XYWl0" class="sphinx-tabs-panel group-tab" id="panel-0-UG9zdC9TdGFydC9Db21wbGV0ZS9XYWl0" name="UG9zdC9TdGFydC9Db21wbGV0ZS9XYWl0" role="tabpanel" tabindex="0"><p>We can use active target synchronization. It’s not a great idea to use
+a fence: because the communication will be between a pair of processes
+and a fence forces <em>all</em> processes to synchronize after each call to
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Accumulate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Accumulate</code></span></a>.</p>
+<p>You can find a scaffold in the <code class="docutils literal notranslate"><span class="pre">content/code/day-4/06_rma-pi-pscw</span></code>
+folder, which uses Post/Start/Complete/Wait instead.</p>
+<p>The general flow is:</p>
+<ul class="simple">
+<li><p>The process designed as manager holds the number of integration
+points and performs Post-Wait.</p></li>
+<li><p>All worker processes use Start-Complete to retrieve the number of
+integration points.</p></li>
+<li><p>All processes work on their chunk of the integration points.</p></li>
+<li><p>All worker processes use Start-Complete to accumulate their result on
+the manager process.</p></li>
+<li><p>The manager process uses Post-Wait.</p></li>
+</ul>
+<p>Follow the prompts in the scaffold to get your slice of <span class="math notranslate nohighlight">\(\pi\)</span>:</p>
+<ol class="arabic simple">
+<li><p>Create two windows, one to hold the number of integration points,
+the other for the value of <span class="math notranslate nohighlight">\(\pi\)</span> computed on each rank.</p></li>
+<li><p>Create two groups of processes: one only containing rank 0 (the
+manager process), the other with all other processes in the
+communicator (the workers).</p></li>
+<li><p>Obtain the number of points on the worker processes:</p>
+<ul class="simple">
+<li><p>On the manager process, use Post-Wait.</p></li>
+<li><p>On the worker processes, use <a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a>, correctly interleaved
+with Start-Complete.</p></li>
+</ul>
+</li>
+<li><p>Aggregate the results:</p>
+<ul class="simple">
+<li><p>On the worker processes, use <a class="reference internal" href="../quick-reference/index.html#term-MPI_Accumulate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Accumulate</code></span></a>, correctly
+interleaved with Start-Complete.</p></li>
+<li><p>On the manager process, use Post-Wait</p></li>
+</ul>
+</li>
+<li><p>Don’t forget to free the windows!</p></li>
+</ol>
+<p>Find a working solution in the <code class="docutils literal notranslate"><span class="pre">solution</span></code> folder.</p>
+</div><div aria-labelledby="tab-0-TG9jayBhbmQgdW5sb2Nr" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-TG9jayBhbmQgdW5sb2Nr" name="TG9jayBhbmQgdW5sb2Nr" role="tabpanel" tabindex="0"><p>Since all communication between manager and workers is point-to-point,
+it’s feasible and more readable to use passive target synchronization
+with locks.</p>
+<p>You can find a scaffold in the <code class="docutils literal notranslate"><span class="pre">content/code/day-4/07_rma-pi-lock-unlock</span></code>
+folder.</p>
+<p>Follow the prompts in the scaffold to get your slice of <span class="math notranslate nohighlight">\(\pi\)</span>:</p>
+<ol class="arabic simple">
+<li><p>Create two windows, one to hold the number of integration points,
+the other for the value of <span class="math notranslate nohighlight">\(\pi\)</span> computed on each rank.</p></li>
+<li><p>Obtain the number of integration points on the worker processes:</p>
+<ul class="simple">
+<li><p>Acquire a lock on the manager process.</p></li>
+<li><p>Use <a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a></p></li>
+<li><p>Which lock type should you use?</p></li>
+</ul>
+</li>
+<li><p>Aggregate the results:</p>
+<ul class="simple">
+<li><p>Acquire a lock on the manager process.</p></li>
+<li><p>Use <a class="reference internal" href="../quick-reference/index.html#term-MPI_Accumulate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Accumulate</code></span></a></p></li>
+<li><p>Which lock type should you use?</p></li>
+</ul>
+</li>
+<li><p>Use a collective barrier to ensure that the manager process is done
+with its chunk of the calculation. What happens if you forget to do
+this?</p></li>
+<li><p>Don’t forget to free the windows!</p></li>
+</ol>
+<p>Find a working solution in the <code class="docutils literal notranslate"><span class="pre">solution</span></code> folder.</p>
+</div></div>
+</div>
+</section>
+<section id="final-thoughts">
+<h2>Final thoughts<a class="headerlink" href="#final-thoughts" title="Permalink to this heading"></a></h2>
+<p>One-sided communication and its use are a bit more complicated than standard
+two-sided communication in MPI. When and why should one think about using
+<a class="reference internal" href="../quick-reference/#term-RMA"><span class="xref std std-term">RMA</span></a>?</p>
+<ul class="simple">
+<li><p>We can achieve better performance using one-sided communication. This is due
+mostly to the fact that we can have more granular control over synchronization
+and data movements.</p></li>
+<li><p>Though the synchronization mechanisms may appear quite convoluted, they’re a
+more natural fit for cases where one wants to overlap computation and
+communication.</p></li>
+</ul>
+<p>As a general rule of thumb, you should beware whenever a performance claim is
+made without showing any numbers. One-sided communication can be efficient, with some caveats:</p>
+<ol class="arabic simple">
+<li><p><strong>Software</strong>: the quality of its implementation in the MPI library you’re
+using can be rather poor.</p></li>
+<li><p><strong>Hardware</strong>: the interconnect might have high latency and/or not support RMA
+natively.</p></li>
+<li><p><strong>Usage anti-patterns</strong>: using the synchronization methods appropriately is
+key to performance. For example:</p>
+<ul class="simple">
+<li><p>Using a fence on many processes when only a few of those need to
+communicate is inefficient (and wasteful).</p></li>
+<li><p>Using locks on many procesess will be poses correctness <em>and</em> efficiency
+issues.</p></li>
+</ul>
+</li>
+</ol>
+<p>Some advice in case you decide to use one-sided communication in your code:</p>
+<ul class="simple">
+<li><p>Run a microbenchmark test suite, for example the <a class="reference external" href="http://mvapich.cse.ohio-state.edu/benchmarks/">OSU suite</a> to check that hardware and
+software will not be an issue.</p></li>
+<li><p><a class="reference internal" href="../quick-reference/#term-RMA"><span class="xref std std-term">RMA</span></a> can lead to improved performance especially when <em>many</em>
+communication calls can be made within a pair of synchronization calls. If you
+want to capitalize on this, make sure to group your calls accordingly!</p></li>
+</ul>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>The lecture covering MPI RMA from EPCC is available
+<a class="reference external" href="http://www.archer.ac.uk/training/course-material/2020/01/advMPI-imperial/Slides/L08-Advanced%20RMA.pdf">here</a></p></li>
+<li><p>Chapters 3 and 4 of the <strong>Using Advanced MPI</strong> by William Gropp <em>et al.</em> <span id="id1">[<a class="reference internal" href="../zbibliography/#id2" title="William Gropp, Torsten Hoefler, Rajeev Thakur, and Ewing Lusk. Using Advanced MPI: Modern Features of the Message-Passing Interface. Scientific and Engineering Computation. MIT Press, November 2014. ISBN 9780262527637. URL: https://mitpress.mit.edu/books/using-advanced-mpi.">GHTL14</a>]</span></p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition" id="keypoints-0">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>RMA epochs and synchronization.</p></li>
+<li><p>The difference between <em>active</em> and <em>passive</em> synchronization.</p></li>
+<li><p>How and when to use different synchronization models.</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../one-sided-routines/" class="btn btn-neutral float-left" title="One-sided communication: functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../mpi-and-threads-pt1/" class="btn btn-neutral float-right" title="Introducing MPI and threads" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, EuroCC National Competence Centre Sweden.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

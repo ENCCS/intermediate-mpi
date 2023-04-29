@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scatter and gather &mdash; Intermediate MPI</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+        <script data-domain="enccs.github.io/intermediate-mpi" defer="defer" src="https://plausible.io/js/script.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Generalized forms of gather" href="../collective-communication-pt3/" />
+    <link rel="prev" title="Simple collective communication" href="../collective-communication-pt1/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../" class="icon icon-home">
+            Intermediate MPI
+              <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt1/">Derived datatypes: pack and unpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt2/">Derived datatypes: <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Scatter and gather</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#scatter">Scatter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gather">Gather</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-scatter-and-gather-1">Exercise: scatter and gather (1)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-scatter-and-gather-2">Exercise: scatter and gather (2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-scatter-and-gather-3">Exercise: scatter and gather (3)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communication: functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Scatter and gather</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/collective-communication-pt2.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="scatter-and-gather">
+<h1>Scatter and gather<a class="headerlink" href="#scatter-and-gather" title="Permalink to this heading"></a></h1>
+<div class="admonition-questions questions admonition" id="questions-0">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>How can I split data across the ranks of my program?</p></li>
+<li><p>How can I join data from the ranks of my program?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition" id="objectives-0">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Know the difference between scatter and gather</p></li>
+</ul>
+</div>
+<section id="scatter">
+<h2>Scatter<a class="headerlink" href="#scatter" title="Permalink to this heading"></a></h2>
+<p>An <code class="docutils literal notranslate"><span class="pre">MPI_Scatter</span></code> call sends data from one rank to all other ranks.</p>
+<figure class="align-center" id="id1">
+<img alt="../_images/MPI_Scatter.svg" src="../_images/MPI_Scatter.svg" /><figcaption>
+<p><span class="caption-text">After the call, all ranks in the communicator have the one value
+sent from the root rank, ordered by rank number.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><code class="docutils literal notranslate"><span class="pre">MPI_Scatter</span></code> is <cite>blocking</cite> and introduces <cite>collective
+synchronization</cite> into the program.</p>
+<p>This can be useful to allow one rank to share values to all other
+ranks in the communicator. For example, one rank might compute some
+values, and then scatter the content to all other ranks. They can then
+use this as input for future work.</p>
+<div class="admonition-term-mpi-scatter signature toggle-shown dropdown admonition" id="signature-0">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Scatter"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Scatter</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Scatter</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sendcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">sendtype</span><span class="p">,</span>
+<span class="w">                </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">recvcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">recvtype</span><span class="p">,</span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-0">
+<p class="admonition-title">Parameters</p>
+<p>All ranks must supply the same value for <code class="docutils literal notranslate"><span class="pre">root</span></code>, which specifies
+the rank of that communicator that provides the values that are
+sent to all other ranks.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sendbuf</span></code>, <code class="docutils literal notranslate"><span class="pre">sendcount</span></code> and <code class="docutils literal notranslate"><span class="pre">sendtype</span></code> describe the buffer on
+the <strong>root</strong> process from which the data comes. <code class="docutils literal notranslate"><span class="pre">sendcount</span></code>
+describes the extent of the buffer sent to each other rank, not the
+extent of the whole buffer! Other ranks do not need to allocate a
+send buffer, and may pass any values to the call.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recvbuf</span></code>, <code class="docutils literal notranslate"><span class="pre">recvcount</span></code> and <code class="docutils literal notranslate"><span class="pre">recvtype</span></code> describe the buffer on
+<strong>each</strong> process to which the data is sent. Only a buffer large
+enough to receive the data for that process is needed.</p>
+<p>All ranks in the communicator must participate with valid receive
+buffers and consistent counts and types.</p>
+</div>
+</section>
+<section id="gather">
+<h2>Gather<a class="headerlink" href="#gather" title="Permalink to this heading"></a></h2>
+<p>An <code class="docutils literal notranslate"><span class="pre">MPI_Gather</span></code> call sends data from all ranks to a single rank.
+It is the inverse operation of <code class="docutils literal notranslate"><span class="pre">MPI_Scatter</span></code>.</p>
+<figure class="align-center" id="id2">
+<img alt="../_images/MPI_Gather.svg" src="../_images/MPI_Gather.svg" /><figcaption>
+<p><span class="caption-text">After the call, the root rank has one value from each other rank in
+the communicator, ordered by rank number.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><code class="docutils literal notranslate"><span class="pre">MPI_Gather</span></code> is <cite>blocking</cite> and introduces <cite>collective
+synchronization</cite> into the program.</p>
+<p>This can be useful to allow one rank to collect values from all other
+ranks in the communicator. For example, all ranks might compute some
+values, and then the root rank gathers the content. It can then use
+this as input for future work. One use case is to combine data so that
+one rank can compute a combined property, or write all the data to a
+file.</p>
+<div class="admonition-term-mpi-gather signature toggle-shown dropdown admonition" id="signature-1">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Gather"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Gather</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Gather</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sendcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">sendtype</span><span class="p">,</span>
+<span class="w">               </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">recvcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">recvtype</span><span class="p">,</span>
+<span class="w">               </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-1">
+<p class="admonition-title">Parameters</p>
+<p>All ranks must supply the same value for <code class="docutils literal notranslate"><span class="pre">root</span></code>, which specifies
+the rank of the process within that communicator that receives the
+values send from each process.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sendbuf</span></code>, <code class="docutils literal notranslate"><span class="pre">sendcount</span></code> and <code class="docutils literal notranslate"><span class="pre">sendtype</span></code> describe the buffer on
+<strong>each</strong> process from which the data is sent. Only a buffer large
+enough to contain the data sent by that process is needed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recvbuf</span></code>, <code class="docutils literal notranslate"><span class="pre">recvcount</span></code> and <code class="docutils literal notranslate"><span class="pre">recvtype</span></code> describe the buffer on
+the <strong>root</strong> process in which the data is received. <code class="docutils literal notranslate"><span class="pre">revcount</span></code>
+describes the extent of the buffer received from each rank, not the
+extent of the whole buffer! Other ranks do not need to allocate a
+receive buffer, and may pass any values to the call.</p>
+<p>All ranks in the communicator must participate with valid send
+buffers and consistent counts and types.</p>
+</div>
+</section>
+<section id="exercise-scatter-and-gather-1">
+<h2>Exercise: scatter and gather (1)<a class="headerlink" href="#exercise-scatter-and-gather-1" title="Permalink to this heading"></a></h2>
+<div class="admonition-use-scatter-and-gather exercise important admonition" id="exercise-0">
+<p class="admonition-title">Use scatter and gather</p>
+<p>You can find a scaffold for the code <code class="docutils literal notranslate"><span class="pre">scatter-and-gather-1.c</span></code> in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-2/00_scatter-and-gather</span></code> folder.  A working solution is
+in the <code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder. It’s similar to the broadcast code we saw
+earlier. Try to compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">scatter</span><span class="o">-</span><span class="ow">and</span><span class="o">-</span><span class="n">gather</span><span class="o">-</span><span class="mf">1.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">scatter</span><span class="o">-</span><span class="ow">and</span><span class="o">-</span><span class="n">gather</span><span class="o">-</span><span class="mi">1</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>When you have the code compiling, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="mi">4</span> <span class="o">./</span><span class="n">scatter</span><span class="o">-</span><span class="ow">and</span><span class="o">-</span><span class="n">gather</span><span class="o">-</span><span class="mi">1</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use clues from the compiler and the comments in the code to
+change the code so it compiles and runs. Try to get all ranks to
+report success :-)</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution important dropdown admonition" id="solution-0">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>One correct pair of calls is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MPI_Scatter</span><span class="p">(</span><span class="n">values_to_scatter</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_FLOAT</span><span class="p">,</span>
+            <span class="o">&amp;</span><span class="n">scattered_value</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_FLOAT</span><span class="p">,</span>
+            <span class="n">rank_of_scatter_root</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="n">MPI_Gather</span><span class="p">(</span><span class="o">&amp;</span><span class="n">result</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_FLOAT</span><span class="p">,</span>
+           <span class="n">gathered_values</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_FLOAT</span><span class="p">,</span>
+           <span class="n">rank_of_gather_root</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>What would happen if you mistakenly used 4 for the scatter send count
+or the gather receive count. Why?</p></li>
+<li><p>What would happen if you mistakenly used more (or fewer) MPI proccesses
+to run the code (e.g. <code class="docutils literal notranslate"><span class="pre">mpiexec</span> <span class="pre">-np</span> <span class="pre">5</span> <span class="pre">...</span></code>)?</p></li>
+</ul>
+</div>
+</section>
+<section id="exercise-scatter-and-gather-2">
+<h2>Exercise: scatter and gather (2)<a class="headerlink" href="#exercise-scatter-and-gather-2" title="Permalink to this heading"></a></h2>
+<div class="admonition-use-scatter-and-gather-on-more-data exercise important admonition" id="exercise-1">
+<p class="admonition-title">Use scatter and gather on more data</p>
+<p>In this exercise you’ll use <code class="docutils literal notranslate"><span class="pre">MPI_Scatter</span></code> to split a matrix into row
+vectors. The number of rows in the matrix is equal to the number of
+processes, and each vector will be stored on the individual processes.
+After scatter, you can also use <code class="docutils literal notranslate"><span class="pre">MPI_Gather</span></code> to assemble the vectors
+into a matrix.</p>
+<p>You can find a scaffold for the code <code class="docutils literal notranslate"><span class="pre">scatter-and-gather-2.c</span></code> in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-2/00_scatter-and-gather</span></code> folder.</p>
+<p>A working solution is
+in the <code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder. It’s similar to the broadcast code we saw
+earlier. Try to compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">scatter</span><span class="o">-</span><span class="ow">and</span><span class="o">-</span><span class="n">gather</span><span class="o">-</span><span class="mf">2.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">scatter</span><span class="o">-</span><span class="ow">and</span><span class="o">-</span><span class="n">gather</span><span class="o">-</span><span class="mi">2</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>When you have the code compiling, try to run with different number of
+MPI processes.</p></li>
+<li><p>Try to get all ranks to report success :-)</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution important dropdown admonition" id="solution-1">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>One correct pair of calls is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MPI_Scatter</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">MPI_FLOAT</span><span class="p">,</span>
+            <span class="n">vector</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_FLOAT</span><span class="p">,</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="n">MPI_Gather</span><span class="p">(</span><span class="n">matrix_2</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">MPI_FLOAT</span><span class="p">,</span>
+           <span class="n">vector</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">MPI_FLOAT</span><span class="p">,</span>
+           <span class="mi">0</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</section>
+<section id="exercise-scatter-and-gather-3">
+<h2>Exercise: scatter and gather (3)<a class="headerlink" href="#exercise-scatter-and-gather-3" title="Permalink to this heading"></a></h2>
+<div class="admonition-use-scatter-and-gather-to-compute-inner-product-of-vectors exercise important admonition" id="exercise-2">
+<p class="admonition-title">Use scatter and gather to compute inner product of vectors</p>
+<p>In this exercise you’ll use <code class="docutils literal notranslate"><span class="pre">MPI_Scatter</span></code> to split two vectors into
+segments and compute their inner product in parallel.
+After scatter, you can use <code class="docutils literal notranslate"><span class="pre">MPI_Reduce</span></code> to collect the final result,
+and use <code class="docutils literal notranslate"><span class="pre">MPI_Gather</span></code> to collect timing information.</p>
+<p>You can find a scaffold for the code <code class="docutils literal notranslate"><span class="pre">scatter-and-gather-3.c</span></code> in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-2/00_scatter-and-gather</span></code> folder.</p>
+<p>A working solution is
+in the <code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder. It’s similar to the broadcast code we saw
+earlier. Try to compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">scatter</span><span class="o">-</span><span class="ow">and</span><span class="o">-</span><span class="n">gather</span><span class="o">-</span><span class="mf">3.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">scatter</span><span class="o">-</span><span class="ow">and</span><span class="o">-</span><span class="n">gather</span><span class="o">-</span><span class="mi">3</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>When you have the code compiling, try to run with different number of
+MPI processes.</p></li>
+<li><p>Try to get rank 0 to report success :-)</p></li>
+</ol>
+</div>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.archer.ac.uk/training/course-material/2020/01/advMPI-imperial/Slides/AMPP-Advanced-Collectives.pdf">http://www.archer.ac.uk/training/course-material/2020/01/advMPI-imperial/Slides/AMPP-Advanced-Collectives.pdf</a></p></li>
+<li><p><a class="reference external" href="https://www.codingame.com/playgrounds/349/introduction-to-mpi/scattering-and-gathering">https://www.codingame.com/playgrounds/349/introduction-to-mpi/scattering-and-gathering</a></p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition" id="keypoints-0">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>MPI applications can scatter and gather data to suit common application patterns.</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../collective-communication-pt1/" class="btn btn-neutral float-left" title="Simple collective communication" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../collective-communication-pt3/" class="btn btn-neutral float-right" title="Generalized forms of gather" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, EuroCC National Competence Centre Sweden.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introducing MPI and threads &mdash; Intermediate MPI</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script data-domain="enccs.github.io/intermediate-mpi" defer="defer" src="https://plausible.io/js/script.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="MPI and threads in practice" href="../mpi-and-threads-pt2/" />
+    <link rel="prev" title="One-sided communication: synchronization" href="../one-sided-sync/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../" class="icon icon-home">
+            Intermediate MPI
+              <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt1/">Derived datatypes: pack and unpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt2/">Derived datatypes: <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communication: functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introducing MPI and threads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#why-move-past-pure-mpi-programs">Why move past pure-MPI programs?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mpi-threading">MPI + threading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#advantages-of-mpi-threading">Advantages of MPI + threading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#disadvantages-of-mpi-threading">Disadvantages of MPI + threading</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#threading-library-options">Threading library options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mpi-support-for-threading">MPI support for threading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#querying-the-mpi-runtime">Querying the MPI runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#which-threading-level-to-use">Which threading level to use?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introducing MPI and threads</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/mpi-and-threads-pt1.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introducing-mpi-and-threads">
+<h1>Introducing MPI and threads<a class="headerlink" href="#introducing-mpi-and-threads" title="Permalink to this heading"></a></h1>
+<div class="admonition-questions questions admonition" id="questions-0">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>What might stop my code scaling?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition" id="objectives-0">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Understand the different threading modes available to an MPI rank</p></li>
+</ul>
+</div>
+<section id="why-move-past-pure-mpi-programs">
+<h2>Why move past pure-MPI programs?<a class="headerlink" href="#why-move-past-pure-mpi-programs" title="Permalink to this heading"></a></h2>
+<p>MPI is an excellent tool for parallel execution of programs. A key
+strength is that the programmer must explicitly move data to where it
+is needed. That can make code easier to understand, albeit more work
+since both authors <em>and</em> maintainers spend more time <strong>reading</strong>
+existing code than <strong>writing</strong> new code, that is often desirable.</p>
+<p>However, such approaches tend to perform poorly at scale. Computer
+hardware has not grown much faster in the last 20 years, but instead
+made many more potentially parallel execution units available. One can
+hardly buy a single-core CPU any more, and HPC nodes with multiple CPU
+sockets each containing scores of cores abound. MPI was designed in an
+era where it was much more common to find a node with only a single
+processor and a single core, and total counts were in the hundreds to
+thousands. Such jobs are often <em>too small</em> to be permitted to run on
+current high-end clusters.</p>
+<p>Code that assumes one MPI process to a core has trouble scaling to
+<span class="math notranslate nohighlight">\(N\)</span> processes (eg. for <span class="math notranslate nohighlight">\(N &gt; 1000\)</span>) for several reasons:</p>
+<ul class="simple">
+<li><p>collective communication cost tends to scale at least like
+<span class="math notranslate nohighlight">\(\mathrm{log} N\)</span> - aggregating messages helps a lot but more
+processes as starting and ending points for messages simply must
+take more time</p></li>
+<li><p>data must be replicated to each process, which takes time that grows
+with the process count</p></li>
+<li><p>replicated data forces cores to share the memory bandwith, thus
+defeating the advantages of shared memory caches</p></li>
+</ul>
+<figure class="align-center" id="id1">
+<img alt="../_images/pure-vs-hybrid.svg" src="../_images/pure-vs-hybrid.svg" /><figcaption>
+<p><span class="caption-text">Comparing pure MPI vs hybrid MPI-threading solutions. MPI ranks are
+shown in red boxes. Total memory usage and message cost tends to be
+lower with hybrid, because threads can share the same
+memory. However, realizing those benefits can lead to further work
+to reduce contention and eliminate race conditions.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Imagine if a halo-exchange application like that from <a class="reference internal" href="../non-blocking-communication-pt1/#stencil-application-example"><span class="std std-ref">an earlier
+lesson</span></a>
+was implemented in these two ways. The pure-MPI solution has a much
+larger volume of data in the border and halo regions. That means more
+data must be sent in total, as well as more messages between pairs of
+MPI ranks. In the hybrid case, both are reduced. However, the hybrid
+solution can have other challenges, including code complexity, usage
+complexity, synchronization, and avoiding problematic sharing.</p>
+</section>
+<section id="mpi-threading">
+<h2>MPI + threading<a class="headerlink" href="#mpi-threading" title="Permalink to this heading"></a></h2>
+<p>The MPI standard has been updated to accommodate the use of threads
+within processes. Using these capabilities is optional, and presents
+numerous advantages and disadvantages</p>
+<section id="advantages-of-mpi-threading">
+<h3>Advantages of MPI + threading<a class="headerlink" href="#advantages-of-mpi-threading" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>possiblity for better scaling of communication costs</p></li>
+<li><p>either simpler and/or faster code that does not need to distribute
+as much data, because all threads in the process can share it
+already</p></li>
+<li><p>higher performance from using memory caches better</p></li>
+<li><p>reduced need to dedicate a rank solely to communication coordination
+in code using a manager-worker paradigm</p></li>
+</ul>
+</section>
+<section id="disadvantages-of-mpi-threading">
+<h3>Disadvantages of MPI + threading<a class="headerlink" href="#disadvantages-of-mpi-threading" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>implicitly shared data can be harder to reason about correctly
+(eg. race conditions)</p></li>
+<li><p>code now has to be correct MPI code <em>and</em> correct threaded code</p></li>
+<li><p>possibility of lower performance from cache contention, when one thread
+writes to memory that is very close to where another thread needs to read</p></li>
+<li><p>more code complexity</p></li>
+<li><p>might be merely shifting bottlenecks from one place to another
+(eg. opening and closing OpenMP thread regions)</p></li>
+<li><p>needs higher quality MPI implementations</p></li>
+<li><p>it can be awkward to use libraries that also use threading internally</p></li>
+<li><p>usage gets more complicated, as both ranks and threads have to be
+shepherded onto cores for maximum performance</p></li>
+</ul>
+<div class="admonition-quiz-is-an-application-that-already-scales-well-with-mpi-and-which-uses-large-amounts-of-read-only-data-a-good-candidate-for-mpi-with-threading exercise important admonition" id="exercise-0">
+<p class="admonition-title">Quiz: Is an application that already scales well with
+MPI and which uses large amounts of read-only data a good candidate
+for MPI with threading?</p>
+<ol class="arabic simple">
+<li><p>Yes, threads can share the memory</p></li>
+<li><p>No, threads will have problems from cache contention</p></li>
+<li><p>No, RMA would definitely be better</p></li>
+<li><p>Can’t tell on the information given</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution important dropdown admonition" id="solution-0">
+<p class="admonition-title">Solution</p>
+<ol class="arabic simple" start="4">
+<li><p>Can’t tell. Any of the three statements could be true. But one
+often needs to understand the whole story. If reading the data
+is less of a problem than writing the results subject to cache
+contention then maybe hybrid would be better, etc.</p></li>
+</ol>
+</div>
+</section>
+</section>
+<section id="threading-library-options">
+<h2>Threading library options<a class="headerlink" href="#threading-library-options" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://www.openmp.org/">OpenMP</a> is the open standard for HPC
+threading, and is widely used with many quality implementations. It is
+possible to use <a class="reference external" href="https://en.wikipedia.org/wiki/POSIX_Threads">raw pthreads</a>, and you will find MPI
+examples using them, but this is much less productive in programmer
+time. It made more sense when OpenMP was less mature. In most HPC
+cases, OpenMP is implemented using <code class="docutils literal notranslate"><span class="pre">pthreads</span></code>.</p>
+<p>This workshop will use simple OpenMP for illustrative purposes. For
+more information on OpenMP check out <a class="reference external" href="https://www.openmp.org/resources/tutorials-articles/">these tutorials</a> and
+<a class="reference external" href="https://github.com/hpc2n/OpenMP-Collaboration">OpenMP training materials</a>.</p>
+</section>
+<section id="mpi-support-for-threading">
+<h2>MPI support for threading<a class="headerlink" href="#mpi-support-for-threading" title="Permalink to this heading"></a></h2>
+<p>Since version 2.0, MPI can be initialized in up to four different
+ways. The former approach using <code class="docutils literal notranslate"><span class="pre">MPI_Init</span></code> still works, but
+applications that wish to use threading should use
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Init_thread"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Init_thread</code></span></a>.</p>
+<div class="admonition-term-mpi-init-thread signature toggle-shown dropdown admonition" id="signature-0">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Init_thread"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Init_thread</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Init_thread</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">***</span><span class="n">argv</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">required</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">provided</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-0">
+<p class="admonition-title">Parameters</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">argc</span></code> and <code class="docutils literal notranslate"><span class="pre">argv</span></code> may be <code class="docutils literal notranslate"><span class="pre">NULL</span></code> (and generally should
+be). <code class="docutils literal notranslate"><span class="pre">required</span></code> describes the level of threading support that is
+requested, and the value returned in <code class="docutils literal notranslate"><span class="pre">*provided</span></code> describes the
+level that the MPI runtime was able to provide. If this is not the
+level required, the program should inform the user and either use
+threading only at the level provided, or <code class="docutils literal notranslate"><span class="pre">MPI_Finalize</span></code> and
+e.g. <code class="docutils literal notranslate"><span class="pre">exit()</span></code>.</p>
+</div>
+<p>The following threading levels are generally supported:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_THREAD_SINGLE</span></code> - rank is not allowed to use threads,
+which is basically equivalent to calling <code class="docutils literal notranslate"><span class="pre">MPI_Init</span></code>.</p>
+<figure class="align-center" id="id2">
+<img alt="../_images/MPI_THREAD_SINGLE.svg" class="with-border" src="../_images/MPI_THREAD_SINGLE.svg" /><figcaption>
+<p><span class="caption-text">With <code class="docutils literal notranslate"><span class="pre">MPI_THREAD_SINGLE</span></code>, the rank may use MPI freely
+and will not use threads.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_THREAD_FUNNELED</span></code> - rank can be multi-threaded but only
+the main thread may call MPI functions. Ideal for fork-join
+parallelism such as used in <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span></code>, where <em>all</em>
+MPI calls are outside the OpenMP regions.</p>
+<figure class="align-center" id="id3">
+<img alt="../_images/MPI_THREAD_FUNNELED.svg" class="with-border" src="../_images/MPI_THREAD_FUNNELED.svg" /><figcaption>
+<p><span class="caption-text">With <code class="docutils literal notranslate"><span class="pre">MPI_THREAD_FUNNELED</span></code>, the rank can use MPI from
+only the main thread.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_THREAD_SERIALIZED</span></code> - rank can be multi-threaded but
+only one thread at a time may call MPI functions. The rank
+must ensure that MPI is used in a thread-safe way. One approach is
+to ensure that MPI usage is <em>mutually excluded</em> by all the threads,
+eg. with a <em>mutex</em>.</p>
+<figure class="align-center" id="id4">
+<img alt="../_images/MPI_THREAD_SERIALIZED.svg" class="with-border" src="../_images/MPI_THREAD_SERIALIZED.svg" /><figcaption>
+<p><span class="caption-text">With <code class="docutils literal notranslate"><span class="pre">MPI_THREAD_SERIALIZED</span></code>, the rank can use MPI from
+any thread so long as it ensures the threads synchronize such
+that no thread calls MPI while another thread is doing so.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_THREAD_MULTIPLE</span></code> - rank can be multi-threaded and any
+thread may call MPI functions. The MPI library ensures that this
+access is safe across threads. Note that this makes all MPI
+operations less efficient, even if only one thread makes MPI calls,
+so should be used only where necessary.</p>
+<figure class="align-center" id="id5">
+<img alt="../_images/MPI_THREAD_MULTIPLE.svg" class="with-border" src="../_images/MPI_THREAD_MULTIPLE.svg" /><figcaption>
+<p><span class="caption-text">With <code class="docutils literal notranslate"><span class="pre">MPI_THREAD_MULTIPLE</span></code>, the rank can use MPI from
+any thread. The MPI library ensures the necessary synchronization</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</li>
+</ul>
+<p>Note that different MPI ranks may make different requirements for MPI
+threading. This can be efficient for applications using manager-worker
+paradigms where the workers have simpler communication patterns.</p>
+<p>For applications where it is possible to implement using
+<code class="docutils literal notranslate"><span class="pre">MPI_THREAD_SERIALIZED</span></code> approach, it will generally outperform the
+same application naively implemented and using
+<code class="docutils literal notranslate"><span class="pre">MPI_THREAD_MULTIPLE</span></code>, because the latter will need to use more
+synchronization.</p>
+</section>
+<section id="querying-the-mpi-runtime">
+<h2>Querying the MPI runtime<a class="headerlink" href="#querying-the-mpi-runtime" title="Permalink to this heading"></a></h2>
+<p>When writing a library, sometimes MPI will be initialized outside your
+code. If you wish to use threading, you have to honor the requirements
+established at the time MPI was initialized (or give an error). This
+can be done with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Query_thread"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Query_thread</code></span></a>.</p>
+<div class="admonition-term-mpi-query-thread signature toggle-shown dropdown admonition" id="signature-1">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Query_thread"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Query_thread</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Query_thread</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">provided</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-1">
+<p class="admonition-title">Parameters</p>
+<p>The value returned in <code class="docutils literal notranslate"><span class="pre">*provided</span></code> describes the level that the
+MPI runtime is providing. If this is not the level required, the
+library should inform the user and either use threading only at the
+level provided, or return an error to its caller.</p>
+<p>It is possible to influence the threading support available from
+some MPI implementations with environment variables, so it can be
+wise to use such a method even if your code is managing the call to
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Init_thread"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Init_thread</code></span></a>.</p>
+</div>
+<p>Similarly, MPI regards the thread that called <a class="reference internal" href="../quick-reference/index.html#term-MPI_Init_thread"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Init_thread</code></span></a>
+as the main thread for the purpose of <code class="docutils literal notranslate"><span class="pre">MPI_THREAD_FUNNELED</span></code>. If your
+code needs to identify that thread (eg. to ensure that calls to your
+library happen from that thread, so you use MPI), then you need to
+call <a class="reference internal" href="../quick-reference/index.html#term-MPI_Is_thread_main"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Is_thread_main</code></span></a>.</p>
+<div class="admonition-term-mpi-is-thread-main signature toggle-shown dropdown admonition" id="signature-2">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Is_thread_main"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Is_thread_main</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Is_thread_main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">flag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-2">
+<p class="admonition-title">Parameters</p>
+<p>A boolean value is returned in <code class="docutils literal notranslate"><span class="pre">*flag</span></code> to indicate whether the
+thread that called <a class="reference internal" href="../quick-reference/index.html#term-MPI_Is_thread_main"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Is_thread_main</code></span></a> is the main thread,
+ie. the one that called <a class="reference internal" href="../quick-reference/index.html#term-MPI_Init_thread"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Init_thread</code></span></a>.</p>
+</div>
+<div class="admonition-compile-an-mpi-program-and-observe-what-thread-level-is-supported exercise important admonition" id="exercise-1">
+<p class="admonition-title">Compile an MPI program and observe what thread level is supported</p>
+<p>You can find a scaffold for the code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-4/00_threading-query</span></code> folder.  A working solution is in the
+<code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder. Try to compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">fopenmp</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">threading</span><span class="o">-</span><span class="n">query</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">threading</span><span class="o">-</span><span class="n">query</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>When you have the code compiling, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="mi">2</span> <span class="o">./</span><span class="n">threading</span><span class="o">-</span><span class="n">query</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use clues from the compiler and the comments in the code to
+change the code so it compiles and runs.</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution important dropdown admonition" id="solution-1">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>One series of correct calls is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MPI_Is_thread_main</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is_master</span><span class="p">);</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="n">required</span> <span class="o">=</span> <span class="n">MPI_THREAD_MULTIPLE</span><span class="p">;</span>
+<span class="n">MPI_Init_thread</span><span class="p">(</span><span class="n">NULL</span><span class="p">,</span> <span class="n">NULL</span><span class="p">,</span> <span class="n">required</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">provided</span><span class="p">);</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="n">MPI_Query_thread</span><span class="p">(</span><span class="o">&amp;</span><span class="n">provided_query</span><span class="p">);</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</section>
+<section id="which-threading-level-to-use">
+<h2>Which threading level to use?<a class="headerlink" href="#which-threading-level-to-use" title="Permalink to this heading"></a></h2>
+<p>If you’re not using threading, use <code class="docutils literal notranslate"><span class="pre">MPI_THREAD_SINGLE</span></code>.</p>
+<p>If you’re using fork-join parallelism, e.g. in the style of OpenMP,
+use <code class="docutils literal notranslate"><span class="pre">MPI_THREAD_FUNNELED</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">MPI_THREAD_SERIALIZED</span></code> can be optimal, but forces the programmer to
+pay a lot more attention to manually ensuring that the promise to the
+MPI runtime is honored.</p>
+<p>If you’re using more complex forms of threading, it’s simplest to use
+<code class="docutils literal notranslate"><span class="pre">MPI_THREAD_MULTIPLE</span></code>. Be aware that this forces the MPI runtime to
+be much more defensive about its internal data structures, and that
+will cost you performance. That’s not going to be a relevant problem
+until you reach your scaling limits. Get your code working correctly
+first, then see if performance is not as good as you expect, and then
+analyse if you can use a less costly MPI threading level.</p>
+<div class="admonition-calculating-math-pi-with-a-hybrid-mpi-openmp-code exercise important admonition" id="exercise-2">
+<p class="admonition-title">Calculating <span class="math notranslate nohighlight">\(\pi\)</span> with a hybrid MPI+OpenMP code</p>
+<p>This example is based on the <span class="math notranslate nohighlight">\(\pi\)</span> computation exercise
+(<code class="docutils literal notranslate"><span class="pre">content/code/day-1/02_compute-pi</span></code>). You can find a scaffold for
+the code in the <code class="docutils literal notranslate"><span class="pre">content/code/day-4/10_integrate-pi</span></code> folder.
+A working solution is in the <code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder. Try to compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">fopenmp</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">pi</span><span class="o">-</span><span class="n">integration</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">pi</span><span class="o">-</span><span class="n">integration</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>Use clues from the compiler and the comments in the code to
+change the code so it compiles and runs.</p></li>
+<li><p>When you have the code compiled, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">OMP_NUM_THREADS</span><span class="o">=</span><span class="mi">2</span>
+<span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="mi">2</span> <span class="o">./</span><span class="n">pi</span><span class="o">-</span><span class="n">integration</span> <span class="mi">10000000</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonition-solution solution important dropdown admonition" id="solution-2">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>One series of correct calls is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="nb">int</span> <span class="n">provided</span><span class="p">,</span> <span class="n">required</span> <span class="o">=</span> <span class="n">MPI_THREAD_FUNNELED</span><span class="p">;</span>
+<span class="n">MPI_Init_thread</span><span class="p">(</span><span class="n">NULL</span><span class="p">,</span> <span class="n">NULL</span><span class="p">,</span> <span class="n">required</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">provided</span><span class="p">);</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">required</span> <span class="o">!=</span> <span class="n">provided</span><span class="p">)</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="c1">#pragma omp parallel for reduction(+:local_pi)</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">local_pi</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">global_pi</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="n">MPI_SUM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://wgropp.cs.illinois.edu/courses/cs598-s15/lectures/lecture36.pdf">William Gropp slides</a></p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition" id="keypoints-0">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>MPI offers four levels of threading support, use the one that fits your
+needs.</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../one-sided-sync/" class="btn btn-neutral float-left" title="One-sided communication: synchronization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../mpi-and-threads-pt2/" class="btn btn-neutral float-right" title="MPI and threads in practice" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, EuroCC National Competence Centre Sweden.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

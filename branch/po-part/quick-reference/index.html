@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Reference &mdash; Intermediate MPI</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Bibliography" href="../zbibliography/" />
+    <link rel="prev" title="MPI and threads in practice" href="../mpi-and-threads-pt2/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../" class="icon icon-home"> Intermediate MPI
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The lesson</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt1/">Derived datatypes: pack and unpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt2/">Derived datatypes: <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communications: functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#visual-glossary">Visual glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mpi-functions">MPI functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+      <li>Quick Reference</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/quick-reference.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quick-reference">
+<h1>Quick Reference<a class="headerlink" href="#quick-reference" title="Permalink to this headline"></a></h1>
+<dl class="glossary">
+<dt id="term-alignment">alignment<a class="headerlink" href="#term-alignment" title="Permalink to this term"></a></dt><dt id="term-data-alignment">data alignment<a class="headerlink" href="#term-data-alignment" title="Permalink to this term"></a></dt><dd><p>See also <a class="reference external" href="https://en.wikipedia.org/wiki/Data_structure_alignment">Wikipedia</a>.</p>
+</dd>
+<dt id="term-intracommunicator">intracommunicator<a class="headerlink" href="#term-intracommunicator" title="Permalink to this term"></a></dt><dd><p>An object managing a group of processes and a communication context.
+Processes in the communicator can perform message passing operations with
+each other, but are isolated from processes not in the communicator.</p>
+</dd>
+<dt id="term-intercommunicator">intercommunicator<a class="headerlink" href="#term-intercommunicator" title="Permalink to this term"></a></dt><dd><p>A communicator for group-to-group communication.</p>
+</dd>
+<dt id="term-origin-process">origin process<a class="headerlink" href="#term-origin-process" title="Permalink to this term"></a></dt><dd><p>In <a class="reference internal" href="#term-RMA"><span class="xref std std-term">RMA</span></a>, the process invoking <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a> and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a> to access another process’s (the <em>target</em> process) window.</p>
+</dd>
+<dt id="term-target-process">target process<a class="headerlink" href="#term-target-process" title="Permalink to this term"></a></dt><dd><p>In <a class="reference internal" href="#term-RMA"><span class="xref std std-term">RMA</span></a>, the process whose window is accessed by <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a> and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a> invoked by another process (the <em>origin</em> process)</p>
+</dd>
+<dt id="term-window">window<a class="headerlink" href="#term-window" title="Permalink to this term"></a></dt><dt id="term-memory-window">memory window<a class="headerlink" href="#term-memory-window" title="Permalink to this term"></a></dt><dt id="term-remote-memory-window">remote memory window<a class="headerlink" href="#term-remote-memory-window" title="Permalink to this term"></a></dt><dd><p>Process-local memory allocated for <a class="reference internal" href="#term-RMA"><span class="xref std std-term">RMA</span></a> operations. It is of implementation-dependent type <code class="docutils literal notranslate"><span class="pre">MPI_Win</span></code>.
+Windows can be created with a variety of MPI functions:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create</code></span></a></p></li>
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_allocate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_allocate</code></span></a></p></li>
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_allocate_shared"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_allocate_shared</code></span></a></p></li>
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create_dynamic"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create_dynamic</code></span></a></p></li>
+</ul>
+</dd>
+<dt id="term-RMA">RMA<a class="headerlink" href="#term-RMA" title="Permalink to this term"></a></dt><dt id="term-remote-memory-access">remote memory access<a class="headerlink" href="#term-remote-memory-access" title="Permalink to this term"></a></dt><dt id="term-one-sided-communication">one-sided communication<a class="headerlink" href="#term-one-sided-communication" title="Permalink to this term"></a></dt><dd><p>Communication paradigm allowing processes to access memory on other processes (remote memory) without the latter’s explicit involvement.</p>
+</dd>
+<dt id="term-synchronization">synchronization<a class="headerlink" href="#term-synchronization" title="Permalink to this term"></a></dt><dd><p>The necessary coordination of remote memory accesses. It can be <em>active</em> or <em>passive</em>.</p>
+</dd>
+<dt id="term-typemap">typemap<a class="headerlink" href="#term-typemap" title="Permalink to this term"></a></dt><dd><p>Abstraction used to represent a datatypes in MPI. It is an associative
+array (map) with datatypes, as understood by MPI, as <em>keys</em> and
+displacements, in bytes, as <em>values</em>. The displacements are computed
+relative to the buffer the datatype describes.</p>
+<div class="math notranslate nohighlight">
+\[\textrm{Typemap} = \{ \textrm{Datatype}_{0}: \textrm{Displacement}_{0}, \ldots, \textrm{Datatype}_{n-1}: \textrm{Displacement}_{n-1} \}\]</div>
+</dd>
+</dl>
+<section id="visual-glossary">
+<h2>Visual glossary<a class="headerlink" href="#visual-glossary" title="Permalink to this headline"></a></h2>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Explain the graphical conventions for <code class="docutils literal notranslate"><span class="pre">MPI_Send</span></code>, <code class="docutils literal notranslate"><span class="pre">MPI_Recv</span></code>, <code class="docutils literal notranslate"><span class="pre">MPI_Get</span></code>, <code class="docutils literal notranslate"><span class="pre">MPI_Put</span></code> etc</p>
+</div>
+</section>
+<section id="mpi-functions">
+<h2>MPI functions<a class="headerlink" href="#mpi-functions" title="Permalink to this headline"></a></h2>
+<dl class="glossary">
+<dt id="term-MPI_Comm_split"><code class="docutils literal notranslate"><span class="pre">MPI_Comm_split</span></code><a class="headerlink" href="#term-MPI_Comm_split" title="Permalink to this term"></a></dt><dd><p>Split an existing communicator.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Comm_split</span><span class="p">(</span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="kt">int</span><span class="w"> </span><span class="n">color</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="kt">int</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="o">*</span><span class="n">newcomm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Comm_split.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Comm_split.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node156.htm#Node156.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Type_get_extent"><code class="docutils literal notranslate"><span class="pre">MPI_Type_get_extent</span></code><a class="headerlink" href="#term-MPI_Type_get_extent" title="Permalink to this term"></a></dt><dd><p>Retrieve lower bound and extent of a type known to MPI.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_get_extent</span><span class="p">(</span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"></span>
+<span class="w">                        </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="o">*</span><span class="n">lb</span><span class="p">,</span><span class="w"></span>
+<span class="w">                        </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="o">*</span><span class="n">extent</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Type_get_extent.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Type_get_extent.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node84.htm#Node84.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Type_size"><code class="docutils literal notranslate"><span class="pre">MPI_Type_size</span></code><a class="headerlink" href="#term-MPI_Type_size" title="Permalink to this term"></a></dt><dd><p>Retrieve size a type known to MPI.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_get_size</span><span class="p">(</span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"></span>
+<span class="w">                      </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">size</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Type_size.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Type_size.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node82.htm#Node82.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Pack"><code class="docutils literal notranslate"><span class="pre">MPI_Pack</span></code><a class="headerlink" href="#term-MPI_Pack" title="Permalink to this term"></a></dt><dd><p>Pack data in a message. The message is in contiguous memory.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Pack</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">inbuf</span><span class="p">,</span><span class="w"></span>
+<span class="w">             </span><span class="kt">int</span><span class="w"> </span><span class="n">incount</span><span class="p">,</span><span class="w"></span>
+<span class="w">             </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">             </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">outbuf</span><span class="p">,</span><span class="w"></span>
+<span class="w">             </span><span class="kt">int</span><span class="w"> </span><span class="n">outsize</span><span class="p">,</span><span class="w"></span>
+<span class="w">             </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">position</span><span class="p">,</span><span class="w"></span>
+<span class="w">             </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Pack.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Pack.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node92.htm#Node92.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Unpack"><code class="docutils literal notranslate"><span class="pre">MPI_Unpack</span></code><a class="headerlink" href="#term-MPI_Unpack" title="Permalink to this term"></a></dt><dd><p>Unpack a message to data in contiguous memory.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Unpack</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">inbuf</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="kt">int</span><span class="w"> </span><span class="n">insize</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">position</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">outbuf</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="kt">int</span><span class="w"> </span><span class="n">outcount</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Unpack.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Unpack.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node92.htm#Node92.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Type_create_struct"><code class="docutils literal notranslate"><span class="pre">MPI_Type_create_struct</span></code><a class="headerlink" href="#term-MPI_Type_create_struct" title="Permalink to this term"></a></dt><dd><p>Create a new MPI datatype given its <a class="reference internal" href="#term-typemap"><span class="xref std std-term">typemap</span></a>.
+This function replaces the <em>deprecated</em> <code class="docutils literal notranslate"><span class="pre">MPI_Type_struct</span></code>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_create_struct</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"></span>
+<span class="w">                           </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">array_of_block_lengths</span><span class="p">[],</span><span class="w"></span>
+<span class="w">                           </span><span class="k">const</span><span class="w"> </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">array_of_displacements</span><span class="p">[],</span><span class="w"></span>
+<span class="w">                           </span><span class="k">const</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">array_of_types</span><span class="p">[],</span><span class="w"></span>
+<span class="w">                           </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">newtype</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Type_create_struct.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Type_create_struct.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node79.htm#Node79.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Type_commit"><code class="docutils literal notranslate"><span class="pre">MPI_Type_commit</span></code><a class="headerlink" href="#term-MPI_Type_commit" title="Permalink to this term"></a></dt><dd><p>Publish a new type to the MPI runtime. You can only use a new type in MPI
+routines after calling this routine.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_commit</span><span class="p">(</span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">datatype</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Type_commit.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Type_commit.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node86.htm#Node86.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Type_contiguous"><code class="docutils literal notranslate"><span class="pre">MPI_Type_contiguous</span></code><a class="headerlink" href="#term-MPI_Type_contiguous" title="Permalink to this term"></a></dt><dd><p>Create a homogeneous collection of a given datatype. Elements are
+contiguous: <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(n-1\)</span> are separated by the extent of the
+old type.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_contiguous</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"></span>
+<span class="w">                        </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">oldtype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                        </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">newtype</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Type_contiguous.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Type_contiguous.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node79.htm#Node79.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Type_vector"><code class="docutils literal notranslate"><span class="pre">MPI_Type_vector</span></code><a class="headerlink" href="#term-MPI_Type_vector" title="Permalink to this term"></a></dt><dd><p>Create a collection of <code class="docutils literal notranslate"><span class="pre">count</span></code> elements of <code class="docutils literal notranslate"><span class="pre">oldtype</span></code> separated by a
+stride that is an arbitrary multiple of the extent of the old type.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_vector</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="kt">int</span><span class="w"> </span><span class="n">blocklength</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="kt">int</span><span class="w"> </span><span class="n">stride</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">oldtype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">newtype</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Type_vector.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Type_vector.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node79.htm#Node79.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Type_indexed"><code class="docutils literal notranslate"><span class="pre">MPI_Type_indexed</span></code><a class="headerlink" href="#term-MPI_Type_indexed" title="Permalink to this term"></a></dt><dd><p>Create a type with non-homogeneous separations between the elements.
+Each displacement is intended as a multiple of the extent of the old type.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_indexed</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"></span>
+<span class="w">                     </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">array_of_blocklengths</span><span class="p">[],</span><span class="w"></span>
+<span class="w">                     </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">array_of_displacements</span><span class="p">[],</span><span class="w"></span>
+<span class="w">                     </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">oldtype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                     </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">newtype</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Type_indexed.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Type_indexed.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node79.htm#Node79.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Type_create_hvector"><code class="docutils literal notranslate"><span class="pre">MPI_Type_create_hvector</span></code><a class="headerlink" href="#term-MPI_Type_create_hvector" title="Permalink to this term"></a></dt><dd><p>Create a collection of <code class="docutils literal notranslate"><span class="pre">count</span></code> elements of <code class="docutils literal notranslate"><span class="pre">oldtype</span></code>. The separation
+between elements in a hvector is expressed in bytes, rather than as a
+multiple of the extent.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_create_hvector</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"></span>
+<span class="w">                            </span><span class="kt">int</span><span class="w"> </span><span class="n">blocklength</span><span class="p">,</span><span class="w"></span>
+<span class="w">                            </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">stride</span><span class="p">,</span><span class="w"></span>
+<span class="w">                            </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">oldtype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                            </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">newtype</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Type_create_hvector.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Type_create_hvector.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node79.htm#Node79.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Type_create_hindexed"><code class="docutils literal notranslate"><span class="pre">MPI_Type_create_hindexed</span></code><a class="headerlink" href="#term-MPI_Type_create_hindexed" title="Permalink to this term"></a></dt><dd><p>Create a type with non-homogeneous separations between the elements
+expressed in bytes, rather than as multiples of the extent.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_create_hindexed</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"></span>
+<span class="w">                             </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">array_of_blocklengths</span><span class="p">[],</span><span class="w"></span>
+<span class="w">                             </span><span class="k">const</span><span class="w"> </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">array_of_displacements</span><span class="p">[],</span><span class="w"></span>
+<span class="w">                             </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">oldtype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                             </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">newtype</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Type_create_hindexed.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Type_create_hindexed.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node79.htm#Node79.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Type_free"><code class="docutils literal notranslate"><span class="pre">MPI_Type_free</span></code><a class="headerlink" href="#term-MPI_Type_free" title="Permalink to this term"></a></dt><dd><p>Free a <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code> object.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_free</span><span class="p">(</span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">type</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Type_free.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Type_free.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node86.htm#Node86.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Get"><code class="docutils literal notranslate"><span class="pre">MPI_Get</span></code><a class="headerlink" href="#term-MPI_Get" title="Permalink to this term"></a></dt><dd><p>Load data from a remote memory window.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Get</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">origin_addr</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">origin_count</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">origin_datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">target_rank</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">target_disp</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">target_count</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">target_datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Get.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Get.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node270.htm#Node270.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Put"><code class="docutils literal notranslate"><span class="pre">MPI_Put</span></code><a class="headerlink" href="#term-MPI_Put" title="Permalink to this term"></a></dt><dd><p>Store data to a remote memory window.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Put</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">origin_addr</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">origin_count</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">origin_datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">target_rank</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">target_disp</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">target_count</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">target_datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Put.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Put.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node269.htm#Node269.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Accumulate"><code class="docutils literal notranslate"><span class="pre">MPI_Accumulate</span></code><a class="headerlink" href="#term-MPI_Accumulate" title="Permalink to this term"></a></dt><dd><p>Accumulate data into target process through remote memory access.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Accumulate</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">origin_addr</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="kt">int</span><span class="w"> </span><span class="n">origin_count</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">origin_datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="kt">int</span><span class="w"> </span><span class="n">target_rank</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">target_disp</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="kt">int</span><span class="w"> </span><span class="n">target_count</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">target_datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Op</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Accumulate.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Accumulate.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node273.htm#Node273.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Win_create"><code class="docutils literal notranslate"><span class="pre">MPI_Win_create</span></code><a class="headerlink" href="#term-MPI_Win_create" title="Permalink to this term"></a></dt><dd><p>Allocates memory and creates the window object.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_create</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">base</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="kt">int</span><span class="w"> </span><span class="n">disp_unit</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Info</span><span class="w"> </span><span class="n">info</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Win</span><span class="w"> </span><span class="o">*</span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Win_create.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Win_create.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node261.htm#Node261.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Win_allocate"><code class="docutils literal notranslate"><span class="pre">MPI_Win_allocate</span></code><a class="headerlink" href="#term-MPI_Win_allocate" title="Permalink to this term"></a></dt><dd><p>Creates a window from already allocated memory.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_allocate</span><span class="p">(</span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"></span>
+<span class="w">                     </span><span class="kt">int</span><span class="w"> </span><span class="n">disp_unit</span><span class="p">,</span><span class="w"></span>
+<span class="w">                     </span><span class="n">MPI_Info</span><span class="w"> </span><span class="n">info</span><span class="p">,</span><span class="w"></span>
+<span class="w">                     </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"></span>
+<span class="w">                     </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">baseptr</span><span class="p">,</span><span class="w"></span>
+<span class="w">                     </span><span class="n">MPI_Win</span><span class="w"> </span><span class="o">*</span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Win_allocate.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Win_allocate.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node262.htm#Node262.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Win_allocate_shared"><code class="docutils literal notranslate"><span class="pre">MPI_Win_allocate_shared</span></code><a class="headerlink" href="#term-MPI_Win_allocate_shared" title="Permalink to this term"></a></dt><dd><p>Creates a window from already allocated MPI shared memory.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_allocate_shared</span><span class="p">(</span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"></span>
+<span class="w">                            </span><span class="kt">int</span><span class="w"> </span><span class="n">disp_unit</span><span class="p">,</span><span class="w"></span>
+<span class="w">                            </span><span class="n">MPI_Info</span><span class="w"> </span><span class="n">info</span><span class="p">,</span><span class="w"></span>
+<span class="w">                            </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"></span>
+<span class="w">                            </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">baseptr</span><span class="p">,</span><span class="w"></span>
+<span class="w">                            </span><span class="n">MPI_Win</span><span class="w"> </span><span class="o">*</span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Win_allocate_shared.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Win_allocate_shared.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node263.htm#Node263.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Win_create_dynamic"><code class="docutils literal notranslate"><span class="pre">MPI_Win_create_dynamic</span></code><a class="headerlink" href="#term-MPI_Win_create_dynamic" title="Permalink to this term"></a></dt><dd><p>Creates a window from allocated memory, but the window-memory pairing is deferred.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_create_dynamic</span><span class="p">(</span><span class="n">MPI_Info</span><span class="w"> </span><span class="n">info</span><span class="p">,</span><span class="w"></span>
+<span class="w">                           </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"></span>
+<span class="w">                           </span><span class="n">MPI_Win</span><span class="w"> </span><span class="o">*</span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Win_create_dynamic.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Win_create_dynamic.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node264.htm#Node264.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Win_fence"><code class="docutils literal notranslate"><span class="pre">MPI_Win_fence</span></code><a class="headerlink" href="#term-MPI_Win_fence" title="Permalink to this term"></a></dt><dd><p>Synchronization routine in <strong>active target</strong> RMA. It opens and closes an access epoch.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_fence</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">assert</span><span class="p">,</span><span class="w"></span>
+<span class="w">                  </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Win_fence.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Win_fence.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node280.htm#Node280.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Win_post"><code class="docutils literal notranslate"><span class="pre">MPI_Win_post</span></code><a class="headerlink" href="#term-MPI_Win_post" title="Permalink to this term"></a></dt><dd><p>Synchronization routine in <strong>active target</strong> RMA. Starts an exposure epoch.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_post</span><span class="p">(</span><span class="n">MPI_Group</span><span class="w"> </span><span class="n">group</span><span class="p">,</span><span class="w"></span>
+<span class="w">                 </span><span class="kt">int</span><span class="w"> </span><span class="n">assert</span><span class="p">,</span><span class="w"></span>
+<span class="w">                 </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Win_post.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Win_post.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node281.htm#Node281.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Win_start"><code class="docutils literal notranslate"><span class="pre">MPI_Win_start</span></code><a class="headerlink" href="#term-MPI_Win_start" title="Permalink to this term"></a></dt><dd><p>Synchronization routine in <strong>active target</strong> RMA. Starts an access epoch.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_start</span><span class="p">(</span><span class="n">MPI_Group</span><span class="w"> </span><span class="n">group</span><span class="p">,</span><span class="w"></span>
+<span class="w">                  </span><span class="kt">int</span><span class="w"> </span><span class="n">assert</span><span class="p">,</span><span class="w"></span>
+<span class="w">                  </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Win_start.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Win_start.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node281.htm#Node281.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Win_complete"><code class="docutils literal notranslate"><span class="pre">MPI_Win_complete</span></code><a class="headerlink" href="#term-MPI_Win_complete" title="Permalink to this term"></a></dt><dd><p>Synchronization routine in <strong>active target</strong> RMA. Finishes an access epoch.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_complete</span><span class="p">(</span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Win_complete.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Win_complete.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node281.htm#Node281.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Win_wait"><code class="docutils literal notranslate"><span class="pre">MPI_Win_wait</span></code><a class="headerlink" href="#term-MPI_Win_wait" title="Permalink to this term"></a></dt><dd><p>Synchronization routine in <strong>active target</strong> RMA. Finishes an exposure epoch.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_wait</span><span class="p">(</span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Win_wait.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Win_wait.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node281.htm#Node281.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Win_test"><code class="docutils literal notranslate"><span class="pre">MPI_Win_test</span></code><a class="headerlink" href="#term-MPI_Win_test" title="Permalink to this term"></a></dt><dd><p>Synchronization routine in <strong>active target</strong> RMA. This is the
+non-blocking version of <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_wait"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_wait</code></span></a> and finishes an exposure
+epoch.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_test</span><span class="p">(</span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">,</span><span class="w"></span>
+<span class="w">                 </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">flag</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Win_test.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Win_test.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node281.htm#Node281.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Win_lock"><code class="docutils literal notranslate"><span class="pre">MPI_Win_lock</span></code><a class="headerlink" href="#term-MPI_Win_lock" title="Permalink to this term"></a></dt><dd><p>Synchronization routine in <strong>passive target</strong> RMA. Locks a memory window.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_lock</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">lock_type</span><span class="p">,</span><span class="w"></span>
+<span class="w">                 </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"></span>
+<span class="w">                 </span><span class="kt">int</span><span class="w"> </span><span class="n">assert</span><span class="p">,</span><span class="w"></span>
+<span class="w">                 </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Win_lock.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Win_lock.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node282.htm#Node282.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Win_unlock"><code class="docutils literal notranslate"><span class="pre">MPI_Win_unlock</span></code><a class="headerlink" href="#term-MPI_Win_unlock" title="Permalink to this term"></a></dt><dd><p>Synchronization routine in <strong>passive target</strong> RMA. Unlocks a memory window.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_unlock</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Win_unlock.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Win_unlock.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node282.htm#Node282.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Isend"><code class="docutils literal notranslate"><span class="pre">MPI_Isend</span></code><a class="headerlink" href="#term-MPI_Isend" title="Permalink to this term"></a></dt><dd><p>Start a non-blocking send</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Isend</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">              </span><span class="kt">int</span><span class="w"> </span><span class="n">dest</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">tag</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Request</span><span class="w"> </span><span class="o">*</span><span class="n">request</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Isend.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Isend.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node63.htm#Node63.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Irecv"><code class="docutils literal notranslate"><span class="pre">MPI_Irecv</span></code><a class="headerlink" href="#term-MPI_Irecv" title="Permalink to this term"></a></dt><dd><p>Starts a non-blocking receive</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Irecv</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">             </span><span class="kt">int</span><span class="w"> </span><span class="n">source</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">tag</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Request</span><span class="w"> </span><span class="o">*</span><span class="n">request</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Irecv.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Irecv.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node63.htm#Node63.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Wait"><code class="docutils literal notranslate"><span class="pre">MPI_Wait</span></code><a class="headerlink" href="#term-MPI_Wait" title="Permalink to this term"></a></dt><dd><p>Return when the operation is complete</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Wait</span><span class="p">(</span><span class="n">MPI_Request</span><span class="w"> </span><span class="o">*</span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Status</span><span class="w"> </span><span class="o">*</span><span class="n">status</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Wait.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Wait.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node64.htm#Node64.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Waitany"><code class="docutils literal notranslate"><span class="pre">MPI_Waitany</span></code><a class="headerlink" href="#term-MPI_Waitany" title="Permalink to this term"></a></dt><dd><p>Waits until exactly one operation completes</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Waitany</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Request</span><span class="w"> </span><span class="n">array_of_requests</span><span class="p">[],</span><span class="w"></span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Status</span><span class="w"> </span><span class="o">*</span><span class="n">status</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Waitany.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Waitany.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node66.htm#Node66.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Waitsome"><code class="docutils literal notranslate"><span class="pre">MPI_Waitsome</span></code><a class="headerlink" href="#term-MPI_Waitsome" title="Permalink to this term"></a></dt><dd><p>Waits until at least one operation completes</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Waitsome</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">incount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Request</span><span class="w"> </span><span class="n">array_of_requests</span><span class="p">[],</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">outcount</span><span class="p">,</span><span class="w"></span>
+<span class="w">                 </span><span class="kt">int</span><span class="w"> </span><span class="n">array_of_indices</span><span class="p">[],</span><span class="w"> </span><span class="n">MPI_Status</span><span class="w"> </span><span class="n">array_of_statuses</span><span class="p">[])</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Waitsome.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Waitsome.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node66.htm#Node66.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Waitall"><code class="docutils literal notranslate"><span class="pre">MPI_Waitall</span></code><a class="headerlink" href="#term-MPI_Waitall" title="Permalink to this term"></a></dt><dd><p>Waits until all operations complete</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Waitall</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Request</span><span class="w"> </span><span class="n">array_of_requests</span><span class="p">[],</span><span class="w"></span>
+<span class="w">                </span><span class="n">MPI_Status</span><span class="w"> </span><span class="n">array_of_statuses</span><span class="p">[])</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Waitall.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Waitall.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node66.htm#Node66.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Test"><code class="docutils literal notranslate"><span class="pre">MPI_Test</span></code><a class="headerlink" href="#term-MPI_Test" title="Permalink to this term"></a></dt><dd><p>Return immediately whether the operation is complete</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Test</span><span class="p">(</span><span class="n">MPI_Request</span><span class="w"> </span><span class="o">*</span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">flag</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Status</span><span class="w"> </span><span class="o">*</span><span class="n">status</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Test.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Test.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node64.htm#Node64.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Testany"><code class="docutils literal notranslate"><span class="pre">MPI_Testany</span></code><a class="headerlink" href="#term-MPI_Testany" title="Permalink to this term"></a></dt><dd><p>Returns immediately at most one operation has completed</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Testany</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Request</span><span class="w"> </span><span class="n">array_of_requests</span><span class="p">[],</span><span class="w"></span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">flag</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Status</span><span class="w"> </span><span class="o">*</span><span class="n">status</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Testany.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Testany.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node66.htm#Node66.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Testsome"><code class="docutils literal notranslate"><span class="pre">MPI_Testsome</span></code><a class="headerlink" href="#term-MPI_Testsome" title="Permalink to this term"></a></dt><dd><p>Like <a class="reference internal" href="../quick-reference/index.html#term-MPI_Waitsome"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Waitsome</code></span></a> but returns immediately</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Testsome</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">incount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Request</span><span class="w"> </span><span class="n">array_of_requests</span><span class="p">[],</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">outcount</span><span class="p">,</span><span class="w"></span>
+<span class="w">                 </span><span class="kt">int</span><span class="w"> </span><span class="n">array_of_indices</span><span class="p">[],</span><span class="w"> </span><span class="n">MPI_Status</span><span class="w"> </span><span class="n">array_of_statuses</span><span class="p">[])</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Testsome.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Testsome.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node66.htm#Node66.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Testall"><code class="docutils literal notranslate"><span class="pre">MPI_Testall</span></code><a class="headerlink" href="#term-MPI_Testall" title="Permalink to this term"></a></dt><dd><p>Returns immediately whether all operations have completed</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Testall</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Request</span><span class="w"> </span><span class="n">array_of_requests</span><span class="p">[],</span><span class="w"></span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">flag</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Status</span><span class="w"> </span><span class="n">array_of_statuses</span><span class="p">[])</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Testall.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Testall.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node66.htm#Node66.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Init_thread"><code class="docutils literal notranslate"><span class="pre">MPI_Init_thread</span></code><a class="headerlink" href="#term-MPI_Init_thread" title="Permalink to this term"></a></dt><dd><p>Initializes MPI and the threading environment within it. Should
+be preferred to <code class="docutils literal notranslate"><span class="pre">MPI_Init</span></code> by thread-aware applications.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Init_thread</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">argv</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">required</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">provided</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Init_thread.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Init_thread.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node303.htm#Node303.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Query_thread"><code class="docutils literal notranslate"><span class="pre">MPI_Query_thread</span></code><a class="headerlink" href="#term-MPI_Query_thread" title="Permalink to this term"></a></dt><dd><p>Returns the current level of threading support.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Query_thread</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">provided</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Query_thread.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Query_thread.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node303.htm#Node303.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Is_thread_main"><code class="docutils literal notranslate"><span class="pre">MPI_Is_thread_main</span></code><a class="headerlink" href="#term-MPI_Is_thread_main" title="Permalink to this term"></a></dt><dd><p>Returns whether the calling thread previously called <a class="reference internal" href="../quick-reference/index.html#term-MPI_Init_thread"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Init_thread</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Is_thread_main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">flag</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Is_thread_main.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Is_thread_main.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node303.htm#Node303.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Ireduce"><code class="docutils literal notranslate"><span class="pre">MPI_Ireduce</span></code><a class="headerlink" href="#term-MPI_Ireduce" title="Permalink to this term"></a></dt><dd><p>Non-blocking variant of <a class="reference internal" href="../quick-reference/index.html#term-MPI_Reduce"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Reduce</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Ireduce</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Op</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Request</span><span class="w"> </span><span class="o">*</span><span class="n">request</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Ireduce.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Ireduce.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node134.htm#Node134.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Ibarrier"><code class="docutils literal notranslate"><span class="pre">MPI_Ibarrier</span></code><a class="headerlink" href="#term-MPI_Ibarrier" title="Permalink to this term"></a></dt><dd><p>Non-blocking variant of <a class="reference internal" href="../quick-reference/index.html#term-MPI_Barrier"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Barrier</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Ibarrier</span><span class="p">(</span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"></span>
+<span class="w">                 </span><span class="n">MPI_Request</span><span class="w"> </span><span class="o">*</span><span class="n">request</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Ibarrier.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Ibarrier.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node127.htm#Node127.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Barrier"><code class="docutils literal notranslate"><span class="pre">MPI_Barrier</span></code><a class="headerlink" href="#term-MPI_Barrier" title="Permalink to this term"></a></dt><dd><p>Ensures all ranks arrive at this call before any of the proceeds
+past it.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Barrier.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Barrier.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node100.htm#Node100.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Bcast"><code class="docutils literal notranslate"><span class="pre">MPI_Bcast</span></code><a class="headerlink" href="#term-MPI_Bcast" title="Permalink to this term"></a></dt><dd><p>Sends data from one rank to all other ranks</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Bcast</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">              </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Bcast.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Bcast.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node101.htm#Node101.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Reduce"><code class="docutils literal notranslate"><span class="pre">MPI_Reduce</span></code><a class="headerlink" href="#term-MPI_Reduce" title="Permalink to this term"></a></dt><dd><p>Combines data from all ranks using an operation and returns
+values to a single rank.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Reduce</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Op</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Reduce.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Reduce.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node111.htm#Node111.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Scatter"><code class="docutils literal notranslate"><span class="pre">MPI_Scatter</span></code><a class="headerlink" href="#term-MPI_Scatter" title="Permalink to this term"></a></dt><dd><p>Sends data from one rank to all other ranks</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Scatter</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sendcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">sendtype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">recvcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">recvtype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Scatter.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Scatter.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node105.htm#Node105.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Gather"><code class="docutils literal notranslate"><span class="pre">MPI_Gather</span></code><a class="headerlink" href="#term-MPI_Gather" title="Permalink to this term"></a></dt><dd><p>Sends data from all ranks to a single rank</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Scatter</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sendcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">sendtype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">recvcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">recvtype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Gather.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Gather.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node103.htm#Node103.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Allgather"><code class="docutils literal notranslate"><span class="pre">MPI_Allgather</span></code><a class="headerlink" href="#term-MPI_Allgather" title="Permalink to this term"></a></dt><dd><p>Gathers data from all ranks and provides the same data to all ranks</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Allgather</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sendcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">sendtype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                  </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">recvcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">recvtype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                  </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Allgather.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Allgather.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node107.htm#Node107.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+<dt id="term-MPI_Alltoall"><code class="docutils literal notranslate"><span class="pre">MPI_Alltoall</span></code><a class="headerlink" href="#term-MPI_Alltoall" title="Permalink to this term"></a></dt><dd><p>Gathers data from all ranks and provides different parts of the
+data to different ranks.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Alltoall</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sendcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">sendtype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                 </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">recvcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">recvtype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                 </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p><p>Documentation from implementors:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpich.org/static/docs/latest/www3/MPI_Alltoall.html">MPICH</a></p></li>
+<li><p><a class="reference external" href="https://www.open-mpi.org/doc/current/man3/MPI_Alltoall.3.php">OpenMPI</a></p></li>
+</ul>
+</div>
+<p>Documentation in the standard:</p>
+<div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node109.htm#Node109.html">MPI standard 3.1</a></p></li>
+</ul>
+</div></p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../mpi-and-threads-pt2/" class="btn btn-neutral float-left" title="MPI and threads in practice" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../zbibliography/" class="btn btn-neutral float-right" title="Bibliography" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, EuroCC National Competence Centre Sweden.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

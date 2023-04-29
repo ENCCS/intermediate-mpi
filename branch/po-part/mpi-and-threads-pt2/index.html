@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MPI and threads in practice &mdash; Intermediate MPI</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Quick Reference" href="../quick-reference/" />
+    <link rel="prev" title="Introducing MPI and threads" href="../mpi-and-threads-pt1/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../" class="icon icon-home"> Intermediate MPI
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt1/">Derived datatypes: pack and unpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt2/">Derived datatypes: <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communications: functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MPI and threads in practice</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#using-fork-join-parallelism">Using fork-join parallelism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-openmp-tasking-with-mpi">Using OpenMP tasking with MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-the-proper-thread-affinity">Setting the proper thread affinity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tips-for-implementing-hybrid-mpi-openmp">Tips for implementing hybrid MPI+OpenMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+      <li>MPI and threads in practice</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/mpi-and-threads-pt2.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mpi-and-threads-in-practice">
+<h1>MPI and threads in practice<a class="headerlink" href="#mpi-and-threads-in-practice" title="Permalink to this headline"></a></h1>
+<div class="admonition-questions questions admonition" id="questions-0">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>When should I consider writing hybrid MPI+OpenMP programs?</p></li>
+<li><p>What should I look out for when writing hybrid MPI+OpenMP programs?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition" id="objectives-0">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Know to estimate the benefits before trying to write code for hybrid parallelism</p></li>
+</ul>
+</div>
+<section id="using-fork-join-parallelism">
+<h2>Using fork-join parallelism<a class="headerlink" href="#using-fork-join-parallelism" title="Permalink to this headline"></a></h2>
+<p>In fork-join parallelism, multiple threads are launched to collaborate
+on work. Typically regions of parallelism alternate with regions where
+only one thread works. This enables parallelism to be introduced
+gradually, and only where profiling shows that it would be most
+beneficial. In typical implementations, threads are kept idle between
+parallel regions; this is more efficient than creating and destroying
+them many times.</p>
+<figure class="align-center" id="id3">
+<img alt="../_images/fork-join-parallelism.svg" src="../_images/fork-join-parallelism.svg" /><figcaption>
+<p><span class="caption-text">OpenMP is particularly suited for fork-join parallelism. Beware
+that each parallel region requires synchronization between threads,
+which can be costly. Further, the speed-up depends critically on
+the time spent in the single-threaded regions!</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>The simplest hybrid approach is often to do the MPI communication in
+the regions that are single-threaded.</p>
+<figure class="align-center" id="id4">
+<img alt="../_images/fork-join-with-mpi.svg" src="../_images/fork-join-with-mpi.svg" /><figcaption>
+<p><span class="caption-text">Fork-join parallelism is a natural fit for <code class="docutils literal notranslate"><span class="pre">MPI_THREAD_FUNNELED</span></code>
+where fairly simple code can be improved with thread parallelism.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><code class="docutils literal notranslate"><span class="pre">for</span></code> loops in Fortan/C/C++ can be readily parallelised with <code class="docutils literal notranslate"><span class="pre">#pragma</span>
+<span class="pre">omp</span> <span class="pre">parallel</span></code>, so applications that already use MPI outside such loops
+can be converted to hybrid parallelism fairly easily.</p>
+<div class="admonition-exercise exercise important admonition" id="exercise-0">
+<p class="admonition-title">Exercise</p>
+<p>You can find a scaffold for the code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-4/01_threading-funneled</span></code> folder.  A working solution is
+in the <code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder. It is quite similar to that for the earlier
+non-blocking code-along exercise. Try to compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">fopenmp</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">threading</span><span class="o">-</span><span class="n">funneled</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">threading</span><span class="o">-</span><span class="n">funneled</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>When you have the code compiling, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="mi">2</span> <span class="o">./</span><span class="n">threading</span><span class="o">-</span><span class="n">funneled</span>
+</pre></div>
+</div>
+</li>
+<li><p>Try to fix the code so that it compiles, runs, and reports success</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution important dropdown admonition" id="solution-0">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>One correct approach is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">provided</span><span class="p">,</span> <span class="n">required</span> <span class="o">=</span> <span class="n">MPI_THREAD_FUNNELED</span><span class="p">;</span>
+<span class="n">MPI_Init_thread</span><span class="p">(</span><span class="n">NULL</span><span class="p">,</span> <span class="n">NULL</span><span class="p">,</span> <span class="n">required</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">provided</span><span class="p">);</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="nb">int</span> <span class="n">local_work</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="n">compute_row</span><span class="p">(</span><span class="n">local_work</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">working_data_set</span><span class="p">,</span> <span class="n">next_working_data_set</span><span class="p">);</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="nb">int</span> <span class="n">non_local_work</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="n">compute_row</span><span class="p">(</span><span class="n">non_local_work</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">working_data_set</span><span class="p">,</span> <span class="n">next_working_data_set</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</section>
+<section id="using-openmp-tasking-with-mpi">
+<h2>Using OpenMP tasking with MPI<a class="headerlink" href="#using-openmp-tasking-with-mpi" title="Permalink to this headline"></a></h2>
+<figure class="align-center" id="id5">
+<img alt="../_images/stencil-with-tasking.svg" src="../_images/stencil-with-tasking.svg" /><figcaption>
+<p><span class="caption-text">Stencil code with halo exchange implemented with OpenMP
+tasking. One group of threads takes responsibility for the halo
+exchange and non-local stencil work. Another takes responsibility
+for the local work. The threads are split statically during each
+time step, but how many threads to assign to each part might be
+able to be tuned over the duration of the program.</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition-exercise exercise important admonition" id="exercise-1">
+<p class="admonition-title">Exercise</p>
+<p>You can find a scaffold for the code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-4/02_threading-multiple</span></code> folder.  A working solution is in the
+<code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder. Try to compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">fopenmp</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">threading</span><span class="o">-</span><span class="n">multiple</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">threading</span><span class="o">-</span><span class="n">multiple</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>When you have the code compiling, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OMP_NUM_THREADS</span><span class="o">=</span><span class="mi">4</span> <span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="mi">2</span> <span class="o">./</span><span class="n">threading</span><span class="o">-</span><span class="n">multiple</span>
+</pre></div>
+</div>
+</li>
+<li><p>Unfortunately I haven’t found the last bug in my use of OpenMP tasking,
+but you can see the kind of approach that can work, and the complexity
+it entails. Do this only when you really need to!</p></li>
+</ol>
+</div>
+</section>
+<section id="setting-the-proper-thread-affinity">
+<h2>Setting the proper thread affinity<a class="headerlink" href="#setting-the-proper-thread-affinity" title="Permalink to this headline"></a></h2>
+<p>Setting the affinity or the preferred location of threads in the hardware
+is crucial for the performance of hybrid MPI+OpenMP applications specially in
+modern architectures which are composed of several non-uniform memory access (NUMA)
+nodes.</p>
+<figure class="align-center" id="id6">
+<img alt="../_images/kebnekaise.png" src="../_images/kebnekaise.png" />
+<figcaption>
+<p><span class="caption-text">Kebnekaise architecture contains two NUMA nodes and 14 cores per NUMA node.
+Also several levels of cache L1,L2, and L3 can be seen in this architecture.</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>In addition to the physical cores (28 per node on Kebnekaise), logical cores could be
+available in your system but this option is usually turned-off in HPC systems.
+In the case of Kebnekaise, only one thread can run on a physical core:</p>
+<div class="admonition-system-information signature toggle-shown dropdown admonition" id="signature-0">
+<p class="admonition-title"><a href="#id7"><span class="problematic" id="id8">|System information|</span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span>lscpu | grep -i &#39;core\|thread\|Socket&#39;
+Thread(s) per core:              1
+Core(s) per socket:              14
+Socket(s):                       2
+</pre></div>
+</div>
+</div>
+<p>Without specifying the location of threads, the OS decides where the threads
+are placed. Binding of OpenMP threads can be controlled with the enviroment variables:</p>
+<div class="admonition-omp-proc-bind-false-true-close-primary-spread signature toggle-shown dropdown admonition" id="signature-1">
+<p class="admonition-title"><code class="docutils literal notranslate"><span class="pre">OMP_PROC_BIND=false,true,close,primary,spread</span></code></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span>``true`` and ``false`` values tell the OS that threads are fixed or they
+are can move to a different core, respectively. ``primary`` will place all the threads
+on the same core where the primary thread for each rank will run. ``close`` and ``spread``
+are used to place the threads close to each other or well separated, respectively.
+</pre></div>
+</div>
+</div>
+<div class="admonition-omp-places-cores-threads-sockets signature toggle-shown dropdown admonition" id="signature-2">
+<p class="admonition-title"><code class="docutils literal notranslate"><span class="pre">OMP_PLACES=cores,threads,sockets</span></code></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span>``cores`` denotes a physical core location, ``threads`` is used to bind to hyperthreads
+(if available), and ``sockets`` is used to denote a single socket per thread.
+</pre></div>
+</div>
+</div>
+<p>There are several programs available that allow you to see the binding
+scheme that is being used for instance the <code class="docutils literal notranslate"><span class="pre">xthi.c</span></code> program from HPE(Cray) cited
+at the bottom of this page.</p>
+<div class="admonition-exercise exercise important admonition" id="exercise-2">
+<p class="admonition-title">Exercise</p>
+<p>Download the <a href="#id1"><span class="problematic" id="id2">``</span></a>xthi.c` code and compile it with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">fopenmp</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">xthi</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">xthi_exe</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>When you have the code compiling, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">OMP_NUM_THREADS</span><span class="o">=</span><span class="p">(</span><span class="n">Nr</span><span class="o">.</span> <span class="n">threads</span><span class="p">)</span>
+<span class="n">export</span> <span class="n">OMP_DISPLAY_ENV</span><span class="o">=</span><span class="n">true</span>
+<span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="p">(</span><span class="n">Nr</span><span class="o">.</span> <span class="n">MPI</span> <span class="n">ranks</span><span class="p">)</span> <span class="o">./</span><span class="n">xthi_exe</span> <span class="o">|</span> <span class="n">sort</span> <span class="o">-</span><span class="n">n</span> <span class="o">-</span><span class="n">k</span> <span class="mi">4</span> <span class="o">-</span><span class="n">k</span> <span class="mi">6</span>
+</pre></div>
+</div>
+</li>
+<li><p>You should set the Nr. threads and MPI ranks so that their product don’t
+exceed the number of physical cores in your system. The variable <code class="docutils literal notranslate"><span class="pre">OMP_DISPLAY_ENV</span></code>
+can be used to see the value of the OpenMP environment variables.</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution important dropdown admonition" id="solution-1">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>The output in the case of Kebnekaise looks like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>OPENMP DISPLAY ENVIRONMENT BEGIN
+   _OPENMP=&#39;201611&#39;
+  [host] OMP_AFFINITY_FORMAT=&#39;OMP: pid %P tid %i thread %n bound to OS proc set {%A}&#39;
+  [host] OMP_ALLOCATOR=&#39;omp_default_mem_alloc&#39;
+  [host] OMP_CANCELLATION=&#39;FALSE&#39;
+  [host] OMP_DEBUG=&#39;disabled&#39;
+  [host] OMP_DEFAULT_DEVICE=&#39;0&#39;
+  [host] OMP_DISPLAY_AFFINITY=&#39;TRUE&#39;
+  [host] OMP_DISPLAY_ENV=&#39;TRUE&#39;
+  [host] OMP_DYNAMIC=&#39;FALSE&#39;
+  [host] OMP_MAX_ACTIVE_LEVELS=&#39;1&#39;
+  [host] OMP_MAX_TASK_PRIORITY=&#39;0&#39;
+  [host] OMP_NESTED: deprecated; max-active-levels-var=1
+  [host] OMP_NUM_TEAMS=&#39;0&#39;
+  [host] OMP_NUM_THREADS=&#39;7&#39;
+  ``[host] OMP_PLACES: value is not defined``
+  ``[host] OMP_PROC_BIND=&#39;false&#39;``
+  [host] OMP_SCHEDULE=&#39;static&#39;
+  [host] OMP_STACKSIZE=&#39;4M&#39;
+  [host] OMP_TARGET_OFFLOAD=DEFAULT
+  [host] OMP_TEAMS_THREAD_LIMIT=&#39;0&#39;
+  [host] OMP_THREAD_LIMIT=&#39;2147483647&#39;
+  [host] OMP_TOOL=&#39;enabled&#39;
+  [host] OMP_TOOL_LIBRARIES: value is not defined
+  [host] OMP_TOOL_VERBOSE_INIT: value is not defined
+  [host] OMP_WAIT_POLICY=&#39;PASSIVE&#39;
+OPENMP DISPLAY ENVIRONMENT END
+Hello from rank 0, thread 1, on b-cn1045.hpc2n.umu.se. (core affinity = 0-6)
+Hello from rank 0, thread 2, on b-cn1045.hpc2n.umu.se. (core affinity = 0-6)
+Hello from rank 0, thread 3, on b-cn1045.hpc2n.umu.se. (core affinity = 0-6)
+Hello from rank 0, thread 4, on b-cn1045.hpc2n.umu.se. (core affinity = 0-6)
+Hello from rank 0, thread 5, on b-cn1045.hpc2n.umu.se. (core affinity = 0-6)
+Hello from rank 0, thread 6, on b-cn1045.hpc2n.umu.se. (core affinity = 0-6)
+Hello from rank 1, thread 0, on b-cn1045.hpc2n.umu.se. (core affinity = 7-13)
+Hello from rank 1, thread 1, on b-cn1045.hpc2n.umu.se. (core affinity = 7-13)
+Hello from rank 1, thread 2, on b-cn1045.hpc2n.umu.se. (core affinity = 7-13)
+Hello from rank 1, thread 3, on b-cn1045.hpc2n.umu.se. (core affinity = 7-13)
+Hello from rank 1, thread 4, on b-cn1045.hpc2n.umu.se. (core affinity = 7-13)
+Hello from rank 1, thread 5, on b-cn1045.hpc2n.umu.se. (core affinity = 7-13)
+Hello from rank 1, thread 6, on b-cn1045.hpc2n.umu.se. (core affinity = 7-13)
+Hello from rank 2, thread 0, on b-cn1045.hpc2n.umu.se. (core affinity = 14-20)
+Hello from rank 2, thread 1, on b-cn1045.hpc2n.umu.se. (core affinity = 14-20)
+Hello from rank 2, thread 2, on b-cn1045.hpc2n.umu.se. (core affinity = 14-20)
+Hello from rank 2, thread 3, on b-cn1045.hpc2n.umu.se. (core affinity = 14-20)
+Hello from rank 2, thread 4, on b-cn1045.hpc2n.umu.se. (core affinity = 14-20)
+Hello from rank 2, thread 5, on b-cn1045.hpc2n.umu.se. (core affinity = 14-20)
+Hello from rank 2, thread 6, on b-cn1045.hpc2n.umu.se. (core affinity = 14-20)
+Hello from rank 3, thread 0, on b-cn1045.hpc2n.umu.se. (core affinity = 21-27)
+Hello from rank 3, thread 1, on b-cn1045.hpc2n.umu.se. (core affinity = 21-27)
+Hello from rank 3, thread 2, on b-cn1045.hpc2n.umu.se. (core affinity = 21-27)
+Hello from rank 3, thread 3, on b-cn1045.hpc2n.umu.se. (core affinity = 21-27)
+Hello from rank 3, thread 4, on b-cn1045.hpc2n.umu.se. (core affinity = 21-27)
+Hello from rank 3, thread 5, on b-cn1045.hpc2n.umu.se. (core affinity = 21-27)
+Hello from rank 3, thread 6, on b-cn1045.hpc2n.umu.se. (core affinity = 21-27)
+</pre></div>
+</div>
+<p>In this case, the OS has the freedom to decide the location of threads
+(<code class="docutils literal notranslate"><span class="pre">OMP_PROC_BIND='false'</span></code>). For instance, threads 0-6 of the rank 0 can move accross
+cores 0-6 during a simulation.</p>
+</li>
+</ul>
+</div>
+<div class="admonition-exercise exercise important admonition" id="exercise-3">
+<p class="admonition-title">Exercise</p>
+<ol class="arabic">
+<li><p>Export the variables for binding affinity and run the <code class="docutils literal notranslate"><span class="pre">xthi.c</span></code> code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">OMP_NUM_THREADS</span><span class="o">=</span><span class="p">(</span><span class="n">Nr</span><span class="o">.</span> <span class="n">threads</span><span class="p">)</span>
+<span class="n">export</span> <span class="n">OMP_DISPLAY_ENV</span><span class="o">=</span><span class="n">true</span>
+<span class="n">export</span> <span class="n">OMP_PROC_BIND</span><span class="o">=</span><span class="n">close</span>
+<span class="n">export</span> <span class="n">OMP_PLACES</span><span class="o">=</span><span class="n">cores</span>
+<span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="p">(</span><span class="n">Nr</span><span class="o">.</span> <span class="n">MPI</span> <span class="n">ranks</span><span class="p">)</span> <span class="o">./</span><span class="n">xthi_exe</span> <span class="o">|</span> <span class="n">sort</span> <span class="o">-</span><span class="n">n</span> <span class="o">-</span><span class="n">k</span> <span class="mi">4</span> <span class="o">-</span><span class="n">k</span> <span class="mi">6</span>
+</pre></div>
+</div>
+</li>
+<li><p>You should set the Nr. threads and MPI ranks so that their product don’t
+exceed the number of physical cores in your system. The variable <code class="docutils literal notranslate"><span class="pre">OMP_DISPLAY_ENV</span></code>
+can be used to see the value of the OpenMP environment variables.</p></li>
+<li><p>Compare this output with the one of the previous exercise. Where are the threads placed?</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution important dropdown admonition" id="solution-2">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>The output in the case of Kebnekaise looks like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>OPENMP DISPLAY ENVIRONMENT BEGIN
+   _OPENMP=&#39;201611&#39;
+  [host] OMP_AFFINITY_FORMAT=&#39;OMP: pid %P tid %i thread %n bound to OS proc set {%A}&#39;
+  [host] OMP_ALLOCATOR=&#39;omp_default_mem_alloc&#39;
+  [host] OMP_CANCELLATION=&#39;FALSE&#39;
+  [host] OMP_DEBUG=&#39;disabled&#39;
+  [host] OMP_DEFAULT_DEVICE=&#39;0&#39;
+  [host] OMP_DISPLAY_AFFINITY=&#39;TRUE&#39;
+  [host] OMP_DISPLAY_ENV=&#39;TRUE&#39;
+  [host] OMP_DYNAMIC=&#39;FALSE&#39;
+  [host] OMP_MAX_ACTIVE_LEVELS=&#39;1&#39;
+  [host] OMP_MAX_TASK_PRIORITY=&#39;0&#39;
+  [host] OMP_NESTED: deprecated; max-active-levels-var=1
+  [host] OMP_NUM_TEAMS=&#39;0&#39;
+  [host] OMP_NUM_THREADS=&#39;7&#39;
+  ``[host] OMP_PLACES=&#39;cores&#39;``
+  ``[host] OMP_PROC_BIND=&#39;close&#39;``
+  [host] OMP_SCHEDULE=&#39;static&#39;
+  [host] OMP_STACKSIZE=&#39;4M&#39;
+  [host] OMP_TARGET_OFFLOAD=DEFAULT
+  [host] OMP_TEAMS_THREAD_LIMIT=&#39;0&#39;
+  [host] OMP_THREAD_LIMIT=&#39;2147483647&#39;
+  [host] OMP_TOOL=&#39;enabled&#39;
+  [host] OMP_TOOL_LIBRARIES: value is not defined
+  [host] OMP_TOOL_VERBOSE_INIT: value is not defined
+  [host] OMP_WAIT_POLICY=&#39;PASSIVE&#39;
+OPENMP DISPLAY ENVIRONMENT END
+Hello from rank 0, thread 1, on b-cn0516.hpc2n.umu.se. (core affinity = 1)
+Hello from rank 0, thread 2, on b-cn0516.hpc2n.umu.se. (core affinity = 2)
+Hello from rank 0, thread 3, on b-cn0516.hpc2n.umu.se. (core affinity = 3)
+Hello from rank 0, thread 4, on b-cn0516.hpc2n.umu.se. (core affinity = 4)
+Hello from rank 0, thread 5, on b-cn0516.hpc2n.umu.se. (core affinity = 5)
+Hello from rank 0, thread 6, on b-cn0516.hpc2n.umu.se. (core affinity = 6)
+Hello from rank 1, thread 0, on b-cn0516.hpc2n.umu.se. (core affinity = 7)
+Hello from rank 1, thread 1, on b-cn0516.hpc2n.umu.se. (core affinity = 8)
+Hello from rank 1, thread 2, on b-cn0516.hpc2n.umu.se. (core affinity = 9)
+Hello from rank 1, thread 3, on b-cn0516.hpc2n.umu.se. (core affinity = 10)
+Hello from rank 1, thread 4, on b-cn0516.hpc2n.umu.se. (core affinity = 11)
+Hello from rank 1, thread 5, on b-cn0516.hpc2n.umu.se. (core affinity = 12)
+Hello from rank 1, thread 6, on b-cn0516.hpc2n.umu.se. (core affinity = 13)
+Hello from rank 2, thread 0, on b-cn0516.hpc2n.umu.se. (core affinity = 14)
+Hello from rank 2, thread 1, on b-cn0516.hpc2n.umu.se. (core affinity = 15)
+Hello from rank 2, thread 2, on b-cn0516.hpc2n.umu.se. (core affinity = 16)
+Hello from rank 2, thread 3, on b-cn0516.hpc2n.umu.se. (core affinity = 17)
+Hello from rank 2, thread 4, on b-cn0516.hpc2n.umu.se. (core affinity = 18)
+Hello from rank 2, thread 5, on b-cn0516.hpc2n.umu.se. (core affinity = 19)
+Hello from rank 2, thread 6, on b-cn0516.hpc2n.umu.se. (core affinity = 20)
+Hello from rank 3, thread 0, on b-cn0516.hpc2n.umu.se. (core affinity = 21)
+Hello from rank 3, thread 1, on b-cn0516.hpc2n.umu.se. (core affinity = 22)
+Hello from rank 3, thread 2, on b-cn0516.hpc2n.umu.se. (core affinity = 23)
+Hello from rank 3, thread 3, on b-cn0516.hpc2n.umu.se. (core affinity = 24)
+Hello from rank 3, thread 4, on b-cn0516.hpc2n.umu.se. (core affinity = 25)
+Hello from rank 3, thread 5, on b-cn0516.hpc2n.umu.se. (core affinity = 26)
+Hello from rank 3, thread 6, on b-cn0516.hpc2n.umu.se. (core affinity = 27)
+</pre></div>
+</div>
+<p>Notice that now the threads are placed on different cores.</p>
+</li>
+</ul>
+</div>
+</section>
+<section id="tips-for-implementing-hybrid-mpi-openmp">
+<h2>Tips for implementing hybrid MPI+OpenMP<a class="headerlink" href="#tips-for-implementing-hybrid-mpi-openmp" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Demonstrate that you need more scaling to solve the problem.</p></li>
+<li><p>Know why you’re adding hybrid parallelism… to access more memory,
+improve performance, reduce communication or a combination?</p></li>
+<li><p>Estimate how much improvement is available, based on existing performance
+measurements, e.g. profiling to find bottlenecks. If you don’t know how,
+learn. Access to quality tools at HPC clusters are worth it!</p></li>
+<li><p>Are your external libraries using threading? How should you manage them?</p></li>
+<li><p>You have to introduce effective OpenMP parallelism to 90% of the
+execution time to get a good result.</p></li>
+<li><p>Start with master-only or funneled style. Migrate later if
+measurements suggest it.</p></li>
+<li><p>Initialize data structures inside OpenMP regions, to take advantage of
+“first-touch” policies needed with NUMA nodes.</p></li>
+<li><p>Make use of OpenMP’s conditional compilation features to ensure that
+the application can still be built without OpenMP.</p></li>
+<li><p>If the application makes use of derived datatypes to pack/unpack
+noncontiguous data, consider replacing these with user-level
+pack/unpack routines which can be parallelised with OpenMP.</p></li>
+<li><p>Learn about and use the OpenMP environment variables well</p></li>
+<li><p>Learn how to use the MPI launcher to place the ranks and their
+threads well. This is different for different applications.</p></li>
+</ul>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.intertwine-project.eu/sites/default/files/images/INTERTWinE_Best_Practice_Guide_MPI%2BOpenMP_1.2.pdf">Hybrid MPI-OpenMP best practices</a></p></li>
+<li><p><cite>Kebnekaise &lt;https://www.hpc2n.umu.se/resources/hardware/kebnekaise&gt;</cite></p></li>
+<li><p><cite>xthi.c code &lt;https://support.hpe.com/hpesc/public/docDisplay?docLocale=en_US&amp;docId=a00114008en_us&amp;page=Run_an_OpenMP_Application.html&gt;</cite></p></li>
+<li><p><cite>OpenMPI API specification 5.2 &lt;https://www.openmp.org/wp-content/uploads/OpenMP-API-Specification-5-2.pdf&gt;</cite></p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition" id="keypoints-0">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>Fork-join parallelism with <code class="docutils literal notranslate"><span class="pre">MPI_THREAD_FUNNELED</span></code> is a cheap way to get improvements, but the benefit is limited</p></li>
+<li><p>More complex multi-threading can do a better job of overlapping communication and computation</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../mpi-and-threads-pt1/" class="btn btn-neutral float-left" title="Introducing MPI and threads" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../quick-reference/" class="btn btn-neutral float-right" title="Quick Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, EuroCC National Competence Centre Sweden.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

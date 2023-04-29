@@ -1,0 +1,451 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Index &mdash; Intermediate MPI</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/segment.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/menu.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/tab.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/togglebutton.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script src="../_static/sphinx_tabs/semantic-ui-2.4.1/tab.min.js"></script>
+        <script src="../_static/sphinx_tabs/tabs.js"></script>
+        <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="../search/" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../" class="icon icon-home" alt="Documentation Home"> Intermediate MPI
+          
+
+          
+            
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption"><span class="caption-text">The lesson</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes/">Derived datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communications: functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Index</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/genindex" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ 
+</div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-alignment"><strong>alignment</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-data-alignment"><strong>data alignment</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-intercommunicator"><strong>intercommunicator</strong></a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-intracommunicator"><strong>intracommunicator</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-memory-window"><strong>memory window</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Accumulate"><strong>MPI_Accumulate</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Allgather"><strong>MPI_Allgather</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Alltoall"><strong>MPI_Alltoall</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Barrier"><strong>MPI_Barrier</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Bcast"><strong>MPI_Bcast</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Comm_split"><strong>MPI_Comm_split</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Gather"><strong>MPI_Gather</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Get"><strong>MPI_Get</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Ibarrier"><strong>MPI_Ibarrier</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Init_thread"><strong>MPI_Init_thread</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Irecv"><strong>MPI_Irecv</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Ireduce"><strong>MPI_Ireduce</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Is_thread_main"><strong>MPI_Is_thread_main</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Isend"><strong>MPI_Isend</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Pack"><strong>MPI_Pack</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Put"><strong>MPI_Put</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Query_thread"><strong>MPI_Query_thread</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Reduce"><strong>MPI_Reduce</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Scatter"><strong>MPI_Scatter</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Test"><strong>MPI_Test</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Testall"><strong>MPI_Testall</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Testany"><strong>MPI_Testany</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Testsome"><strong>MPI_Testsome</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Type_commit"><strong>MPI_Type_commit</strong></a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-MPI_Type_contiguous"><strong>MPI_Type_contiguous</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Type_create_hindexed"><strong>MPI_Type_create_hindexed</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Type_create_hvector"><strong>MPI_Type_create_hvector</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Type_create_struct"><strong>MPI_Type_create_struct</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Type_free"><strong>MPI_Type_free</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Type_get_extent"><strong>MPI_Type_get_extent</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Type_indexed"><strong>MPI_Type_indexed</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Type_size"><strong>MPI_Type_size</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Type_vector"><strong>MPI_Type_vector</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Unpack"><strong>MPI_Unpack</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Wait"><strong>MPI_Wait</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Waitall"><strong>MPI_Waitall</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Waitany"><strong>MPI_Waitany</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Waitsome"><strong>MPI_Waitsome</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Win_allocate"><strong>MPI_Win_allocate</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Win_allocate_shared"><strong>MPI_Win_allocate_shared</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Win_complete"><strong>MPI_Win_complete</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Win_create"><strong>MPI_Win_create</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Win_create_dynamic"><strong>MPI_Win_create_dynamic</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Win_fence"><strong>MPI_Win_fence</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Win_lock"><strong>MPI_Win_lock</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Win_post"><strong>MPI_Win_post</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Win_start"><strong>MPI_Win_start</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Win_test"><strong>MPI_Win_test</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Win_unlock"><strong>MPI_Win_unlock</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-MPI_Win_wait"><strong>MPI_Win_wait</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-one-sided-communication"><strong>one-sided communication</strong></a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-origin-process"><strong>origin process</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-remote-memory-access"><strong>remote memory access</strong></a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-remote-memory-window"><strong>remote memory window</strong></a>
+</li>
+      <li><a href="../quick-reference/#term-RMA"><strong>RMA</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-synchronization"><strong>synchronization</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-target-process"><strong>target process</strong></a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-typemap"><strong>typemap</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="../quick-reference/#term-window"><strong>window</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, EuroCC National Competence Centre Sweden
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

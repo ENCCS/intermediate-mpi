@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Derived datatypes: MPI_Datatype &mdash; Intermediate MPI</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script src="../_static/tabs.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script data-domain="enccs.github.io/intermediate-mpi" defer="defer" src="https://plausible.io/js/script.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Simple collective communication" href="../collective-communication-pt1/" />
+    <link rel="prev" title="Derived datatypes: pack and unpack" href="../derived-datatypes-pt1/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../" class="icon icon-home">
+            Intermediate MPI
+              <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt1/">Derived datatypes: pack and unpack</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Derived datatypes: <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#representation-of-datatypes-in-mpi">Representation of datatypes in MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#any-type-you-like-datatype-constructors-in-mpi">Any type you like: datatype constructors in MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communication: functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Derived datatypes: <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/derived-datatypes-pt2.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="derived-datatypes-mpi-datatype">
+<span id="derived-datatypes-pt2"></span><h1>Derived datatypes: <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code><a class="headerlink" href="#derived-datatypes-mpi-datatype" title="Permalink to this heading"></a></h1>
+<div class="admonition-questions questions admonition" id="questions-0">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>How can you use your own derived datatypes as content of messages?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition" id="objectives-0">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Understand how MPI handles datatypes.</p></li>
+<li><p>Learn to send and receive messages using composite datatypes.</p></li>
+<li><p>Learn how to represent homogeneous collections as MPI datatypes.</p></li>
+<li><p>Learn how to represent your own derived datatypes as MPI datatypes.</p></li>
+</ul>
+</div>
+<p>The ability to define custom datatypes is one of the hallmarks of a modern
+programming language, since it allows programmers to structure their code in a
+way that enhances readability and maintainability.
+How can this be done in MPI? Recall that MPI is a standard describing a library
+to enable parallel programming in the message passing model.</p>
+<p>In the C language, types are <strong>primitive</strong> constructs: they
+are <em>defined</em> by the standard and <em>enforced</em> by the compiler.
+The MPI types are instead <strong>variants</strong> in the <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code> enumeration: they
+appear as the <strong>same</strong> type to the compiler.
+This is a fundamental difference which influences the way custom datatypes are handled.</p>
+<p>In the C language, you would declare a <code class="docutils literal notranslate"><span class="pre">struct</span></code> such as the following:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">Pair</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">first</span><span class="p">;</span>
+<span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">second</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Pair</span></code> is a new type. From the compiler’s point of view, it has status on par
+with the fundamental datatypes introduced above. The C standard makes requirements on <em>how
+to</em> represent this in memory and the compiler will generate machine code to
+comply with it.</p>
+<p>MPI does not know how to represent user-defined datatypes in memory by itself:</p>
+<ul class="simple">
+<li><p>How much memory does it need? Recall that MPI deals with <strong>groups of
+processes</strong>. For portability, you can <em>never</em> assume that two processes share
+the same architecture!</p></li>
+<li><p>How are the components of <code class="docutils literal notranslate"><span class="pre">Pair</span></code> laid out in memory? Are they always
+contiguous? Or are they padded?</p></li>
+</ul>
+<p>The programmer needs to provide this low-level information, such that the MPI
+runtime can send and receive custom  datatypes as messages over a heterogeneous
+network of processes.</p>
+<section id="representation-of-datatypes-in-mpi">
+<h2>Representation of datatypes in MPI<a class="headerlink" href="#representation-of-datatypes-in-mpi" title="Permalink to this heading"></a></h2>
+<p>The representation of datatypes in MPI uses few low-level concepts.
+The <strong>type signature</strong> of a custom datatypes is the list of its basic datatypes:</p>
+<div class="math notranslate nohighlight" id="equation-eq-typesig">
+<span class="eqno">(1)<a class="headerlink" href="#equation-eq-typesig" title="Permalink to this equation"></a></span>\[\textrm{Type signature}[\texttt{T}] = [ \texttt{Datatype}_{0}, \ldots, \texttt{Datatype}_{n-1} ]\]</div>
+<p>The <strong>typemap</strong> is the associative array (map) with datatypes, as understood by MPI, as
+<em>keys</em> and displacements, in bytes, as <em>values</em>.</p>
+<div class="math notranslate nohighlight" id="equation-eq-typemap">
+<span class="eqno">(2)<a class="headerlink" href="#equation-eq-typemap" title="Permalink to this equation"></a></span>\[\textrm{Typemap}[\texttt{T}] = \{ \texttt{Datatype}_{0}: \textrm{Displacement}_{0}, \ldots, \texttt{Datatype}_{n-1}: \textrm{Displacement}_{n-1} \}\]</div>
+<p>The displacements are <em>relative</em> to the buffer the datatype describes.</p>
+<p>Assuming that an <code class="docutils literal notranslate"><span class="pre">int</span></code> takes 4 bytes of memory, the typemap for our <code class="docutils literal notranslate"><span class="pre">Pair</span></code>
+datatype would be: <span class="math notranslate nohighlight">\(\textrm{Typemap}[\texttt{Pair}] = \{ \texttt{int}: 0,
+\texttt{char}: 4\}\)</span>. Note again that the displacements are <em>relative</em>.</p>
+<figure class="align-center" id="id3">
+<img alt="../_images/E01-displacements.svg" src="../_images/E01-displacements.svg" /><figcaption>
+<p><span class="caption-text">Depiction of the typemap for the <code class="docutils literal notranslate"><span class="pre">Pair</span></code> custom type. The displacements are
+always relative.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Knowledge of typemap and type signature is not enough for a full description of
+the type to the MPI runtime: the underlying programming language might mandate
+architecture-specific <a class="reference internal" href="../quick-reference/#term-alignment"><span class="xref std std-term">alignment</span></a> of the basic datatypes. The data
+structure would then be laid out in memory incoherently with the displacements
+in its typemap.
+We need a few more concepts. Given a typemap <span class="math notranslate nohighlight">\(m\)</span> we can define:</p>
+<dl>
+<dt>Lower bound</dt><dd><p>The first byte occupied by the datatype.</p>
+<div class="math notranslate nohighlight" id="equation-eq-lowerbound">
+<span class="eqno">(3)<a class="headerlink" href="#equation-eq-lowerbound" title="Permalink to this equation"></a></span>\[\textrm{LB}[m] = \min_{j}[\textrm{Displacement}_{j}]\]</div>
+</dd>
+<dt>Upper bound</dt><dd><p>The last byte occupied by the datatype.</p>
+<div class="math notranslate nohighlight" id="equation-eq-upperbound">
+<span class="eqno">(4)<a class="headerlink" href="#equation-eq-upperbound" title="Permalink to this equation"></a></span>\[\textrm{UB}[m] = \max_{j}[\textrm{Displacement}_{j} + \texttt{sizeof}(\textrm{Datatype}_{j})] + \textrm{Padding}\]</div>
+</dd>
+<dt>Extent</dt><dd><p>The amount of memory needed to represent the datatype, taking into account architecture-specific alignment.</p>
+<div class="math notranslate nohighlight" id="equation-eq-extent">
+<span class="eqno">(5)<a class="headerlink" href="#equation-eq-extent" title="Permalink to this equation"></a></span>\[\textrm{Extent}[m] = \textrm{UB}[m] - \textrm{LB}[m]\]</div>
+</dd>
+</dl>
+<p>The C language (and Fortran) <em>require</em> that the data occurs in memory at
+well-defined addresses: the data needs to be aligned. The address, in bytes, of
+any item must be a multiple of the size of that item in bytes. This is so-called
+<em>natural alignment</em>.
+For our <code class="docutils literal notranslate"><span class="pre">Pair</span></code> data structure the <code class="docutils literal notranslate"><span class="pre">first</span></code> element is an <code class="docutils literal notranslate"><span class="pre">int</span></code> and occupies
+4 bytes. An <code class="docutils literal notranslate"><span class="pre">int</span></code> will align to 4 bytes boundaries: when allocating a new
+<code class="docutils literal notranslate"><span class="pre">int</span></code> in memory, the compiler will insert <strong>padding</strong> to reach the alignment
+boundary. Indeed, <code class="docutils literal notranslate"><span class="pre">second</span></code> is a <code class="docutils literal notranslate"><span class="pre">char</span></code> and requires just 1 byte. This gives:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+  \texttt{Pair.first} &amp;\rightarrow \textrm{Displacement}_{0} = 0, \quad \texttt{sizeof}(\texttt{int}) = 4 \\
+  \texttt{Pair.second} &amp;\rightarrow \textrm{Displacement}_{1} = 4, \quad \texttt{sizeof}(\texttt{char}) = 1
+\end{aligned}\end{split}\]</div>
+<p>To insert yet another
+<code class="docutils literal notranslate"><span class="pre">Pair</span></code> item, we first need to reach the alignment boundary with a padding of 3
+bytes.
+Thus:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+  \textrm{LB}[\texttt{Pair}] &amp;= \min[0, 4] = 0 \\
+  \textrm{UB}[\texttt{Pair}] &amp;= \max[0+4, 4+1] + 3 = 8 \\
+  \textrm{Extent}[\texttt{Pair}] &amp;= \textrm{UB}[\texttt{Pair}] - \textrm{LB}[\texttt{Pair}] = 8
+\end{aligned}\end{split}\]</div>
+<figure class="align-center" id="id4">
+<img alt="../_images/E01-extent_and_size.svg" src="../_images/E01-extent_and_size.svg" /><figcaption>
+<p><span class="caption-text">The relation between <strong>size</strong> and <strong>extent</strong> of a derived datatype in the
+case of the <code class="docutils literal notranslate"><span class="pre">Pair</span></code>.
+We show the address alignment boundaries with
+vertical <span class="red">red</span> lines. The lowerbound of the custom datatype is 4:
+<code class="docutils literal notranslate"><span class="pre">first</span></code> can be found with an offset of 4 bytes after the starting address.
+Notice the 3 bytes of padding, necessary to achieve natural alignment of
+<code class="docutils literal notranslate"><span class="pre">Pair</span></code>.  The upperbound is 8: the <em>next</em> item of type <code class="docutils literal notranslate"><span class="pre">Pair</span></code> can be found
+with an offset of 8 bytes after the previous element.
+The total size is 5 bytes, but the extent, which takes the padding into
+account, is 8 bytes.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition-which-of-the-following-statements-about-the-size-and-extent-of-an-mpi-datatype-is-true exercise important admonition" id="exercise-0">
+<p class="admonition-title">Which of the following statements about the size and
+            extent of an MPI datatype is true?</p>
+<ol class="arabic simple">
+<li><p>The size is always greater than the extent</p></li>
+<li><p>The size and extent can be equal</p></li>
+<li><p>The extent is always greater than the size</p></li>
+<li><p>None of the above</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution important dropdown admonition" id="solution-0">
+<p class="admonition-title">Solution</p>
+<ol class="arabic simple" start="2">
+<li><p>The size and extent can be equal when no padding is
+required. It’s best not to rely on this even when it is true,
+because your code or compiler or MPI library can change.</p></li>
+</ol>
+</div>
+<p>MPI offers functions to query extent and size of its types: they all take a variant of the <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code> enumeration as argument.</p>
+<div class="admonition-term-mpi-type-get-extent signature toggle-shown dropdown admonition" id="signature-0">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_get_extent"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_get_extent</code></span></a></p>
+<p>Returns the lower bound and extent of a type.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_get_extent</span><span class="p">(</span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">type</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="o">*</span><span class="n">lb</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="o">*</span><span class="n">extent</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-0">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">type</span></code></dt><dd><p>The datatype whose extent we’re querying.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">lb</span></code></dt><dd><p>The lower bound of the datatype. <code class="docutils literal notranslate"><span class="pre">MPI_Aint</span></code> is a type designed to hold any valid address.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">extent</span></code></dt><dd><p>The extent of the datatype. <code class="docutils literal notranslate"><span class="pre">MPI_Aint</span></code> is a type designed to hold any valid address.</p>
+</dd>
+</dl>
+</div>
+<div class="admonition-term-mpi-type-size signature toggle-shown dropdown admonition" id="signature-1">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_size"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_size</code></span></a></p>
+<p>Returns the number of bytes occupied by entries in the datatype.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_size</span><span class="p">(</span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">type</span><span class="p">,</span>
+<span class="w">                  </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">size</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-1">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">type</span></code></dt><dd><p>The datatype whose extent we’re querying.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">size</span></code></dt><dd><p>The number of bytes occupied by the entries in the datatype.</p>
+</dd>
+</dl>
+</div>
+<div class="admonition-extents-and-sizes exercise important admonition" id="exercise-1">
+<p class="admonition-title">Extents and sizes</p>
+<p>We will now play around a bit with the compiler and MPI to gain further
+understanding of padding, alignment, extents, and sizes.</p>
+<ol class="arabic">
+<li><p>What are extents and sizes for the basis datatypes <code class="docutils literal notranslate"><span class="pre">char</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span></code>,
+<code class="docutils literal notranslate"><span class="pre">float</span></code>, and <code class="docutils literal notranslate"><span class="pre">double</span></code> on your architecture? Do the numbers conform to
+your expectations? What is the result of <code class="docutils literal notranslate"><span class="pre">sizeof</span></code> for these types?</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// char</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">&quot;sizeof(char) = %ld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span>
+<span class="n">MPI_Type_get_extent</span><span class="p">(</span><span class="n">MPI_CHAR</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="p">..,</span><span class="w"> </span><span class="o">&amp;</span><span class="p">..);</span>
+<span class="n">MPI_Type_size</span><span class="p">(</span><span class="n">MPI_CHAR</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="p">..);</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">&quot;For MPI_CHAR:</span><span class="se">\n</span><span class="s">  lowerbound = %ld; extent = %ld; size = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">..,</span>
+<span class="w">        </span><span class="p">..,</span><span class="w"> </span><span class="p">..);</span>
+</pre></div>
+</div>
+<p>You can find the file with the complete source code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-1/03_basic-extent-size/solution</span></code> folder.</p>
+</li>
+<li><p>Let’s now look at the <code class="docutils literal notranslate"><span class="pre">Pair</span></code> data structure. We first need declare the
+data structure to MPI. The following code, which we will study
+in much detail later on, achieves the purpose:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// build up the typemap for Pair</span>
+<span class="c1">// the type signature for Pair</span>
+<span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">typesig</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_CHAR</span><span class="p">};</span>
+<span class="c1">// how many of each type in a &quot;block&quot; of Pair</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">block_lengths</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">};</span>
+<span class="c1">// displacements of data members in Pair</span>
+<span class="n">MPI_Aint</span><span class="w"> </span><span class="n">displacements</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="c1">// why not use pointer arithmetic directly?</span>
+<span class="n">MPI_Get_address</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_pair</span><span class="p">.</span><span class="n">first</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">displacements</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="n">MPI_Get_address</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_pair</span><span class="p">.</span><span class="n">second</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">displacements</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+
+<span class="c1">// create and commit the new type</span>
+<span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">mpi_pair</span><span class="p">;</span>
+<span class="n">MPI_Type_create_struct</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">block_lengths</span><span class="p">,</span><span class="w"> </span><span class="n">displacements</span><span class="p">,</span><span class="w"> </span><span class="n">typesig</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">mpi_pair</span><span class="p">);</span>
+<span class="n">MPI_Type_commit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mpi_pair</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>What are the size and the extent? Do they match up with our pen-and-paper calculation?
+Try different combinations of datatypes and adding other fields to the <code class="docutils literal notranslate"><span class="pre">struct</span></code>.</p>
+<p>You can find the file with the complete source code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-1/04_struct-extent-size/solution</span></code> folder.</p>
+</li>
+</ol>
+</div>
+<div class="admonition-extents-and-the-count-parameter typealong toggle-shown dropdown admonition" id="typealong-0">
+<p class="admonition-title">Extents and the <code class="docutils literal notranslate"><span class="pre">count</span></code> parameter</p>
+<p>Let us reiterate: the extent of a custom datatype <em>is not</em> its size. The
+extent tells the MPI runtime how to get to the <strong>next</strong> item in an array of a
+given type, much like a <em>stride</em>.</p>
+<p>We can send an array of <code class="docutils literal notranslate"><span class="pre">n</span></code> <code class="docutils literal notranslate"><span class="pre">int</span></code>-s with a single <a class="reference internal" href="../quick-reference/index.html#term-MPI_Send"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Send</code></span></a>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rank %d send</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">);</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">SIZE</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;buffer[%d] = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">MPI_Send</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">SIZE</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">MPI_Recv</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">SIZE</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+<span class="w">    </span><span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rank %d recv</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">);</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">SIZE</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;buffer[%d] = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>or with <code class="docutils literal notranslate"><span class="pre">n</span></code> such calls:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">SIZE</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rank %d send: buffer[%d] = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="w">      </span><span class="n">MPI_Send</span><span class="p">(</span><span class="n">buffer</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">extent</span><span class="p">),</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">SIZE</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">MPI_Recv</span><span class="p">(</span><span class="n">buffer</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">extent</span><span class="p">),</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+<span class="w">      </span><span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rank %d recv: buffer[%d] = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span>
+<span class="w">              </span><span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>In the latter case, we must program explicitly how to get the next element in
+the array by using the extent of the datatype.</p>
+</div>
+</section>
+<section id="any-type-you-like-datatype-constructors-in-mpi">
+<h2>Any type you like: datatype constructors in MPI<a class="headerlink" href="#any-type-you-like-datatype-constructors-in-mpi" title="Permalink to this heading"></a></h2>
+<p>The typemap concept allows us to provide a <em>low-level</em> description of any compound
+datatype.  The class of functions <code class="docutils literal notranslate"><span class="pre">MPI_Type_*</span></code> offers facilities for <em>portable</em> type
+manipulations in the MPI standard.
+At a glance, each custom datatype goes through a well-defined lifecycle in an MPI application:</p>
+<ul class="simple">
+<li><p>We <em>construct</em> our new datatype with a <strong>type constructor</strong>. The new type will
+be a variable with <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code> type.</p></li>
+<li><p>We <em>publish</em> our new type to the runtime with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_commit"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_commit</code></span></a>.</p></li>
+<li><p>We <em>use</em> the new type in any of the MPI communication routines, as needed.</p></li>
+<li><p>We <em>free</em> the new type from memory with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_free"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_free</code></span></a>.</p></li>
+</ul>
+<figure class="align-center" id="id5">
+<img alt="../_images/E01-type-life-cycle.svg" src="../_images/E01-type-life-cycle.svg" /><figcaption>
+<p><span class="caption-text">The lifecycle of user-defined datatypes in MPI. Calling any of the type
+constructors will create an object of type <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code> with the
+user-defined typemap. Before using this custom datatype in message passing,
+it needs to be published with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_commit"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_commit</code></span></a>: the typemap is made
+known to the runtime, allowing it to handle messages of the new custom type.
+The programmer must take care to free the custom datatype object.</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>It is not always necessary to go all the way down to a typemap to construct new
+datatypes in MPI.  The following types can be created with convenience
+functions, side-stepping the explicit computation of a typemap. In MPI
+nomenclature, these types are:</p>
+<dl>
+<dt>Contiguous</dt><dd><p>A homogeneous collection of a given datatype. The returned new type will
+describe a collection of <code class="docutils literal notranslate"><span class="pre">count</span></code> times the old type. Elements are
+contiguous: <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(n-1\)</span> are separated by the extent of the old
+type.</p>
+<div class="admonition-term-mpi-type-contiguous signature toggle-shown dropdown admonition" id="signature-2">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_contiguous"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_contiguous</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_contiguous</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">oldtype</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">newtype</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</dd>
+<dt>Vector</dt><dd><p>A slight generalization of the contiguous type: <code class="docutils literal notranslate"><span class="pre">count</span></code> elements in the new
+type can be separated by a stride that is an arbitrary multiple of the extent
+of the old type.</p>
+<div class="admonition-term-mpi-type-vector signature toggle-shown dropdown admonition" id="signature-3">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_vector"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_vector</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_vector</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">                    </span><span class="kt">int</span><span class="w"> </span><span class="n">blocklength</span><span class="p">,</span>
+<span class="w">                    </span><span class="kt">int</span><span class="w"> </span><span class="n">stride</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">oldtype</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">newtype</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</dd>
+<dt>Hvector</dt><dd><p>Yet another generalization of the contiguous datatype. The separation between
+elements in a hvector is expressed in bytes, rather than as a multiple of the
+extent.</p>
+<div class="admonition-term-mpi-type-create-hvector signature toggle-shown dropdown admonition" id="signature-4">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_create_hvector"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_create_hvector</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_create_hvector</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">                            </span><span class="kt">int</span><span class="w"> </span><span class="n">blocklength</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">stride</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">oldtype</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">newtype</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</dd>
+<dt>Indexed</dt><dd><p>This type allows to have non-homogeneous separations between the elements.
+Each displacement is intended as a multiple of the extent of the old type.</p>
+<div class="admonition-term-mpi-type-indexed signature toggle-shown dropdown admonition" id="signature-5">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_indexed"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_indexed</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_indexed</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">                     </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">array_of_blocklengths</span><span class="p">[],</span>
+<span class="w">                     </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">array_of_displacements</span><span class="p">[],</span>
+<span class="w">                     </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">oldtype</span><span class="p">,</span>
+<span class="w">                     </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">newtype</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</dd>
+<dt>Hindexed</dt><dd><p>This is a generalization of the indexed type analogous to the hvector.  The
+non-homogeneous separations between the elements are expressed in bytes,
+rather than as multiples of the extent.</p>
+<div class="admonition-term-mpi-type-create-hindexed signature toggle-shown dropdown admonition" id="signature-6">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_create_hindexed"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_create_hindexed</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_create_hindexed</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">                             </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">array_of_blocklengths</span><span class="p">[],</span>
+<span class="w">                             </span><span class="k">const</span><span class="w"> </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">array_of_displacements</span><span class="p">[],</span>
+<span class="w">                             </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">oldtype</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">newtype</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</dd>
+</dl>
+<p>Before using the output parameter <code class="docutils literal notranslate"><span class="pre">newtype</span></code>, it needs to be “published” to the
+runtime with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_commit"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_commit</code></span></a>:</p>
+<div class="admonition-term-mpi-type-commit signature toggle-shown dropdown admonition" id="signature-7">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_commit"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_commit</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_commit</span><span class="p">(</span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">type</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">newtype</span></code> is a variable of type <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code>. The programmer must
+ensure proper release of the memory used at the end of the program by calling
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_free"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_free</code></span></a>:</p>
+<div class="admonition-term-mpi-type-free signature toggle-shown dropdown admonition" id="signature-8">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_free"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_free</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_free</span><span class="p">(</span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">type</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>In practice, none of the previous convenience constructors might be suitable for
+your application. As we glimpsed in a previous challenge, the general type
+constructor <a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_create_struct"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_create_struct</code></span></a> will suit your needs:</p>
+<div class="admonition-term-mpi-type-create-struct signature toggle-shown dropdown admonition" id="signature-9">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Type_create_struct"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Type_create_struct</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Type_create_struct</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">                           </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">array_of_block_lengths</span><span class="p">[],</span>
+<span class="w">                           </span><span class="k">const</span><span class="w"> </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">array_of_displacements</span><span class="p">[],</span>
+<span class="w">                           </span><span class="k">const</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">array_of_types</span><span class="p">[],</span>
+<span class="w">                           </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="o">*</span><span class="n">newtype</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-2">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">count</span></code></dt><dd><p>Number of fields (<em>blocks</em> in MPI nomenclature) of the datatype. This is
+the length of the <code class="docutils literal notranslate"><span class="pre">array_of_block_lengths</span></code>, <code class="docutils literal notranslate"><span class="pre">array_of_displacements</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">array_of_types</span></code> parameters.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">array_of_block_lengths</span></code></dt><dd><p>Number of elements in each field of the datatype.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">array_of_displacements</span></code></dt><dd><p>Displacements, in bytes, for each field of the datatype.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">array_of_types</span></code></dt><dd><p>Types for each field of the datatype, <em>i.e.</em> the type signature.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">newtype</span></code></dt><dd><p>The new datatype.</p>
+</dd>
+</dl>
+</div>
+<div class="admonition-the-mpi-version-of-the-pair-datatype typealong toggle-shown dropdown admonition" id="typealong-1">
+<p class="admonition-title">The MPI version of the <code class="docutils literal notranslate"><span class="pre">Pair</span></code> datatype</p>
+<p>We saw code for this earlier on, but without explanation. Let’s dive into it now!
+You can find the file with the complete source code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-1/04_struct-extent-size/solution</span></code> folder.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Pair</span></code> has two fields, hence <code class="docutils literal notranslate"><span class="pre">count</span> <span class="pre">=</span> <span class="pre">2</span></code> in the call to
+<code class="docutils literal notranslate"><span class="pre">MPI_Type_create_struct</span></code>. All array arguments to this function will have
+length 2.
+The type signature is:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">typesig</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_CHAR</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>We have one <code class="docutils literal notranslate"><span class="pre">int</span></code> in the <code class="docutils literal notranslate"><span class="pre">first</span></code> field and one <code class="docutils literal notranslate"><span class="pre">char</span></code> in the <code class="docutils literal notranslate"><span class="pre">second</span></code>
+fields, hence the <code class="docutils literal notranslate"><span class="pre">array_of_block_lengths</span></code> argument is:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">block_lengths</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>The calculation of displacements is slightly more involved.  We will use
+<code class="docutils literal notranslate"><span class="pre">MPI_Get_address</span></code> to fill the <code class="docutils literal notranslate"><span class="pre">displacements</span></code> array. Notice that its
+elements are of type <code class="docutils literal notranslate"><span class="pre">MPI_Aint</span></code>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">displacements</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="n">MPI_Get_address</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_pair</span><span class="p">.</span><span class="n">first</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">displacements</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="n">MPI_Get_address</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_pair</span><span class="p">.</span><span class="n">second</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">displacements</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p>We <em>cannot use</em> pointer arithmetic to compute displacements. Always keep in
+mind that your program might be deployed on heterogeneous architectures: you
+have to program for correctness and portability.</p>
+<p>We are now ready to call the type constructor and commit our type:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">mpi_pair</span><span class="p">;</span>
+<span class="n">MPI_Type_create_struct</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">block_lengths</span><span class="p">,</span><span class="w"> </span><span class="n">displacements</span><span class="p">,</span><span class="w"> </span><span class="n">typesig</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">mpi_pair</span><span class="p">);</span>
+<span class="n">MPI_Type_commit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mpi_pair</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>And clean up after use, of course!</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">MPI_Type_free</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mpi_pair</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-more-message-passing-pokemons exercise important admonition" id="exercise-2">
+<p class="admonition-title">More message passing Pokémons</p>
+<p>We will revisit the Pokémon example from above using custom datatypes.</p>
+<p>You can find a scaffold for the code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-1/07_pokemon-type-create-struct</span></code> folder.
+You will have to complete the source code to compile and run correctly:
+follow the hints in the source file.  A working solution is in the
+<code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Pokémons, again!</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Superbonus</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><ol class="arabic simple">
+<li><p>Define the C <code class="docutils literal notranslate"><span class="pre">struct</span></code> for a pokémon. This has to contain:</p>
+<ul class="simple">
+<li><p>The attacking pokémon’s name: a <code class="docutils literal notranslate"><span class="pre">char</span></code> array.</p></li>
+<li><p>How many life points it has: a <code class="docutils literal notranslate"><span class="pre">double</span></code>.</p></li>
+<li><p>The damage its attack will inflict: an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
+<li><p>A damage multiplier: a <code class="docutils literal notranslate"><span class="pre">double</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Create its corresponding MPI datatype.</p></li>
+<li><p>Print it out on the receiving process.</p></li>
+</ol>
+<p>Compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">pokemon</span><span class="o">-</span><span class="nb">type</span><span class="o">-</span><span class="n">create</span><span class="o">-</span><span class="n">struct</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">pokemon</span><span class="o">-</span><span class="nb">type</span><span class="o">-</span><span class="n">create</span><span class="o">-</span><span class="n">struct</span>
+</pre></div>
+</div>
+<p>What happens if you don’t commit the type?</p>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>Somehow the rules have changed: you can use multiple pokémon’s in your round!
+Modify your code to broadcast an array of 4 pokémons as a new type.</p>
+</div></div>
+</div>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>The lecture covering MPI datatypes from EPCC is available on <a class="reference external" href="https://github.com/EPCCed/archer2-MPI-2020-05-14/blob/master/slides/L10-derivedtypes.pdf">GitHub</a></p></li>
+<li><p>Chapter 5 of the <strong>Using MPI</strong> book by William Gropp <em>et al.</em> <span id="id1">[<a class="reference internal" href="../zbibliography/#id3" title="William Gropp, Ewing Lusk, and Anthony Skjellum. Using MPI: Portable Parallel Programming with the Message-Passing Interface. Scientific and Engineering Computation. MIT Press, November 2014. ISBN 9780262527392. URL: https://mitpress.mit.edu/books/using-mpi-third-edition.">GLS14</a>]</span></p></li>
+<li><p>Chapter 6 of the <strong>Parallel Programming with MPI</strong> book by Peter Pacheco. <span id="id2">[<a class="reference internal" href="../zbibliography/#id4" title="Peter Pacheco. Parallel Programming with MPI. Morgan Kaufmann, 1997. ISBN 9781558603394. URL: https://www.elsevier.com/books/parallel-programming-with-mpi/pacheco/978-0-08-051354-6.">Pac97</a>]</span></p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition" id="keypoints-0">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>Typemaps are essential to enable MPI communication of complex datatypes.</p></li>
+<li><p>MPI offers many type constructors to portably use your own datatypes in
+message passing.</p></li>
+<li><p>Usage of the type constructors can be quite involved, but you strictly
+ensure your programs will be portable.</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../derived-datatypes-pt1/" class="btn btn-neutral float-left" title="Derived datatypes: pack and unpack" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../collective-communication-pt1/" class="btn btn-neutral float-right" title="Simple collective communication" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, EuroCC National Competence Centre Sweden.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

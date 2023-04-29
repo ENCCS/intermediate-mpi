@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Non-blocking collective communication &mdash; Intermediate MPI</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="One-sided communication: concepts" href="../one-sided-concepts/" />
+    <link rel="prev" title="Non-blocking point-to-point" href="../non-blocking-communication-pt1/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../" class="icon icon-home"> Intermediate MPI
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt1/">Derived datatypes: pack and unpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt2/">Derived datatypes: <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Non-blocking collective communication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#non-blocking-barrier-synchronization">Non-blocking barrier synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#non-blocking-reduce">Non-blocking reduce</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-along-exercise-non-blocking-ireduce-during-stencil-workflow">Code-along exercise: non-blocking ireduce during stencil workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-analysis">Code analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communications: functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+      <li>Non-blocking collective communication</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/non-blocking-communication-pt2.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="non-blocking-collective-communication">
+<h1>Non-blocking collective communication<a class="headerlink" href="#non-blocking-collective-communication" title="Permalink to this headline"></a></h1>
+<div class="admonition-questions questions admonition" id="questions-0">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>Is the synchronization of collective communications avoidable?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition" id="objectives-0">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Understand that a non-blocking barrier is useful</p></li>
+</ul>
+</div>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h2>
+<p>Just like for point-to-point messages, applications that use
+non-blocking collectives can be more efficient than blocking
+ones. This is because the latency of communication can overlap with
+unrelated computation.</p>
+</section>
+<section id="non-blocking-barrier-synchronization">
+<h2>Non-blocking barrier synchronization<a class="headerlink" href="#non-blocking-barrier-synchronization" title="Permalink to this headline"></a></h2>
+<p>At first glance, this seems like a nonsense. However if a barrier is
+needed, then it can be quite useful to overlap work with the
+synchronization. Use cases are rare, but include highly unstructured
+work described by variable numbers of messages sent between ranks, or
+very latency-sensitive applications.</p>
+<div class="admonition-term-mpi-ibarrier signature toggle-shown dropdown admonition" id="signature-0">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Ibarrier"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Ibarrier</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Ibarrier</span><span class="p">(</span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"></span>
+<span class="w">                 </span><span class="n">MPI_Request</span><span class="w"> </span><span class="o">*</span><span class="n">request</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-0">
+<p class="admonition-title">Parameters</p>
+<p>A communicator <code class="docutils literal notranslate"><span class="pre">comm</span></code> and a <code class="docutils literal notranslate"><span class="pre">request</span></code> object that is a handler
+for a later wait call.</p>
+</div>
+<p>It is necessary to use blocking barrier only when communicating
+through a side channel, like a file or a socket.</p>
+</section>
+<section id="non-blocking-reduce">
+<h2>Non-blocking reduce<a class="headerlink" href="#non-blocking-reduce" title="Permalink to this headline"></a></h2>
+<p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Ireduce"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Ireduce</code></span></a> starts a reduction operation and generates a request in
+an <code class="docutils literal notranslate"><span class="pre">MPI_Request</span></code> object. The reduction process is completed only when a test
+is passed or a wait call is done. Upon completion, the reduced value is collected
+in the root process.</p>
+<div class="admonition-term-mpi-ireduce signature toggle-shown dropdown admonition" id="signature-1">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Ireduce"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Ireduce</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Ireduce</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">sendbuf</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">recvbuf</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="n">MPI_Op</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="n">MPI_Request</span><span class="w"> </span><span class="o">*</span><span class="n">request</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-1">
+<p class="admonition-title">Parameters</p>
+<p><code class="docutils literal notranslate"><span class="pre">sendbuf</span></code>, <code class="docutils literal notranslate"><span class="pre">recvbuf</span></code>, and <code class="docutils literal notranslate"><span class="pre">count</span></code> are the buffer on <strong>each</strong>
+process, the buffer on <code class="docutils literal notranslate"><span class="pre">root</span></code>, and the number of elements to be
+on each process. <code class="docutils literal notranslate"><span class="pre">datatype</span></code> is the type of the data to be reduced.
+<code class="docutils literal notranslate"><span class="pre">op</span></code> is the reduction operation to be applied on the distributed
+data. The global result of the reduction operation is collected in
+the <code class="docutils literal notranslate"><span class="pre">root</span></code> process in the communicator <code class="docutils literal notranslate"><span class="pre">comm</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">request</span></code> object that is returned must be used to wait on the
+communication later.</p>
+</div>
+</section>
+<section id="code-along-exercise-non-blocking-ireduce-during-stencil-workflow">
+<h2>Code-along exercise: non-blocking ireduce during stencil workflow<a class="headerlink" href="#code-along-exercise-non-blocking-ireduce-during-stencil-workflow" title="Permalink to this headline"></a></h2>
+<div class="admonition-observe-a-running-total-during-a-stencil-workflow exercise important admonition" id="exercise-0">
+<p class="admonition-title">Observe a running total during a stencil workflow</p>
+<p>You can find a scaffold for the code in the <code class="docutils literal notranslate"><span class="pre">content/code/day-3/00_ireduce</span></code>
+folder. It is quite similar to that for the earlier non-blocking code-along
+exercise. A working solution is in the <code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder. Try to compile
+with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">non</span><span class="o">-</span><span class="n">blocking</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">ireduce</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">non</span><span class="o">-</span><span class="n">blocking</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">ireduce</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>When you have the code compiling, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="mi">2</span> <span class="o">./</span><span class="n">non</span><span class="o">-</span><span class="n">blocking</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">ireduce</span>
+</pre></div>
+</div>
+</li>
+<li><p>Try to fix the code TODO</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution important dropdown admonition" id="solution-0">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>One correct approach is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TODO</span>
+</pre></div>
+</div>
+</li>
+<li><p>There are other approaches that work correctly. Is yours better
+or worse than this one? Why?</p></li>
+</ul>
+</div>
+</section>
+<section id="code-analysis">
+<h2>Code analysis<a class="headerlink" href="#code-analysis" title="Permalink to this headline"></a></h2>
+<p>How can you know when a blocking or non-blocking communication is required?
+It is cumbersome to analyse code with printing out instructions (<code class="docutils literal notranslate"><span class="pre">printf</span></code>)
+embedded in the code. For this reason, analysis tools have been written that
+allow you to monitor the behavior of your code in more detail.
+Some of these tools are Extrae/Paraver, TAU, Scalasca, to cite only a few of them.</p>
+<p>Here, we will mention the combination of Extrae and Paraver tools that are
+developed at the Barcelona Supercomputing Center (BSC) and provide support
+for different architectures including CPUs and GPUs and also for different
+parallelisation levels, for instance, MPI, OpenMP, and MPI+OpenMP. Extrae is the
+tool used for producing trace files while Paraver is the visualiser/analyser
+tool.</p>
+<p>In order to use Extrae, one needs to compile the code with debugging flag
+(<code class="docutils literal notranslate"><span class="pre">-g</span></code>). Events that should be monitored by Extrae are included in a <code class="docutils literal notranslate"><span class="pre">.xml</span></code>
+file (<code class="docutils literal notranslate"><span class="pre">extrae.xml</span></code>), for instance MPI or OpenMP:</p>
+<div class="admonition-extrae-xml signature toggle-shown dropdown admonition" id="signature-2">
+<p class="admonition-title"><a href="#id4"><span class="problematic" id="id5">|``extrae.xml``|</span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span>&lt;?xml version=&#39;1.0&#39;?&gt;
+
+  &lt;trace enabled=&quot;yes&quot;
+   home=&quot;/software/Extrae/3.8.0-gompi-2020b&quot;
+   initial-mode=&quot;detail&quot;
+   type=&quot;paraver&quot; &gt;
+
+  &lt;mpi enabled=&quot;yes&quot;&gt;
+    &lt;counters enabled=&quot;yes&quot; /&gt;
+  &lt;/mpi&gt;
+
+  &lt;openmp enabled=&quot;no&quot;&gt;
+    &lt;locks enabled=&quot;no&quot; /&gt;
+    &lt;counters enabled=&quot;no&quot; /&gt;
+  &lt;/openmp&gt;
+
+&lt;/trace&gt;
+</pre></div>
+</div>
+</div>
+<p>For the non-blocking deadlock and overlap cases discussed in the previous lecture,
+the MPI call events show the following patterns in Paraver:</p>
+<figure class="align-center" id="id2">
+<img alt="../_images/extrae-deadlock.png" src="../_images/extrae-deadlock.png" />
+<figcaption>
+<p><span class="caption-text">MPI calls analysis for the deadlock case in the previous non-blocking
+section.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id3">
+<img alt="../_images/extrae-overlap.png" src="../_images/extrae-overlap.png" />
+<figcaption>
+<p><span class="caption-text">MPI calls analysis for the overlap case.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Notice that the size in the horizontal axis for the grid was increased to 8000
+to make the visualisation clearer. From the overlap case, we can see that some
+work was interleaved (black region) between the <a class="reference internal" href="../quick-reference/index.html#term-MPI_Isend"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Isend</code></span></a> and
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Irecv"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Irecv</code></span></a> calls and the waiting call (red rectangles).</p>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Chapter 2 of the <strong>Using Advanced MPI</strong> book by William Gropp <em>et al.</em> show
+examples of using the functions described in this episode. <span id="id1">[<a class="reference internal" href="../zbibliography/#id2" title="William Gropp, Torsten Hoefler, Rajeev Thakur, and Ewing Lusk. Using Advanced MPI: Modern Features of the Message-Passing Interface. Scientific and Engineering Computation. MIT Press, November 2014. ISBN 9780262527637. URL: https://mitpress.mit.edu/books/using-advanced-mpi.">GHTL14</a>]</span></p></li>
+<li><p><a class="reference external" href="https://www.codingame.com/playgrounds/349/introduction-to-mpi/non-blocking-communications">https://www.codingame.com/playgrounds/349/introduction-to-mpi/non-blocking-communications</a></p></li>
+<li><p><a class="reference external" href="https://tools.bsc.es/">https://tools.bsc.es/</a></p></li>
+<li><p><a class="reference external" href="https://www.cs.uoregon.edu/research/tau/home.php">https://www.cs.uoregon.edu/research/tau/home.php</a></p></li>
+<li><p><a class="reference external" href="https://www.scalasca.org/">https://www.scalasca.org/</a></p></li>
+<li><p><a class="reference external" href="https://prace-ri.eu/wp-content/uploads/WP237.pdf">https://prace-ri.eu/wp-content/uploads/WP237.pdf</a></p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition" id="keypoints-0">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>Non-blocking collectives take advantage of the efficiency of collective
+communications and allow at the same time the possibility of interleaving
+useful work.</p></li>
+<li><p>Although it sounds contradictory and unuseful, a non-blocking barrier is
+sometimes handy, for instance in the case where only a notification from
+the processses arriving to the barrier is needed.</p></li>
+<li><p>There are several available tools that can allow you to analyse your code in
+detail. Here, we have described the Extrae and Paraver tools but there are
+others in the market.</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../non-blocking-communication-pt1/" class="btn btn-neutral float-left" title="Non-blocking point-to-point" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../one-sided-concepts/" class="btn btn-neutral float-right" title="One-sided communication: concepts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, EuroCC National Competence Centre Sweden.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

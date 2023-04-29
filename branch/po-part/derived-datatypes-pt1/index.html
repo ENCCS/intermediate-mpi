@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Derived datatypes: pack and unpack &mdash; Intermediate MPI</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script src="../_static/tabs.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Derived datatypes: MPI_Datatype" href="../derived-datatypes-pt2/" />
+    <link rel="prev" title="Communicators and groups" href="../communicators-groups/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../" class="icon icon-home"> Intermediate MPI
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Derived datatypes: pack and unpack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#packing-and-unpacking">Packing and unpacking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt2/">Derived datatypes: <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communications: functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+      <li>Derived datatypes: pack and unpack</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/derived-datatypes-pt1.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="derived-datatypes-pack-and-unpack">
+<span id="derived-datatypes-pt1"></span><h1>Derived datatypes: pack and unpack<a class="headerlink" href="#derived-datatypes-pack-and-unpack" title="Permalink to this headline"></a></h1>
+<div class="admonition-questions questions admonition" id="questions-0">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>How can you reduce the number of messages sent and received?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition" id="objectives-0">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Learn how to pack heterogeneous data into a single message.</p></li>
+</ul>
+</div>
+<p>MPI supports many of the basic datatypes recognized by the C and Fortran standards.
+However, often one needs to represent data that requires more complex programming structures than just the fundamental datatypes.</p>
+<table class="colwidths-auto docutils align-center" id="id3">
+<caption><span class="caption-text">Basic datatypes in MPI and in the C standard. For a comprehensive
+            explanation of the types defined in the C language, you can
+            consult <a class="reference external" href="https://en.cppreference.com/w/c/language/type">this reference</a>.</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>MPI</p></th>
+<th class="head"><p>C</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_CHAR</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">signed</span> <span class="pre">char</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_FLOAT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_DOUBLE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_LONG_DOUBLE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">double</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_WCHAR</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wchar_t</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_SHORT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">short</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_INT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_LONG</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">long</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_LONG_LONG_INT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_SIGNED_CHAR</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">signed</span> <span class="pre">char</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_UNSIGNED_CHAR</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">char</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_UNSIGNED_SHORT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">short</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_UNSIGNED</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_UNSIGNED_LONG</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_UNSIGNED_LONG_LONG</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_C_COMPLEX</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">_Complex</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_C_DOUBLE_COMPLEX</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span> <span class="pre">_Complex</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_C_LONG_DOUBLE_COMPLEX</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">double</span> <span class="pre">_Complex</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_PACKED</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MPI_BYTE</span></code></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The MPI standard defines functions to extend the datatypes that can be used in MPI messages. In this episode, we will discuss how to collect heterogeneous data into a single MPI message, leaving the definition of your own types to next episode <a class="reference internal" href="../derived-datatypes-pt2/#derived-datatypes-pt2"><span class="std std-ref">Derived datatypes: MPI_Datatype</span></a>.</p>
+<section id="packing-and-unpacking">
+<h2>Packing and unpacking<a class="headerlink" href="#packing-and-unpacking" title="Permalink to this headline"></a></h2>
+<p>MPI offers the possibility to pack and unpack data of known datatype into a
+single contiguous memory buffer, <em>without</em> first having to define a
+corresponding datatype.
+This can be an extremely useful technique to reduce messaging traffic and could
+help with the readability and portability of the code.
+The resulting packed buffer will be of type <code class="docutils literal notranslate"><span class="pre">MPI_PACKED</span></code> and can contain any
+sort of heterogeneous collection of basic datatypes recognized by MPI.</p>
+<figure class="align-center" id="id4">
+<img alt="../_images/E01-pack_unpack.svg" src="../_images/E01-pack_unpack.svg" /><figcaption>
+<p><span class="caption-text">MPI allows the programmer to communicate heterogeneous collections into a
+single message, without defining a full-fledged custom datatype. The data is
+packed into a buffer of type <code class="docutils literal notranslate"><span class="pre">MPI_PACKED</span></code>. On the receiving end, the buffer
+will be unpacked into its constituent components.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition-term-mpi-pack signature toggle-shown dropdown admonition" id="signature-0">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Pack"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Pack</code></span></a></p>
+<p>Pack data in noncontiguous memory to a contiguous memory buffer.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Pack</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">inbuf</span><span class="p">,</span><span class="w"></span>
+<span class="w">             </span><span class="kt">int</span><span class="w"> </span><span class="n">incount</span><span class="p">,</span><span class="w"></span>
+<span class="w">             </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">             </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">outbuf</span><span class="p">,</span><span class="w"></span>
+<span class="w">             </span><span class="kt">int</span><span class="w"> </span><span class="n">outsize</span><span class="p">,</span><span class="w"></span>
+<span class="w">             </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">position</span><span class="p">,</span><span class="w"></span>
+<span class="w">             </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id5">
+<img alt="../_images/E01-pack.svg" src="../_images/E01-pack.svg" /><figcaption>
+<p><span class="caption-text">The relation of <code class="docutils literal notranslate"><span class="pre">inbuf</span></code>, <code class="docutils literal notranslate"><span class="pre">outbuf</span></code>, and <code class="docutils literal notranslate"><span class="pre">position</span></code> when calling
+<code class="docutils literal notranslate"><span class="pre">MPI_Pack</span></code>.  In this figure, <code class="docutils literal notranslate"><span class="pre">outbuf</span></code> already holds some data (the red
+shaded area). The data in <code class="docutils literal notranslate"><span class="pre">inbuf</span></code> is copied to <code class="docutils literal notranslate"><span class="pre">outbuf</span></code> starting at the
+address <code class="docutils literal notranslate"><span class="pre">outbuf+*position</span></code>.  When the function returns, the <code class="docutils literal notranslate"><span class="pre">position</span></code>
+parameter will have been updated to refer to the <em>first</em> position in <code class="docutils literal notranslate"><span class="pre">outbuf</span></code>
+following the data copied by this call.</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-0">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">inbuf</span></code></dt><dd><p>The input buffer, <em>i.e.</em> the data to be packed into contigous memory.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">incount</span></code></dt><dd><p>Number of input data items.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">datatype</span></code></dt><dd><p>The datatype of each item to be packed.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">outbuf</span></code></dt><dd><p>Starting address of the output buffer.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">outsize</span></code></dt><dd><p>The size, in bytes, of the output buffer.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">position</span></code></dt><dd><p>This is an input/output parameter that describes locations within
+<code class="docutils literal notranslate"><span class="pre">outbuf</span></code>. The data at <code class="docutils literal notranslate"><span class="pre">inbuf</span></code> will be copied to <code class="docutils literal notranslate"><span class="pre">outbuf</span> <span class="pre">+</span> <span class="pre">*position</span></code>.
+After the function returns, the value <code class="docutils literal notranslate"><span class="pre">*position</span></code> indicates the first
+position in <code class="docutils literal notranslate"><span class="pre">outbuf</span></code> that follows the data just copied.
+This is useful to pass as <code class="docutils literal notranslate"><span class="pre">position</span></code> to the next call to <code class="docutils literal notranslate"><span class="pre">MPI_Pack</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">comm</span></code></dt><dd><p>The communicator.</p>
+</dd>
+</dl>
+</div>
+<div class="admonition-term-mpi-unpack signature toggle-shown dropdown admonition" id="signature-1">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Unpack"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Unpack</code></span></a></p>
+<p>Unpack a contiguous memory buffer into noncontiguous memory locations.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Unpack</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">inbuf</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="kt">int</span><span class="w"> </span><span class="n">insize</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">position</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">outbuf</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="kt">int</span><span class="w"> </span><span class="n">outcount</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id6">
+<img alt="../_images/E01-unpack.svg" src="../_images/E01-unpack.svg" /><figcaption>
+<p><span class="caption-text">The relation of <code class="docutils literal notranslate"><span class="pre">inbuf</span></code>, <code class="docutils literal notranslate"><span class="pre">outbuf</span></code>, and <code class="docutils literal notranslate"><span class="pre">position</span></code> when calling
+<code class="docutils literal notranslate"><span class="pre">MPI_Unpack</span></code>.  In this figure, <code class="docutils literal notranslate"><span class="pre">inbuf</span></code> holds some data. The data
+in <code class="docutils literal notranslate"><span class="pre">inbuf</span></code> is copied to <code class="docutils literal notranslate"><span class="pre">outbuf</span></code> starting at the address given with
+<code class="docutils literal notranslate"><span class="pre">position</span></code>.  When the function returns, the <code class="docutils literal notranslate"><span class="pre">position</span></code> parameter will
+have been updated to the <em>first</em> position in <code class="docutils literal notranslate"><span class="pre">inbuf</span></code> following the just
+copied data.</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-1">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">inbuf</span></code></dt><dd><p>The input buffer, <em>i.e.</em> the data to be unpacked.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">insize</span></code></dt><dd><p>The size, in bytes, of the input buffer.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">position</span></code></dt><dd><p>This is an input/output parameter that describes locations within
+<code class="docutils literal notranslate"><span class="pre">inbuf</span></code>. The data at <code class="docutils literal notranslate"><span class="pre">inbuf</span> <span class="pre">+</span> <span class="pre">*position</span></code> will be copied to <code class="docutils literal notranslate"><span class="pre">outbuf</span></code>.
+After the function returns, the value <code class="docutils literal notranslate"><span class="pre">*position</span></code> indicates the first
+position in <code class="docutils literal notranslate"><span class="pre">inbuf</span></code> that follows the data just copied.
+This is useful to pass as <code class="docutils literal notranslate"><span class="pre">position</span></code> to the next call to <code class="docutils literal notranslate"><span class="pre">MPI_Unpack</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">outbuf</span></code></dt><dd><p>Starting address of the output buffer.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">outcount</span></code></dt><dd><p>Number of output data items.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">datatype</span></code></dt><dd><p>The datatype of each item to be unpacked.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">comm</span></code></dt><dd><p>The communicator.</p>
+</dd>
+</dl>
+</div>
+<div class="admonition-message-passing-pokemons exercise important admonition" id="exercise-0">
+<p class="admonition-title">Message passing Pokémons</p>
+<p>In the Pokémon trading card game, opponents face each in duels using their
+pokémons. The game is played in turns and at each turn a player can attack.
+We have to send:</p>
+<ul class="simple">
+<li><p>The attacking pokémon’s name: a <code class="docutils literal notranslate"><span class="pre">char</span></code> array.</p></li>
+<li><p>How many life points it has: a <code class="docutils literal notranslate"><span class="pre">double</span></code>.</p></li>
+<li><p>The damage its attack will inflict: an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
+<li><p>A damage multiplier: a <code class="docutils literal notranslate"><span class="pre">double</span></code>.</p></li>
+</ul>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Pack and unpack</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Bonus</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">Superbonus</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>You can find a scaffold for the code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-1/05_pokemon-pack-unpack</span></code> folder. You will have to
+complete the source code to compile and run correctly: follow the hints
+in the source file.  A working solution is in the <code class="docutils literal notranslate"><span class="pre">solution</span></code>
+subfolder.</p>
+<ol class="arabic simple">
+<li><p>Pack the data in the <code class="docutils literal notranslate"><span class="pre">message</span></code> buffer.</p></li>
+<li><p>Unpack the <code class="docutils literal notranslate"><span class="pre">message</span></code> buffer into its component data.</p></li>
+</ol>
+<p>Compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">pokemon</span><span class="o">-</span><span class="n">pack</span><span class="o">-</span><span class="n">unpack</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">pokemon</span><span class="o">-</span><span class="n">pack</span><span class="o">-</span><span class="n">unpack</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Why are we hardcoding the length of the pokémon’s name?</p></li>
+<li><p>What is the purpose of the <code class="docutils literal notranslate"><span class="pre">position</span></code> variable? Print its value
+after each packing and unpacking. Do these values conform with your
+intuition?</p></li>
+<li><p>Should packing and unpacking happen in the same order? What happens if not?</p></li>
+<li><p>What happens when there is a mismatch of types between packing and unpacking?</p></li>
+<li><p>We could have packed our data as <code class="docutils literal notranslate"><span class="pre">char</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">double</span></code>. Is there a way to pack (unpack) the life points and the
+damage multiplier with one call to <code class="docutils literal notranslate"><span class="pre">MPI_Pack</span></code> (<code class="docutils literal notranslate"><span class="pre">MPI_Unpack</span></code>)?</p></li>
+</ul>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>The <code class="docutils literal notranslate"><span class="pre">message</span></code> is a buffer of size <code class="docutils literal notranslate"><span class="pre">BUFSIZ</span></code> (defined in the standard
+header <code class="docutils literal notranslate"><span class="pre">stdio.h</span></code>) We cannot always be sure this is the correct
+choice: the space might be plentiful, in which case we’re wasting
+resource, or it might not be enough, in which case the program is not
+safe and likely not even portable!</p>
+<p>MPI offers the function <a class="reference internal" href="../quick-reference/index.html#term-MPI_Pack_size"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Pack_size</code></span></a> for this purpose. Look up its
+documentation and modify the source code such that the buffer is sized
+more appropriately.
+What could be problematic with the pack/unpack approach?</p>
+<p>A working solution is in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-1/06_pokemon-pack-unpack-size/solution</span></code> folder.</p>
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><p>The length of the string holding the pokémon’s name is hardcoded to a
+constant. How would you generalize this program?</p>
+</div></div>
+</div>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>The lecture covering MPI datatypes from EPCC is available on <a class="reference external" href="https://github.com/EPCCed/archer2-MPI-2020-05-14/blob/master/slides/L10-derivedtypes.pdf">GitHub</a></p></li>
+<li><p>Chapter 5 of the <strong>Using MPI</strong> book by William Gropp <em>et al.</em> <span id="id1">[<a class="reference internal" href="../zbibliography/#id3" title="William Gropp, Ewing Lusk, and Anthony Skjellum. Using MPI: Portable Parallel Programming with the Message-Passing Interface. Scientific and Engineering Computation. MIT Press, November 2014. ISBN 9780262527392. URL: https://mitpress.mit.edu/books/using-mpi-third-edition.">GLS14</a>]</span></p></li>
+<li><p>Chapter 6 of the <strong>Parallel Programming with MPI</strong> book by Peter Pacheco. <span id="id2">[<a class="reference internal" href="../zbibliography/#id4" title="Peter Pacheco. Parallel Programming with MPI. Morgan Kaufmann, 1997. ISBN 9781558603394. URL: https://www.elsevier.com/books/parallel-programming-with-mpi/pacheco/978-0-08-051354-6.">Pac97</a>]</span></p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition" id="keypoints-0">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>You can reduce message traffic by packing (unpacking) heterogeneous data together.</p></li>
+<li><p>Packing/unpacking are straightforward to use, but might lead to less
+readable programs.</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../communicators-groups/" class="btn btn-neutral float-left" title="Communicators and groups" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../derived-datatypes-pt2/" class="btn btn-neutral float-right" title="Derived datatypes: MPI_Datatype" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, EuroCC National Competence Centre Sweden.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

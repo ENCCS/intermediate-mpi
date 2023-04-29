@@ -1,0 +1,530 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Communicators and groups &mdash; Intermediate MPI</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/segment.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/menu.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/tab.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/togglebutton.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Derived datatypes" href="../derived-datatypes/" />
+    <link rel="prev" title="Setting up your system" href="../setup/" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../" class="icon icon-home" alt="Documentation Home"> Intermediate MPI
+          
+
+          
+            
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Communicators and groups</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes/">Derived datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-pt1/">One-sided communication: basic concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-pt2/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Communicators and groups</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/communicators-groups.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="communicators-and-groups">
+<span id="comms-groups"></span><h1>Communicators and groups<a class="headerlink" href="#communicators-and-groups" title="Permalink to this headline">¶</a></h1>
+<div class="admonition-questions questions admonition">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>How can we write safe parallel libraries?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Learn about tagging of messages and why it is an unsafe mechanism to
+distinguish library and host messages.</p></li>
+<li><p>Learn the difference between <a class="reference internal" href="../quick-reference/#term-intracommunicator"><span class="xref std std-term">intracommunicator</span></a> and
+<a class="reference internal" href="../quick-reference/#term-intercommunicator"><span class="xref std std-term">intercommunicator</span></a>.</p></li>
+<li><p>Learn how to create new communicators.</p></li>
+</ul>
+</div>
+<p>The use of software libraries allows programmers to develop new software without
+having to reinvent the wheel every time one is needed.
+Software components, if properly packaged and documented, can be easily reused
+and combined to fit the programmers purposes.
+How can we write high quality libraries that can efficiently exploit parallelism
+in the message passing model?</p>
+<p>Let us have a look at the basic point-to-point communication routines
+<code class="docutils literal notranslate"><span class="pre">MPI_Send</span></code> and <code class="docutils literal notranslate"><span class="pre">MPI_Recv</span></code>.</p>
+<div class="figure align-center" id="id3">
+<img alt="../_images/E02-send-recv_step2.svg" src="../_images/E02-send-recv_step2.svg" /><p class="caption"><span class="caption-text">Point-to-point communication between two sloths. The tag of the message can
+be used to match messages between sending and receiving partners.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<div class="admonition-mpi-send signature toggle-shown dropdown admonition">
+<p class="admonition-title"><code class="docutils literal notranslate"><span class="pre">MPI_Send</span></code></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Send</span><span class="p">(</span><span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span>
+             <span class="kt">int</span> <span class="n">count</span><span class="p">,</span>
+             <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span>
+             <span class="kt">int</span> <span class="n">dest</span><span class="p">,</span>
+             <span class="kt">int</span> <span class="n">tag</span><span class="p">,</span>
+             <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-mpi-recv signature toggle-shown dropdown admonition">
+<p class="admonition-title"><code class="docutils literal notranslate"><span class="pre">MPI_Recv</span></code></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Recv</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span>
+             <span class="kt">int</span> <span class="n">count</span><span class="p">,</span>
+             <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span>
+             <span class="kt">int</span> <span class="n">source</span><span class="p">,</span>
+             <span class="kt">int</span> <span class="n">tag</span><span class="p">,</span>
+             <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">,</span>
+             <span class="n">MPI_Status</span> <span class="o">*</span><span class="n">status</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Both accept a <code class="docutils literal notranslate"><span class="pre">tag</span></code> parameter, used to match messages sent and received.  As a
+library author, you might decide to reserve any range of integers for exclusive
+use as tags for messages originating from your code. This is however far from an
+optimal solution:</p>
+<ol class="arabic simple">
+<li><p>You are imposing a restrictive design onto your potential users. This is a
+choice that is not intrinsic to the problem domain and usually suggests a bad
+design.</p></li>
+<li><p>The design is not <em>extensible</em>. What if you run out of tags and need to add a
+new one to the reserved list? You will break your API or, worse, will
+interfere with existing tagging in client code.</p></li>
+<li><p>You library is not, most likely, the only one used. How can you guarantee
+that your choice of reserved tags is unique?</p></li>
+</ol>
+<p>Clearly, using tags to distinguish the origin of messages <em>does not scale</em> with
+the number of components involved in a software project and will reduce the
+extensibility and maintainability of the codebase.</p>
+<div class="admonition-what-might-happen-if-some-other-component-uses-your-message-tag challenge admonition">
+<p class="admonition-title">What might happen if some other component uses your message tag?</p>
+<ol class="arabic simple">
+<li><p>The program hangs waiting for the right message</p></li>
+<li><p>The program crashes</p></li>
+<li><p>The program continues normally, but perhaps with wrong results</p></li>
+<li><p>All of the above</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution dropdown admonition">
+<p class="admonition-title">Solution</p>
+<p>All of the above. Note that the behavior also depends on which communicator
+is used.</p>
+</div>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">MPI_Send</span></code> and <code class="docutils literal notranslate"><span class="pre">MPI_Recv</span></code> also take a communicator as parameter
+and indeed the use of communicators is the solution offered by the MPI standard
+for the problems faced by library authors.
+Even if you are not writing parallel libraries, it is a good idea to get
+acquainted with the concepts of <strong>communicators</strong> and <strong>groups</strong>.  Communicators
+come in two flavors:</p>
+<ol class="arabic simple">
+<li><p><strong>Intracommunicators</strong>. Essentially a collection of processes that can
+interact through point-to-point <em>and</em> collective message passing routines.</p></li>
+<li><p><strong>Intercommunicators</strong>. These are collection of processes in <em>disjoint</em>
+intracommunicators that can interact through message passing.</p></li>
+</ol>
+<p>Intracommunicators are the most commonly occuring flavor. We will only deal with
+intracommunicators in this lesson and, following general practice, we will
+simply call them communicators from now on.
+A communicator consists of:</p>
+<ul class="simple">
+<li><p>A <strong>group</strong>, <em>i.e.</em> an ordered collection of processes. Each process in the
+group is assigned a <strong>rank</strong>, a non-negative integer number. The rank uniquely
+identifies each process in the group.</p></li>
+<li><p>A <strong>context</strong>, <em>i.e.</em> a system-defined object that identifies each
+communicator uniquely. Since the context is unique to the communicator, the
+same group can span <em>different</em> communicators, without causing issues.</p></li>
+</ul>
+<div class="admonition-it-s-a-wonderful-mpi-comm-world typealong toggle-shown dropdown admonition">
+<p class="admonition-title">It’s a wonderful <code class="docutils literal notranslate"><span class="pre">MPI_COMM_WORLD</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">MPI_COMM_WORLD</span></code> is the default communicator: it is spanned by the group of
+processes specified when launching your program:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="mi">2</span> <span class="n">program</span>
+</pre></div>
+</div>
+<p>Let’s get reacquainted with some functions with communicators as parameters.
+Probably the most basic ones are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Comm_size</span></code>, to obtain the size of the group spanning the
+communicator.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Comm_rank</span></code>, to obtain the rank of the calling process in the group
+spanning the communicator.</p></li>
+</ul>
+<p>We cannot modify the context of a communicator directly, but we can get its
+group with the <a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_group"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_group</code></span></a> function:</p>
+<div class="admonition-term-mpi-comm-group signature toggle-shown dropdown admonition">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_group"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_group</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Comm_group</span><span class="p">(</span><span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">,</span>
+                   <span class="n">MPI_Group</span> <span class="o">*</span><span class="n">group</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>A group has type <code class="docutils literal notranslate"><span class="pre">MPI_Group</span></code>, it is good practice to clean up the memory
+used by such an object calling <a class="reference internal" href="../quick-reference/index.html#term-MPI_Group_free"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Group_free</code></span></a>.</p>
+<div class="admonition-term-mpi-comm-free signature toggle-shown dropdown admonition">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_free"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_free</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Comm_free</span><span class="p">(</span><span class="n">MPI_Comm</span> <span class="o">*</span><span class="n">comm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>What can we do with groups? Quite a lot, it turns out! Processes in a group
+form a <em>set</em>. We can create new groups by:</p>
+<ul class="simple">
+<li><p>explicitly <em>including</em> and <em>excluding</em> processes from an existing group.</p></li>
+<li><p>performing set operations, such as intersection and difference, between
+groups.</p></li>
+</ul>
+<p>Exclusion and inclusion of processes are done with integer arrays of ranks,
+recall that the rank is the unique identifier of a process within a group.</p>
+<div class="admonition-term-mpi-group-excl signature toggle-shown dropdown admonition">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Group_excl"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Group_excl</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Group_excl</span><span class="p">(</span><span class="n">MPI_Group</span> <span class="n">group</span><span class="p">,</span>
+                   <span class="kt">int</span> <span class="n">n</span><span class="p">,</span>
+                   <span class="k">const</span> <span class="kt">int</span> <span class="n">ranks</span><span class="p">[],</span>
+                   <span class="n">MPI_Group</span> <span class="o">*</span><span class="n">newgroup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Once we have a group, a call to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_create</code></span></a> will handily give us a
+new communicator spanned by the processes in the group.</p>
+<div class="admonition-term-mpi-comm-create signature toggle-shown dropdown admonition">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_create</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Comm_create</span><span class="p">(</span><span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">,</span>
+                    <span class="n">MPI_Group</span> <span class="n">group</span><span class="p">,</span>
+                    <span class="n">MPI_Comm</span> <span class="o">*</span><span class="n">newcomm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The new communicator is an object of <code class="docutils literal notranslate"><span class="pre">MPI_Comm</span></code> type, which can be used in
+any context where you would have used <code class="docutils literal notranslate"><span class="pre">MPI_COMM_WORLD</span></code>.  You can clean up
+such an object with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_free"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_free</code></span></a>.</p>
+<div class="admonition-what-happens-when-you-call-term-mpi-comm-create challenge admonition">
+<p class="admonition-title">What happens when you call <a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_create</code></span></a>?</p>
+<p>Check the documentation about <a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node156.htm#Node156">creating communicators</a>. Which
+of the following is true when calling <a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_create</code></span></a>?</p>
+<ol class="arabic simple">
+<li><p>Every rank in <code class="docutils literal notranslate"><span class="pre">comm</span></code> needs to call <a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_create</code></span></a></p></li>
+<li><p>Every rank in <code class="docutils literal notranslate"><span class="pre">group</span></code> needs to call <a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_create</code></span></a></p></li>
+<li><p>Only one rank needs to call <a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_create</code></span></a></p></li>
+</ol>
+<div class="admonition-solution solution dropdown admonition">
+<p class="admonition-title">Solution</p>
+<ol class="arabic simple">
+<li><p>Every rank must call <a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_create</code></span></a>. Creation of
+communicators is a collective operation.</p></li>
+</ol>
+</div>
+</div>
+<p>Manipulation of groups can be a tedious affair. It is usually more convenient
+to create new communicators by splitting existing ones with
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_split"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_split</code></span></a>.</p>
+<div class="admonition-term-mpi-comm-split signature toggle-shown dropdown admonition">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Comm_split"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Comm_split</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Comm_split</span><span class="p">(</span><span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">,</span>
+                   <span class="kt">int</span> <span class="n">color</span><span class="p">,</span>
+                   <span class="kt">int</span> <span class="n">key</span><span class="p">,</span>
+                   <span class="n">MPI_Comm</span> <span class="o">*</span><span class="n">newcomm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">comm</span></code></dt><dd><p>The existing communicator to split.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">color</span></code></dt><dd><p>The criterion by which to assign the calling process to the new communicator.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">key</span></code></dt><dd><p>The relative rank of the calling process in the group of the new communicator.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">newcomm</span></code></dt><dd><p>The new communicator. <code class="docutils literal notranslate"><span class="pre">newcomm</span></code> and <code class="docutils literal notranslate"><span class="pre">comm</span></code> will not overlap.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="admonition-warm-up-your-communicators-and-your-groups challenge admonition">
+<p class="admonition-title">Warm up your communicators and your groups</p>
+<p>Time for some practice! We will run with 4 processes, divide them evenly into two
+groups and create a new communicator out of them.</p>
+<p>Download the <a class="reference download internal" download="" href="../_downloads/e9810b37f445dfb8296c9d77a423fb41/comms-groups-divide-evenly.c"><code class="xref download docutils literal notranslate"><span class="pre">scaffold</span> <span class="pre">source</span> <span class="pre">code</span></code></a>.  Open it and read through it. Address
+the <code class="docutils literal notranslate"><span class="pre">FIXME</span></code> points appropriately. Compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">comms</span><span class="o">-</span><span class="n">groups</span><span class="o">-</span><span class="n">divide</span><span class="o">-</span><span class="n">evenly</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">comms</span><span class="o">-</span><span class="n">groups</span><span class="o">-</span><span class="n">divide</span><span class="o">-</span><span class="n">evenly</span>
+</pre></div>
+</div>
+<p>Download a <a class="reference download internal" download="" href="../_downloads/82720e14441c2b485dab5500ed415299/comms-groups-divide-evenly-solution.c"><code class="xref download docutils literal notranslate"><span class="pre">working</span> <span class="pre">solution</span></code></a></p>
+</div>
+<div class="admonition-calculating-math-pi challenge admonition">
+<p class="admonition-title">Calculating <span class="math notranslate nohighlight">\(\pi\)</span></p>
+<p>The computation of high-dimensional integrals with Monte Carlo method can be
+quite efficient.  We will aim at a more modest target here: the calculation
+of <span class="math notranslate nohighlight">\(\pi\)</span> by Monte Carlo sampling.
+Given a circle of radius 1, the ratio of randomly drawn points inside and
+outside the circle will converge to <span class="math notranslate nohighlight">\(\frac{\pi}{4}\)</span>.
+Rather than have every process invoke <code class="docutils literal notranslate"><span class="pre">rand</span></code> separately, we would like to
+reserve one single process for that purpose and use all the others to check
+whether these points are inside or outside the circle.
+To reduce communication traffic, this single process will fill and send a
+whole array of random numbers.</p>
+<ol class="arabic simple">
+<li><p>Download the <a class="reference download internal" download="" href="../_downloads/dc38b71d9d377044ebce800044a0bc5f/pi-monte-carlo.c"><code class="xref download docutils literal notranslate"><span class="pre">scaffold</span> <span class="pre">source</span> <span class="pre">code</span></code></a>.
+Open it and read through it.</p></li>
+<li><p>Only one process will generate random data. Define a <code class="docutils literal notranslate"><span class="pre">checkers_g</span></code> group
+including all other processes which will be acting as checkers.</p></li>
+<li><p>Define a communicator for the checker processes.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">rng</span></code> process listens for requests and serves them by sending an
+array of random data. The scaffold defines <code class="docutils literal notranslate"><span class="pre">REQUEST</span></code> and <code class="docutils literal notranslate"><span class="pre">REPLY</span></code> tags.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">checkers</span></code> group goes through the random data and tallies the number
+of points inside and outside the circle.</p></li>
+<li><p>Unless we meet the user-provided error threshold, checker processes will
+request a fresh batch of random data.</p></li>
+</ol>
+<p>Compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">pi</span><span class="o">-</span><span class="n">monte</span><span class="o">-</span><span class="n">carlo</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">pi</span><span class="o">-</span><span class="n">monte</span><span class="o">-</span><span class="n">carlo</span>
+</pre></div>
+</div>
+<p>Download a <a class="reference download internal" download="" href="../_downloads/cffce89cacb30837fba3de11fdeef3eb/pi-monte-carlo-solution.c"><code class="xref download docutils literal notranslate"><span class="pre">working</span> <span class="pre">solution</span></code></a></p>
+</div>
+<div class="section" id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Chapters 3, 4, and 6 of the <strong>Using MPI</strong> book by William Gropp <em>et al.</em> show
+examples of using the functions described in this episode.
+<a class="bibtex reference internal" href="../zbibliography/#gropp2014-qf" id="id1">[GLS14]</a></p></li>
+<li><p>Chapter 7 of the <strong>Parallel Programming with MPI</strong> book by Peter Pacheco.
+<a class="bibtex reference internal" href="../zbibliography/#pacheco1997-qq" id="id2">[Pac97]</a></p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>You can use tags to differentiate the source of messages, but this approach
+is neither scalable nor safe.</p></li>
+<li><p>You can create new communicators by splitting or grouping.</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../derived-datatypes/" class="btn btn-neutral float-right" title="Derived datatypes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../setup/" class="btn btn-neutral float-left" title="Setting up your system" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, EuroCC National Competence Centre Sweden
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

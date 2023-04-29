@@ -1,0 +1,584 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Non-blocking point-to-point &mdash; Intermediate MPI</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/segment.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/menu.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/tab.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/togglebutton.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Non-blocking collective communication" href="../non-blocking-communication-pt2/" />
+    <link rel="prev" title="Generalized forms of gather" href="../collective-communication-pt3/" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../" class="icon icon-home" alt="Documentation Home"> Intermediate MPI
+          
+
+          
+            
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes/">Derived datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Non-blocking point-to-point</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stencil-application-example">Stencil application example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inferior-mpi-workflows-for-stencil-applications">Inferior MPI workflows for stencil applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performant-non-blocking-mpi-workflows-for-stencil-applications">Performant non-blocking MPI workflows for stencil applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#non-blocking-mpi-send-calls">Non-blocking MPI send calls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#non-blocking-mpi-receive-call">Non-blocking MPI receive call</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#waiting-for-non-blocking-call-completion">Waiting for non-blocking call completion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-for-non-blocking-call-completion">Testing for non-blocking call completion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-along-exercise-non-blocking-stencil-application">Code-along exercise: non-blocking stencil application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-pt1/">One-sided communication: basic concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-pt2/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Non-blocking point-to-point</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/non-blocking-communication-pt1.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="non-blocking-point-to-point">
+<h1>Non-blocking point-to-point<a class="headerlink" href="#non-blocking-point-to-point" title="Permalink to this headline">¶</a></h1>
+<div class="admonition-questions questions admonition">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>Does blocking communication scale well?</p></li>
+<li><p>Can my code do useful work while waiting for messages?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Understand that messages can lead to deadlocks</p></li>
+<li><p>Implement an efficient stencil halo exchange</p></li>
+</ul>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Communication operations take time to happen. Most of that time
+doesn’t need the CPU to participate, particularly if the network
+hardware is good. Many applications have work to do on the data they
+already have available in the local process, and then work to do on
+data that arrives in a message. Likewise, they often need to have sent
+data for other processes to use later.</p>
+<p>These messages can be sent synchronously using the point-to-point
+message types we already learned about. However the synchronization
+takes time, and this limits how far one can parallelise.</p>
+</div>
+<div class="section" id="stencil-application-example">
+<h2>Stencil application example<a class="headerlink" href="#stencil-application-example" title="Permalink to this headline">¶</a></h2>
+<p>Stencils are a kind of computational kernel often used in PDE solvers.
+A simple example is a diffusive heat-flow model, where the amount of
+heat in a location at the next point in time depends on the amount of
+heat currently present there, and the amounts in the nearest neighbour
+locations.</p>
+<div class="figure align-center" id="id1">
+<img alt="../_images/StencilApplication.svg" src="../_images/StencilApplication.svg" /><p class="caption"><span class="caption-text">The model of the problem uses an 8x8 grid of data in light blue,
+which has to be updated based on the indicated 5-point stencil in
+light green to move from one time point to another.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>Let us assume the grid is periodic, ie. the left-hand edge is adjacent
+to the right-hand edge (like the video game Space Invaders!), and
+likewise top and bottom. Such a grid models a torus. In order to
+update the amount of heat at every location, all the amount of heat at
+all four of its neighbours must also be known locally. That’s
+straightforward when using a single process, because everything is
+local. But what happens when using two ranks?</p>
+<div class="figure align-center" id="id2">
+<img alt="../_images/HaloExchange.svg" src="../_images/HaloExchange.svg" /><p class="caption"><span class="caption-text">The two processes share the data evenly, in a 4x8 local data set
+shown in light blue.  In order to compute the heat at the next time
+step, the required data set is larger than this, shown in yellow.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>The required data to the left and right of the local data set is easy,
+because that data is already present locally, just on the other side
+of the local data set. However the top and bottom yellow data has to
+come from the other process.</p>
+<div class="figure align-center" id="id3">
+<img alt="../_images/Workingdatasets.svg" src="../_images/Workingdatasets.svg" /><p class="caption"><span class="caption-text">The <code class="docutils literal notranslate"><span class="pre">border</span> <span class="pre">data</span></code> in dark blue has to be sent to the other
+process, and the <code class="docutils literal notranslate"><span class="pre">ghost</span> <span class="pre">data</span></code> or <code class="docutils literal notranslate"><span class="pre">halo</span> <span class="pre">data</span></code> in dark green is
+received from the other process.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="inferior-mpi-workflows-for-stencil-applications">
+<h2>Inferior MPI workflows for stencil applications<a class="headerlink" href="#inferior-mpi-workflows-for-stencil-applications" title="Permalink to this headline">¶</a></h2>
+<p>A possible workflow for the code on these two processes looks like</p>
+<div class="figure align-center" id="id4">
+<img alt="../_images/simplestencilworkflow.svg" src="../_images/simplestencilworkflow.svg" /><p class="caption"><span class="caption-text">A simple parallel stencil-computation workflow. Depending on the
+MPI implementation, doing the send first on both ranks can lead to
+a deadlock.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>This may work sometimes, but it also might not if the buffers or
+number of messages gets large enough. Such code will not be
+portable.</p>
+<div class="figure align-center" id="id5">
+<img alt="../_images/ring-stylestencilworkflow.svg" src="../_images/ring-stylestencilworkflow.svg" /><p class="caption"><span class="caption-text">A correct ring-style parallel stencil-computation workflow.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<p>This workflow will always work. This approach generalizes to larger
+rings, so long as alternating processes either send or respectively
+receive first. It also generalizes to multiple dimensions. However, it
+still requires synchronization between send and receive ranks. That
+synchronization is problematic when the time to send messages is
+comparable with either the amounts of compute work involved, or the
+variation in those amounts.</p>
+</div>
+<div class="section" id="performant-non-blocking-mpi-workflows-for-stencil-applications">
+<h2>Performant non-blocking MPI workflows for stencil applications<a class="headerlink" href="#performant-non-blocking-mpi-workflows-for-stencil-applications" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center" id="id6">
+<img alt="../_images/non-blocking-stylestencilworkflow.svg" src="../_images/non-blocking-stylestencilworkflow.svg" /><p class="caption"><span class="caption-text">A correct non-blocking-style parallel stencil-computation
+workflow. The MPI implementation may be able to do the
+communication overlapped with the computation.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<p>This will also always work. It may be more efficient than the
+ring-style approach, but that depends on the implementation and
+environment, as well as the size of messages and amounts of compute
+that can participate in the overlapped region.</p>
+<p>The user is responsible for not using the memory area until after the
+message request has been waited upon.</p>
+</div>
+<div class="section" id="non-blocking-mpi-send-calls">
+<h2>Non-blocking MPI send calls<a class="headerlink" href="#non-blocking-mpi-send-calls" title="Permalink to this headline">¶</a></h2>
+<p>An <a class="reference internal" href="../quick-reference/index.html#term-MPI_Isend"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Isend</code></span></a> is creates a send request and returns a request
+object. It may or may not have sent the message, or buffered it. The
+caller is responsible for not changing the buffer until after waiting
+upon the resulting request object.</p>
+<div class="admonition-term-mpi-isend signature toggle-shown dropdown admonition">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Isend"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Isend</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Isend</span><span class="p">(</span><span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="n">buf</span><span class="p">,</span>
+              <span class="kt">int</span> <span class="n">count</span><span class="p">,</span>
+              <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span>
+              <span class="kt">int</span> <span class="n">dest</span><span class="p">,</span>
+              <span class="kt">int</span> <span class="n">tag</span><span class="p">,</span>
+              <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">,</span>
+              <span class="n">MPI_Request</span> <span class="o">*</span><span class="n">request</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition">
+<p class="admonition-title">Parameters</p>
+<p><code class="docutils literal notranslate"><span class="pre">buf</span></code>, <code class="docutils literal notranslate"><span class="pre">count</span></code> and <code class="docutils literal notranslate"><span class="pre">datatype</span></code> describe the buffer to be sent
+to <code class="docutils literal notranslate"><span class="pre">dest</span></code> rank of <code class="docutils literal notranslate"><span class="pre">comm</span></code> using tag <code class="docutils literal notranslate"><span class="pre">tag</span></code>. The <code class="docutils literal notranslate"><span class="pre">request</span></code> object
+that is returned must be used to wait on the communication later.</p>
+</div>
+<p>Other calls exist for other sending modes familiar to you from
+point-to-point messages, including buffered, synchronous, and
+ready-mode sends. They are listed in the table below, along with
+links for more information.</p>
+<table class="colwidths-auto docutils align-default" id="id7">
+<caption><span class="caption-text">Point-to-point communication functions</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head" colspan="2" rowspan="2"></th>
+<th class="head" colspan="2"><p>Communication</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Blocking</p></th>
+<th class="head"><p>Non-blocking</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p><strong>Mode</strong></p></td>
+<td><p><strong>Standard</strong></p></td>
+<td><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Send"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Send</code></span></a></p></td>
+<td><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Isend"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Isend</code></span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Synchronous</strong></p></td>
+<td><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Ssend"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Ssend</code></span></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MPI_Issend</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Ready</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MPI_Rsend</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MPI_Irsend</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Buffered</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MPI_Bsend</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MPI_Ibsend</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="non-blocking-mpi-receive-call">
+<h2>Non-blocking MPI receive call<a class="headerlink" href="#non-blocking-mpi-receive-call" title="Permalink to this headline">¶</a></h2>
+<p>An <a class="reference internal" href="../quick-reference/index.html#term-MPI_Irecv"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Irecv</code></span></a> creates a receive request and returns a receive
+request in an <code class="docutils literal notranslate"><span class="pre">MPI_Request</span></code> object. The caller is responsible for
+not changing the buffer until after waiting upon the resulting request
+object.</p>
+<div class="admonition-term-mpi-irecv signature toggle-shown dropdown admonition">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Irecv"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Irecv</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Irecv</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">buf</span><span class="p">,</span>
+              <span class="kt">int</span> <span class="n">count</span><span class="p">,</span>
+              <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span>
+              <span class="kt">int</span> <span class="n">source</span><span class="p">,</span>
+              <span class="kt">int</span> <span class="n">tag</span><span class="p">,</span>
+              <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">,</span>
+              <span class="n">MPI_Request</span> <span class="o">*</span><span class="n">request</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition">
+<p class="admonition-title">Parameters</p>
+<p><code class="docutils literal notranslate"><span class="pre">buf</span></code>, <code class="docutils literal notranslate"><span class="pre">count</span></code> and <code class="docutils literal notranslate"><span class="pre">datatype</span></code> describe the buffer to be
+received from <code class="docutils literal notranslate"><span class="pre">source</span></code> rank of <code class="docutils literal notranslate"><span class="pre">comm</span></code> using tag <code class="docutils literal notranslate"><span class="pre">tag</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">request</span></code> object that is returned must be used to wait on the
+communication later.</p>
+</div>
+<p>An <a class="reference internal" href="../quick-reference/index.html#term-MPI_Irecv"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Irecv</code></span></a> can be used to match any kind of send, regardless of
+sending mode or blocking status.</p>
+</div>
+<div class="section" id="waiting-for-non-blocking-call-completion">
+<h2>Waiting for non-blocking call completion<a class="headerlink" href="#waiting-for-non-blocking-call-completion" title="Permalink to this headline">¶</a></h2>
+<p>An <a class="reference internal" href="../quick-reference/index.html#term-MPI_Wait"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Wait</code></span></a> call waits for completion of the operation that
+created the request object passed to it. For a send, the semantics of
+the sending mode have been fulfilled (not necessarily that the message
+has been received). For a receive, the buffer is now valid for use,
+however the send has not necessarily completed (though obviously has
+been initiated).</p>
+<div class="admonition-term-mpi-wait signature toggle-shown dropdown admonition">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Wait"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Wait</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Wait</span><span class="p">(</span><span class="n">MPI_Request</span> <span class="o">*</span><span class="n">request</span><span class="p">,</span>
+             <span class="n">MPI_Status</span> <span class="o">*</span><span class="n">status</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition">
+<p class="admonition-title">Parameters</p>
+<p><code class="docutils literal notranslate"><span class="pre">request</span></code> describes the operation to be waited upon. <code class="docutils literal notranslate"><span class="pre">status</span></code>
+returns the status of that operation. If the status is not needed,
+pass <code class="docutils literal notranslate"><span class="pre">MPI_STATUS_IGNORE</span></code>.</p>
+</div>
+<p>It can be efficient to wait on any one, some, or all of a set of
+operations before returning. MPI provides <a class="reference internal" href="../quick-reference/index.html#term-MPI_Waitany"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Waitany</code></span></a>,
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Waitsome"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Waitsome</code></span></a>, and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Waitall"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Waitall</code></span></a> for these use cases. For example,
+waiting for any request to complete may allow the caller to continue
+with related computation while waiting for other requests to complete.</p>
+</div>
+<div class="section" id="testing-for-non-blocking-call-completion">
+<h2>Testing for non-blocking call completion<a class="headerlink" href="#testing-for-non-blocking-call-completion" title="Permalink to this headline">¶</a></h2>
+<p>An <a class="reference internal" href="../quick-reference/index.html#term-MPI_Test"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Test</code></span></a> call returns immediately a flag value indicating
+whether a corresponding <a class="reference internal" href="../quick-reference/index.html#term-MPI_Wait"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Wait</code></span></a> would return immediately.</p>
+<div class="admonition-term-mpi-test signature toggle-shown dropdown admonition">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Test"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Test</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MPI_Test</span><span class="p">(</span><span class="n">MPI_Request</span> <span class="o">*</span><span class="n">request</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">flag</span><span class="p">,</span> <span class="n">MPI_Status</span> <span class="o">*</span><span class="n">status</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition">
+<p class="admonition-title">Parameters</p>
+<p><code class="docutils literal notranslate"><span class="pre">request</span></code> describes the operation to be waited upon. <code class="docutils literal notranslate"><span class="pre">status</span></code>
+returns the status of that operation. If the status is not needed,
+pass <code class="docutils literal notranslate"><span class="pre">MPI_STATUS_IGNORE</span></code>. The value returned in <code class="docutils literal notranslate"><span class="pre">flag</span></code> indicates
+whether the operation is complete (ie a corresponding wait will
+return immediately).</p>
+</div>
+<p>It can be efficient to test any one, some, or all of a set of
+operations before returning. MPI provides <a class="reference internal" href="../quick-reference/index.html#term-MPI_Testany"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Testany</code></span></a>,
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Testsome"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Testsome</code></span></a>, and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Testall"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Testall</code></span></a> for these use cases. For
+example, testing for any request completed may allow the caller to
+continue with unrelated computation because no message with work has
+yet arrived.</p>
+</div>
+<div class="section" id="code-along-exercise-non-blocking-stencil-application">
+<h2>Code-along exercise: non-blocking stencil application<a class="headerlink" href="#code-along-exercise-non-blocking-stencil-application" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-observe-a-deadlock challenge admonition">
+<p class="admonition-title">1.1 Observe a deadlock</p>
+<ol class="arabic">
+<li><p>Download the <a class="reference download internal" download="" href="../_downloads/6feffee82a9de367f5438520cc18942c/non-blocking-communication-deadlock.c"><code class="xref download docutils literal notranslate"><span class="pre">source</span> <span class="pre">code</span></code></a>. Open
+<code class="docutils literal notranslate"><span class="pre">non-blocking-communication-deadlock.c</span></code> and read through it. Compile
+with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">non</span><span class="o">-</span><span class="n">blocking</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">deadlock</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">non</span><span class="o">-</span><span class="n">blocking</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">deadlock</span>
+</pre></div>
+</div>
+</li>
+<li><p>When you have the code compiling, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="mi">2</span> <span class="o">./</span><span class="n">non</span><span class="o">-</span><span class="n">blocking</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">deadlock</span>
+</pre></div>
+</div>
+</li>
+<li><p>The communication may block. If it does, you will have to kill
+the process to continue, e.g. with <code class="docutils literal notranslate"><span class="pre">Ctrl-C</span></code>. If it doesn’t,
+follow the first challenge to use a call to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Ssend"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Ssend</code></span></a>
+to make it block.</p></li>
+<li><p>Try to fix the code so that one process sends before receiving
+and the other process does the opposite. Now it will work even
+if the runtime chooses to implement <a class="reference internal" href="../quick-reference/index.html#term-MPI_Send"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Send</code></span></a> like
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Ssend"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Ssend</code></span></a>.</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution dropdown admonition">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>One correct approach is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/*</span> <span class="n">Do</span> <span class="n">sends</span> <span class="ow">and</span> <span class="n">receives</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">opposite</span> <span class="n">order</span> <span class="n">on</span> <span class="n">the</span> <span class="n">two</span> <span class="n">ranks</span> <span class="o">*/</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nb">int</span> <span class="n">send_up_tag</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">send_down_tag</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="o">/*</span> <span class="n">Send</span> <span class="n">the</span> <span class="n">border</span> <span class="n">data</span> <span class="o">*/</span>
+    <span class="nb">int</span> <span class="n">destination_rank</span> <span class="o">=</span> <span class="n">size</span><span class="o">-</span><span class="n">rank</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">MPI_Ssend</span><span class="p">(</span><span class="n">working_data_set</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">8</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">destination_rank</span><span class="p">,</span> <span class="n">send_up_tag</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+    <span class="n">MPI_Ssend</span><span class="p">(</span><span class="n">working_data_set</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="mi">8</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">destination_rank</span><span class="p">,</span> <span class="n">send_down_tag</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+
+    <span class="o">/*</span> <span class="n">Receive</span> <span class="n">the</span> <span class="n">halo</span> <span class="n">data</span> <span class="o">*/</span>
+    <span class="nb">int</span> <span class="n">source_rank</span> <span class="o">=</span> <span class="n">size</span><span class="o">-</span><span class="n">rank</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">working_data_set</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="mi">8</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source_rank</span><span class="p">,</span> <span class="n">send_up_tag</span><span class="p">,</span> <span class="n">comm</span><span class="p">,</span> <span class="n">MPI_STATUS_IGNORE</span><span class="p">);</span>
+    <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">working_data_set</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">8</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source_rank</span><span class="p">,</span> <span class="n">send_down_tag</span><span class="p">,</span> <span class="n">comm</span><span class="p">,</span> <span class="n">MPI_STATUS_IGNORE</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+    <span class="nb">int</span> <span class="n">send_up_tag</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">send_down_tag</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="o">/*</span> <span class="n">Receive</span> <span class="n">the</span> <span class="n">halo</span> <span class="n">data</span> <span class="o">*/</span>
+    <span class="nb">int</span> <span class="n">source_rank</span> <span class="o">=</span> <span class="n">size</span><span class="o">-</span><span class="n">rank</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">working_data_set</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="mi">8</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source_rank</span><span class="p">,</span> <span class="n">send_up_tag</span><span class="p">,</span> <span class="n">comm</span><span class="p">,</span> <span class="n">MPI_STATUS_IGNORE</span><span class="p">);</span>
+    <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">working_data_set</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">8</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source_rank</span><span class="p">,</span> <span class="n">send_down_tag</span><span class="p">,</span> <span class="n">comm</span><span class="p">,</span> <span class="n">MPI_STATUS_IGNORE</span><span class="p">);</span>
+
+    <span class="o">/*</span> <span class="n">Send</span> <span class="n">the</span> <span class="n">border</span> <span class="n">data</span> <span class="o">*/</span>
+    <span class="nb">int</span> <span class="n">destination_rank</span> <span class="o">=</span> <span class="n">size</span><span class="o">-</span><span class="n">rank</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">MPI_Ssend</span><span class="p">(</span><span class="n">working_data_set</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">8</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">destination_rank</span><span class="p">,</span> <span class="n">send_up_tag</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+    <span class="n">MPI_Ssend</span><span class="p">(</span><span class="n">working_data_set</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="mi">8</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">destination_rank</span><span class="p">,</span> <span class="n">send_down_tag</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>There are other approaches that work correctly. Is yours better
+or worse than this one? Why?</p></li>
+<li><p>Download a <a class="reference download internal" download="" href="../_downloads/0f3987129369cad6cc34d5be8a5f84b2/non-blocking-communication-deadlock-solution.c"><code class="xref download docutils literal notranslate"><span class="pre">working</span> <span class="pre">solution</span></code></a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>TODO</p></li>
+<li><p>TODO</p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>TODO</p></li>
+<li><p>point 2</p></li>
+<li><p>…</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../non-blocking-communication-pt2/" class="btn btn-neutral float-right" title="Non-blocking collective communication" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../collective-communication-pt3/" class="btn btn-neutral float-left" title="Generalized forms of gather" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, EuroCC National Competence Centre Sweden
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

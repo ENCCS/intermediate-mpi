@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple collective communication &mdash; Intermediate MPI</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Scatter and gather" href="../collective-communication-pt2/" />
+    <link rel="prev" title="Derived datatypes: MPI_Datatype" href="../derived-datatypes-pt2/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../" class="icon icon-home"> Intermediate MPI
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt1/">Derived datatypes: pack and unpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt2/">Derived datatypes: <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Simple collective communication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#barrier">Barrier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#broadcast">Broadcast</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reduce">Reduce</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-along-exercise-broadcast-and-reduce">Code-along exercise: broadcast and reduce</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tips-when-using-collective-communication">Tips when using collective communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communications: functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+      <li>Simple collective communication</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/collective-communication-pt1.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="simple-collective-communication">
+<h1>Simple collective communication<a class="headerlink" href="#simple-collective-communication" title="Permalink to this headline"></a></h1>
+<div class="admonition-questions questions admonition" id="questions-0">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>How can all ranks of my program collaborate with messages?</p></li>
+<li><p>How does collective messaging differ from point-to-point?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition" id="objectives-0">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Know the different kinds of collective message operations</p></li>
+<li><p>Understand the terminology used in MPI about collective messages</p></li>
+<li><p>Understand how to combine data from ranks of a communicator in an operation</p></li>
+</ul>
+</div>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h2>
+<p>Parallel programs often need to collaborate when passing messages:</p>
+<ul class="simple">
+<li><p>To ensure that all ranks have reached a certain point (barrier)</p></li>
+<li><p>To share data with all ranks (broadcast)</p></li>
+<li><p>To compute based on data from all ranks (reduce)</p></li>
+<li><p>To rearrange data across ranks for subsequent computation (scatter, gather)</p></li>
+</ul>
+<p>These can all be done with point-to-point messages. However that
+requires more code, runs slower, and scales worse that using the
+optimized collective calls.</p>
+<p>There are several other operations that generalize these building
+blocks:</p>
+<ul class="simple">
+<li><p>gathering data from all ranks and delivering the same data to all
+ranks</p></li>
+<li><p>all-to-all scatter and gather of different data to all ranks</p></li>
+</ul>
+<p>Finally, MPI supports reduction operations, where a logical or
+arithmetic operation can be used to efficiently compute while
+communicating data.</p>
+</section>
+<section id="barrier">
+<h2>Barrier<a class="headerlink" href="#barrier" title="Permalink to this headline"></a></h2>
+<p>An <code class="docutils literal notranslate"><span class="pre">MPI_Barrier</span></code> call ensures that all ranks arrive at the call before
+any of them proceeds past it.</p>
+<figure class="align-center" id="id1">
+<img alt="../_images/MPI_Barrier.svg" src="../_images/MPI_Barrier.svg" /><figcaption>
+<p><span class="caption-text">All ranks in the communicator reach the barrier before any continue past it</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><code class="docutils literal notranslate"><span class="pre">MPI_Barrier</span></code> is <cite>blocking</cite> (ie. does not return until the operation
+is complete) and introduces <cite>collective synchronization</cite> into the
+program. This can be useful to allow rank to wait for an external
+event (e.g. files being written by another process) before entering
+the barrier, rather than have all ranks checking.</p>
+<p>When debugging problems in other MPI communication, adding calls to
+<code class="docutils literal notranslate"><span class="pre">MPI_Barrier</span></code> can be useful. However, if a barrier is necessary for
+your program to function correctly, that may suggest your
+program has a bug!</p>
+<div class="admonition-term-mpi-barrier signature toggle-shown dropdown admonition" id="signature-0">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Barrier"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Barrier</code></span></a></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-0">
+<p class="admonition-title">Parameters</p>
+<p>It takes one argument, the communicator over which the barrier
+operates.  All ranks within that communicator must call it or the
+program will hang waiting for them to do so.</p>
+</div>
+</section>
+<section id="broadcast">
+<h2>Broadcast<a class="headerlink" href="#broadcast" title="Permalink to this headline"></a></h2>
+<p>An <code class="docutils literal notranslate"><span class="pre">MPI_Bcast</span></code> call sends data from one rank to all other ranks.</p>
+<figure class="align-center" id="id2">
+<img alt="../_images/MPI_Bcast.svg" src="../_images/MPI_Bcast.svg" /><figcaption>
+<p><span class="caption-text">After the call, all ranks in the communicator agree on the two values
+sent.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><code class="docutils literal notranslate"><span class="pre">MPI_Bcast</span></code> is <cite>blocking</cite> and introduces <cite>collective
+synchronization</cite> into the program.</p>
+<p>This can be useful to allow one rank to share values to all
+other ranks in the communicator. For example, one rank might read
+a file, and then broadcast the content to all other ranks. This is
+usually more efficient than having each rank read the same file.</p>
+<div class="admonition-term-mpi-bcast signature toggle-shown dropdown admonition" id="signature-1">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Bcast"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Bcast</code></span></a></p>
+<p>Sends data from one rank to all other ranks</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Bcast</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">              </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-1">
+<p class="admonition-title">Parameters</p>
+<p>All ranks must supply the same value for <code class="docutils literal notranslate"><span class="pre">root</span></code>, which specifies
+the rank of that communicator that provides the values that are
+broadcast to all other ranks.</p>
+<p><code class="docutils literal notranslate"><span class="pre">buffer</span></code>, <code class="docutils literal notranslate"><span class="pre">count</span></code>, <code class="docutils literal notranslate"><span class="pre">datatype</span></code>, and <code class="docutils literal notranslate"><span class="pre">comm</span></code> are similar to those
+used for point-to-point communication; all ranks in the communicator
+must participate with valid buffers and consistent counts and types.</p>
+</div>
+</section>
+<section id="reduce">
+<h2>Reduce<a class="headerlink" href="#reduce" title="Permalink to this headline"></a></h2>
+<p>An <code class="docutils literal notranslate"><span class="pre">MPI_Reduce</span></code> call combines data from all ranks using an operation
+and returns values to a single rank.</p>
+<figure class="align-center" id="id3">
+<img alt="../_images/MPI_Reduce.svg" src="../_images/MPI_Reduce.svg" /><figcaption>
+<p><span class="caption-text">After the call, the root rank has a value computed by combining a
+value from each other rank in the communicator with an operation.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><code class="docutils literal notranslate"><span class="pre">MPI_Reduce</span></code> is <cite>blocking</cite> and introduces <cite>collective
+synchronization</cite> into the program.</p>
+<p>There are several kinds of pre-defined operation, including arithmetic
+and logical operations. A full list of operations is available in the
+linked documentation.</p>
+<p>This is useful to allow one rank to compute based on values from all
+other ranks in the communicator. For example, the maximum value found
+over all ranks (and even the rank upon which it was found) can be
+returned to the root rank. Often one simply wants a sum, and for that
+<code class="docutils literal notranslate"><span class="pre">MPI_SUM</span></code> is provided.</p>
+<div class="admonition-term-mpi-reduce signature toggle-shown dropdown admonition" id="signature-2">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Reduce"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Reduce</code></span></a></p>
+<p>Combines data from all ranks using an operation and returns values
+to a single rank.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Reduce</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Op</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-2">
+<p class="admonition-title">Parameters</p>
+<p>All ranks must supply the same value for <code class="docutils literal notranslate"><span class="pre">root</span></code>, which specifies
+the rank of the process within that communicator that receives the
+values send from each process.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sendbuf</span></code>, <code class="docutils literal notranslate"><span class="pre">count</span></code> and <code class="docutils literal notranslate"><span class="pre">datatype</span></code> describe the buffer on
+<strong>each</strong> process from which the data is sent. Only a buffer large
+enough to contain the data sent by that process is needed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recvbuf</span></code>, <code class="docutils literal notranslate"><span class="pre">count</span></code> and <code class="docutils literal notranslate"><span class="pre">datatype</span></code> describe the buffer on the
+<strong>root</strong> process in which the combined data is received. Other
+ranks do not need to allocate a receive buffer, and may pass any
+values to the call.</p>
+<p>All ranks in the communicator must participate with valid send
+buffers and consistent counts and types.</p>
+</div>
+</section>
+<section id="code-along-exercise-broadcast-and-reduce">
+<h2>Code-along exercise: broadcast and reduce<a class="headerlink" href="#code-along-exercise-broadcast-and-reduce" title="Permalink to this headline"></a></h2>
+<div class="admonition-use-a-broadcast-and-observe-the-results-with-reduce exercise important admonition" id="exercise-0">
+<p class="admonition-title">Use a broadcast and observe the results with reduce</p>
+<p>You can find a scaffold for the code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-2/00_broadcast</span></code> folder.  A working solution is in the
+<code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder. Try to compile with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c11</span> <span class="n">collective</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">broadcast</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">collective</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">broadcast</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>When you have the code compiling, try to run with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpiexec</span> <span class="o">-</span><span class="n">np</span> <span class="mi">2</span> <span class="o">./</span><span class="n">collective</span><span class="o">-</span><span class="n">communication</span><span class="o">-</span><span class="n">broadcast</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use clues from the compiler and the comments in the code to
+change the code so it compiles and runs. Try to get all ranks to
+report success :-)</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution important dropdown admonition" id="solution-0">
+<p class="admonition-title">Solution</p>
+<ul>
+<li><p>One correct pair of calls is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MPI_Bcast</span><span class="p">(</span><span class="n">values_to_broadcast</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">rank_of_root</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+<span class="o">/*</span> <span class="o">...</span> <span class="o">*/</span>
+<span class="n">MPI_Reduce</span><span class="p">(</span><span class="n">values_to_broadcast</span><span class="p">,</span> <span class="n">reduced_values</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span>
+           <span class="n">MPI_SUM</span><span class="p">,</span> <span class="n">rank_of_root</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>There are other calls that work correctly. Is yours better or worse
+than this one? Why?</p></li>
+</ul>
+</div>
+</section>
+<section id="tips-when-using-collective-communication">
+<h2>Tips when using collective communication<a class="headerlink" href="#tips-when-using-collective-communication" title="Permalink to this headline"></a></h2>
+<p>Unlike point-to-point messages, collective communication does not use
+tags. This is deliberate, because collective communication requires
+all ranks in the communicator to contribute to the work before any
+rank will return from the call. There’s no facility for more than one
+collective communication to run at a time on a communicator, so
+there’s no need for a tag to clarify which communication is taking
+place. That’s implied by the <strong>order</strong> of the collective communication
+calls.</p>
+<p>However, it’s fine to use point-to-point messages on the same
+communicator in any order; they work independently.</p>
+<div class="admonition-quiz-if-one-rank-calls-a-reduce-and-another-rank-calls-a-broadcast-is-it-a-problem exercise important admonition" id="exercise-1">
+<p class="admonition-title">Quiz: if one rank calls a reduce,
+and another rank calls a broadcast, is it a problem?</p>
+<ol class="arabic simple">
+<li><p>Yes, always.</p></li>
+<li><p>No, never.</p></li>
+<li><p>Yes when they are using the same communicator</p></li>
+</ol>
+</div>
+<div class="admonition-solution solution important dropdown admonition" id="solution-1">
+<p class="admonition-title">Solution</p>
+<ol class="arabic simple" start="3">
+<li><p>Collectives <em>on the same communicator</em> must be called in the
+same order by all ranks of that communicator. Collectives on
+different communicators from disjoint groups of ranks don’t
+create problems for each other.</p></li>
+</ol>
+</div>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Check out the <a class="reference external" href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node95.htm#Node95">MPI standard</a></p></li>
+<li><p><a class="reference external" href="https://www.codingame.com/playgrounds/349/introduction-to-mpi/introduction-to-collective-communications">https://www.codingame.com/playgrounds/349/introduction-to-mpi/introduction-to-collective-communications</a></p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition" id="keypoints-0">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>Collective communication requires participation of all ranks in that communicator</p></li>
+<li><p>Collective communication happens <em>in order</em> and so no tags are needed.</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../derived-datatypes-pt2/" class="btn btn-neutral float-left" title="Derived datatypes: MPI_Datatype" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../collective-communication-pt2/" class="btn btn-neutral float-right" title="Scatter and gather" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, EuroCC National Competence Centre Sweden.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

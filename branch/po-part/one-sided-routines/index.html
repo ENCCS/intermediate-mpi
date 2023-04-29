@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One-sided communications: functions &mdash; Intermediate MPI</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="One-sided communication: synchronization" href="../one-sided-sync/" />
+    <link rel="prev" title="One-sided communication: concepts" href="../one-sided-concepts/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../" class="icon icon-home"> Intermediate MPI
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The lesson</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt1/">Derived datatypes: pack and unpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes-pt2/">Derived datatypes: <code class="docutils literal notranslate"><span class="pre">MPI_Datatype</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">One-sided communications: functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rma-anatomy">RMA anatomy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#window-creation">Window creation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rma-operations">RMA operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+      <li>One-sided communications: functions</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/one-sided-routines.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="one-sided-communications-functions">
+<span id="one-sided-routines"></span><h1>One-sided communications: functions<a class="headerlink" href="#one-sided-communications-functions" title="Permalink to this headline"></a></h1>
+<div class="admonition-questions questions admonition" id="questions-0">
+<p class="admonition-title">Questions</p>
+<ul class="simple">
+<li><p>What functions should you use for RMA?</p></li>
+</ul>
+</div>
+<div class="admonition-objectives objectives admonition" id="objectives-0">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Learn how to create memory windows.</p></li>
+<li><p>Learn how to access remote memory windows.</p></li>
+</ul>
+</div>
+<section id="rma-anatomy">
+<h2>RMA anatomy<a class="headerlink" href="#rma-anatomy" title="Permalink to this headline"></a></h2>
+<p>One-sided communication in MPI is achieved in three steps, which map onto three sets of functions:</p>
+<dl>
+<dt>Windows</dt><dd><p>Make memory available on each process for remote memory accesses. We use
+<em>memory windows</em>, which are objects of type <code class="docutils literal notranslate"><span class="pre">MPI_Win</span></code> providing handles to
+remotely-accessible memory.  MPI provides 4 <strong>collective</strong> routines for the
+creation of memory windows:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_allocate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_allocate</code></span></a> allocates memory and creates the window object.</p></li>
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create</code></span></a> creates a window from already allocated memory.</p></li>
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_allocate_shared"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_allocate_shared</code></span></a> creates a window from already allocated MPI shared memory.</p></li>
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create_dynamic"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create_dynamic</code></span></a> creates a window from allocated memory, but
+the window-memory pairing is deferred.</p></li>
+</ul>
+<p>A handle of type <code class="docutils literal notranslate"><span class="pre">MPI_Win</span></code> manages memory made available for remote
+operations on <em>all ranks</em> in the communicator.
+Memory windows must be explicitly freed after use with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_free"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_free</code></span></a>.</p>
+</dd>
+<dt>Load/store</dt><dd><p>Load/store/transform data in remote windows. We can identify an <em>origin</em> and a
+<em>target</em> process. At variance with two-sided communication, the origin process
+fully specifies the data transfer: where the data comes from and where it is
+going to. There are three main groups of MPI routines for this purpose:</p>
+<ul class="simple">
+<li><p><strong>Put</strong> <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a> and <code class="docutils literal notranslate"><span class="pre">MPI_Rput</span></code></p></li>
+<li><p><strong>Get</strong> <a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a> and <code class="docutils literal notranslate"><span class="pre">MPI_Rget</span></code></p></li>
+<li><p><strong>Accumulate</strong> <a class="reference internal" href="../quick-reference/index.html#term-MPI_Accumulate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Accumulate</code></span></a>, <code class="docutils literal notranslate"><span class="pre">MPI_Raccumulate</span></code> and variations thereof.</p></li>
+</ul>
+</dd>
+<dt>Synchronization</dt><dd><p>Ensure that the data is available for remote memory accesses. The load/store
+routines are <em>non-blocking</em> and the programmer must take care that subsequent
+accesses are <em>safe</em> and <em>correct</em>.  How synchronization is achieved depends on
+the one-sided communication <em>paradigm</em> adopted:</p>
+<ul class="simple">
+<li><p><strong>Active</strong> if both origin and target processes play a role in the
+synchronization. This is indeed the message passing model of parallel
+computation.</p></li>
+<li><p><strong>Passive</strong> if the origin process orchestrates data transfer and
+synchronization. Conceptually, this is closely related to the shared memory
+model of parallel computation: the window is the shared memory in the
+communicator and every process can operate on it, seemingly independently of
+each other.</p></li>
+</ul>
+<p>There are three sets of routines currently available in MPI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_fence"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_fence</code></span></a> this achieves synchronization in the <strong>active target</strong>
+communication paradigm.</p></li>
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_start"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_start</code></span></a>, <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_complete"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_complete</code></span></a>, <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_post"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_post</code></span></a>,
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_wait"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_wait</code></span></a> are also used in the <strong>active target</strong> communication
+paradigm.</p></li>
+<li><p><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_lock"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_lock</code></span></a>, <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_unlock"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_unlock</code></span></a> which enables synchronization in
+the <strong>passive target</strong> paradigm.</p></li>
+</ul>
+<p>We will discuss synchronization further in the next episode <a class="reference internal" href="../one-sided-sync/#one-sided-sync"><span class="std std-ref">One-sided communication: synchronization</span></a>.</p>
+</dd>
+</dl>
+<figure class="align-center" id="id2">
+<img alt="../_images/E02-RMA_timeline-coarse.svg" src="../_images/E02-RMA_timeline-coarse.svg" /><figcaption>
+<p><span class="caption-text">The timeline of window creation, calls to RMA routines, and synchronization
+in an application which uses MPI one-sided communication.
+The creation of <code class="docutils literal notranslate"><span class="pre">MPI_Win</span></code> objects in each process in the communicator
+allows the execution of RMA routines. Each access to the window must be
+synchronized: to ensure safety and correctness of the application.
+Note that <strong>any</strong> interaction with the memory window <strong>must</strong> be protected by
+calls to synchronization routines: even local load/store and/or two-sided
+communication.
+The events in between synchronization calls are said to happen in <em>epochs</em>.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition-rma-in-action typealong toggle-shown dropdown admonition" id="typealong-0">
+<p class="admonition-title">RMA in action</p>
+<p>In this example, we will work with two processes:</p>
+<ul class="simple">
+<li><p>Rank 1, will allocate a buffer and expose it as a window.</p></li>
+<li><p>Rank 0, will get the values from this buffer.</p></li>
+</ul>
+<p>You can find a full working solution in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-3/00_rma/solution</span></code> folder.</p>
+<p>First of all, we create the buffer on all ranks. However, only rank 1 will
+fill it with some values. We will see that window creation is <em>collective</em>
+call for all ranks in the given communicator.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">window_buffer</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span><span class="w"></span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">window_buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">window_buffer</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">window_buffer</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">window_buffer</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">;</span><span class="w"></span>
+<span class="n">MPI_Win_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">window_buffer</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">MPI_Aint</span><span class="p">)</span><span class="mi">4</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span><span class="w"></span>
+<span class="w">               </span><span class="n">MPI_INFO_NULL</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">win</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Every rank has now a window, but only the window on rank 1 has values
+different from 0. Before doing anything on the window, we need to start an
+<em>access epoch</em>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">MPI_Win_fence</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">win</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Process 0 can now load the values into its local memory:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">getbuf</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span><span class="w"></span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// Fetch the value from the MPI process 1 window</span>
+<span class="w">  </span><span class="n">MPI_Get</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getbuf</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="n">win</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>We synchronize again once we are done with RMA operations: this access epoch
+is closed. This is needed even if subsequent accesses are local!</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">MPI_Win_fence</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">win</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Remember to free the window object!</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">MPI_Win_free</span><span class="p">(</span><span class="o">&amp;</span><span class="n">win</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-discussion discussion attention admonition" id="discussion-0">
+<p class="admonition-title">Discussion</p>
+<ul class="simple">
+<li><p>Are there similarities between one-sided and non-blocking communication? In
+which contexts would you prefer one over the other?</p></li>
+</ul>
+</div>
+<div class="admonition-non-blocking-vs-rma exercise important admonition" id="exercise-0">
+<p class="admonition-title">Non-blocking vs RMA</p>
+<p>Can you re-express the code shown in the type-along with
+<a class="reference internal" href="../quick-reference/index.html#term-MPI_Isend"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Isend</code></span></a>/<a class="reference internal" href="../quick-reference/index.html#term-MPI_Recv"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Recv</code></span></a>?</p>
+<p>You can find a scaffold for the code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-3/01_rma-vs-nonblocking</span></code> folder.  A working solution is in the
+<code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder.</p>
+</div>
+</section>
+<section id="window-creation">
+<h2>Window creation<a class="headerlink" href="#window-creation" title="Permalink to this headline"></a></h2>
+<p>The creation of <code class="docutils literal notranslate"><span class="pre">MPI_Win</span></code> objects is a collective operation: each process in
+the communicator will reserve the specified memory for remote memory accesses.</p>
+<div class="admonition-term-mpi-win-allocate signature toggle-shown dropdown admonition" id="signature-0">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_allocate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_allocate</code></span></a></p>
+<p>Use this function to <em>allocate</em> memory and <em>create</em> a window object out of it.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_allocate</span><span class="p">(</span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"></span>
+<span class="w">                     </span><span class="kt">int</span><span class="w"> </span><span class="n">disp_unit</span><span class="p">,</span><span class="w"></span>
+<span class="w">                     </span><span class="n">MPI_Info</span><span class="w"> </span><span class="n">info</span><span class="p">,</span><span class="w"></span>
+<span class="w">                     </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"></span>
+<span class="w">                     </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">baseptr</span><span class="p">,</span><span class="w"></span>
+<span class="w">                     </span><span class="n">MPI_Win</span><span class="w"> </span><span class="o">*</span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<p>We can expose an array of 10 <code class="docutils literal notranslate"><span class="pre">double</span></code>-s for RMA with:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// allocate window</span>
+<span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">;</span><span class="w"></span>
+<span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">;</span><span class="w"></span>
+<span class="n">MPI_Win_allocate</span><span class="p">((</span><span class="n">MPI_Aint</span><span class="p">)(</span><span class="mi">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)),</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">),</span><span class="w"></span>
+<span class="w">                 </span><span class="n">MPI_INFO_NULL</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">win</span><span class="p">);</span><span class="w"></span>
+
+<span class="c1">// do something with win</span>
+
+<span class="c1">// free window and the associated memory</span>
+<span class="n">MPI_Win_free</span><span class="p">(</span><span class="o">&amp;</span><span class="n">win</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-0">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">size</span></code></dt><dd><p>Size in bytes.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">disp_unit</span></code></dt><dd><p>Displacement units. If <code class="docutils literal notranslate"><span class="pre">disp_unit</span> <span class="pre">=</span> <span class="pre">1</span></code>, then displacements are computed
+in bytes. The use of displacement units can help with code readability
+and is essential for correctness on heterogeneous systems, where the
+sizes of the basic types might differ between processes.  See also
+<span class="xref std std-ref">derived-datatypes</span>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">info</span></code></dt><dd><p>An info object, which can be used to provide optimization hints to the
+MPI implementation. Using <code class="docutils literal notranslate"><span class="pre">MPI_INFO_NULL</span></code> is always correct.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">comm</span></code></dt><dd><p>The (intra)communicator.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">baseptr</span></code></dt><dd><p>The base pointer.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">win</span></code></dt><dd><p>The window object.</p>
+</dd>
+</dl>
+</div>
+<div class="admonition-term-mpi-win-create signature toggle-shown dropdown admonition" id="signature-1">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create</code></span></a></p>
+<p>With this routine you can tell MPI what memory to expose as
+window. The memory must be already allocated and contiguous, since it will be
+specified in input as <strong>base address plus size in bytes</strong>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Win_create</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">base</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="kt">int</span><span class="w"> </span><span class="n">disp_unit</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Info</span><span class="w"> </span><span class="n">info</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Win</span><span class="w"> </span><span class="o">*</span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<p>What if the memory is not allocated? We advise to use <a class="reference internal" href="../quick-reference/index.html#term-MPI_Alloc_mem"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Alloc_mem</code></span></a>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// allocate memory</span>
+<span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">;</span><span class="w"></span>
+<span class="n">MPI_Alloc_mem</span><span class="p">((</span><span class="n">MPI_Aint</span><span class="p">)(</span><span class="mi">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)),</span><span class="w"> </span><span class="n">MPI_INFO_NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">buf</span><span class="p">);</span><span class="w"></span>
+
+<span class="c1">// create window</span>
+<span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">;</span><span class="w"></span>
+<span class="n">MPI_Win_create</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">MPI_Aint</span><span class="p">)(</span><span class="mi">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)),</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">),</span><span class="w"></span>
+<span class="w">               </span><span class="n">MPI_INFO_NULL</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">win</span><span class="p">);</span><span class="w"></span>
+
+<span class="c1">// do something with win</span>
+
+<span class="c1">// free window</span>
+<span class="n">MPI_Win_free</span><span class="p">(</span><span class="o">&amp;</span><span class="n">win</span><span class="p">);</span><span class="w"></span>
+
+<span class="c1">// free memory</span>
+<span class="n">MPI_Free_mem</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<p>You must explicitly call <a class="reference internal" href="../quick-reference/index.html#term-MPI_Free_mem"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Free_mem</code></span></a> to deallocate memory obtained
+with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Alloc_mem"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Alloc_mem</code></span></a>.</p>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-1">
+<p class="admonition-title">Parameters</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">base</span></code></dt><dd><p>The base pointer.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">size</span></code></dt><dd><p>Size in bytes.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">disp_unit</span></code></dt><dd><p>Displacement units. If <code class="docutils literal notranslate"><span class="pre">disp_unit</span> <span class="pre">=</span> <span class="pre">1</span></code>, then displacements are computed
+in bytes. The use of displacement units can help with code readability
+and is essential for correctness on heterogeneous systems, where the
+sizes of the basic types might differ between processes.  See also
+<span class="xref std std-ref">derived-datatypes</span>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">info</span></code></dt><dd><p>An info object, which can be used to provide optimization hints to the
+MPI implementation. Using <code class="docutils literal notranslate"><span class="pre">MPI_INFO_NULL</span></code> is always correct.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">comm</span></code></dt><dd><p>The (intra)communicator.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">win</span></code></dt><dd><p>The window object.</p>
+</dd>
+</dl>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The memory window is usually a single array: the size of the window object
+then coincides with the size of the array.  If the base type of the array
+is a simple type, then the displacement unit is the size of that type,
+<em>e.g.</em> <code class="docutils literal notranslate"><span class="pre">double</span></code> and <code class="docutils literal notranslate"><span class="pre">sizeof(double)</span></code>.  You should use a displacement
+unit of 1 otherwise.</p></li>
+</ul>
+</div>
+<div class="admonition-window-creation exercise important admonition" id="exercise-1">
+<p class="admonition-title">Window creation</p>
+<p>Let’s look again at the initial example in the type-along. There we published
+an already allocated buffer as memory window. Use the examples above to
+figure out how to switch to using <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_allocate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_allocate</code></span></a></p>
+<p>You can find a scaffold for the code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-3/02_rma-win-allocate</span></code> folder.  A working solution is in the
+<code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder.</p>
+</div>
+</section>
+<section id="rma-operations">
+<h2>RMA operations<a class="headerlink" href="#rma-operations" title="Permalink to this headline"></a></h2>
+<div class="admonition-term-mpi-put signature toggle-shown dropdown admonition" id="signature-2">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a></p>
+<p>Store data from the <strong>origin</strong> process to the memory window of the <strong>target</strong>
+process.
+The origin process is the <em>source</em>, while the target process is the
+<em>destination</em>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Put</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">origin_addr</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">origin_count</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">origin_datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">target_rank</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">target_disp</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">target_count</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">target_datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-term-mpi-get signature toggle-shown dropdown admonition" id="signature-3">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a></p>
+<p>Load data from the memory window of the <strong>target</strong> process to the <strong>origin</strong>
+process.
+The origin process is the <em>destination</em>, while the target process is the
+<em>source</em>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Get</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">origin_addr</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">origin_count</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">origin_datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">target_rank</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">target_disp</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">target_count</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">target_datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-parameters parameters dropdown admonition" id="parameters-2">
+<p class="admonition-title">Parameters</p>
+<p>Both <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a> and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a> are <em>non-blocking</em>: they are completed
+by a call to synchronization routines.
+The two functions have the same argument list. Similarly to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Send"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Send</code></span></a>
+and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Recv"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Recv</code></span></a>, the data is specified by the triplet of address, count,
+and datatype.
+For the data at the <em>origin</em> process this is: <code class="docutils literal notranslate"><span class="pre">origin_addr</span></code>,
+<code class="docutils literal notranslate"><span class="pre">origin_count</span></code>, <code class="docutils literal notranslate"><span class="pre">origin_datatype</span></code>.
+On the <em>target</em> process, we describe the buffer in terms of displacement,
+count, and datatype: <code class="docutils literal notranslate"><span class="pre">target_disp</span></code>, <code class="docutils literal notranslate"><span class="pre">target_count</span></code>, <code class="docutils literal notranslate"><span class="pre">target_datatype</span></code>.
+The address of the buffer on the target process is computed using the base
+address and displacement unit of the <code class="docutils literal notranslate"><span class="pre">MPI_Win</span></code> object:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">target_addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">win_base_addr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">target_disp</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">disp_unit</span><span class="w"></span>
+</pre></div>
+</div>
+<p>With <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a>, the <code class="docutils literal notranslate"><span class="pre">origin</span></code> triplet specifies the <strong>local send
+buffer</strong>; while with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a> it specifies the <strong>local receive
+buffer</strong>.
+The <code class="docutils literal notranslate"><span class="pre">target_rank</span></code> parameter is, as the name suggests, the rank of the
+target process in the communicator.</p>
+</div>
+<div class="admonition-using-term-mpi-put exercise important admonition" id="exercise-2">
+<p class="admonition-title">Using <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a></p>
+<p>Reorganize the sample code of the previous exercise such that rank 1 <em>stores</em>
+values into rank 0 memory window with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a>, rather than rank 0
+<em>loading</em> them with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a>.</p>
+<p>You can find a scaffold for the code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-3/03_rma-put</span></code> folder.  A working solution is in the
+<code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder.</p>
+</div>
+<div class="admonition-term-mpi-accumulate signature toggle-shown dropdown admonition" id="signature-4">
+<p class="admonition-title"><a class="reference internal" href="../quick-reference/index.html#term-MPI_Accumulate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Accumulate</code></span></a></p>
+<p>Store data from the <strong>origin</strong> process to the memory window of the <strong>target</strong>
+process <em>and</em> combine it using one the predefined MPI reduction operations.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">MPI_Accumulate</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">origin_addr</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="kt">int</span><span class="w"> </span><span class="n">origin_count</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">origin_datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="kt">int</span><span class="w"> </span><span class="n">target_rank</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Aint</span><span class="w"> </span><span class="n">target_disp</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="kt">int</span><span class="w"> </span><span class="n">target_count</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">target_datatype</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Op</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"></span>
+<span class="w">                   </span><span class="n">MPI_Win</span><span class="w"> </span><span class="n">win</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The argument list to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Accumulate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Accumulate</code></span></a> is the same as for <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a>,
+with the addition of the <code class="docutils literal notranslate"><span class="pre">op</span></code> parameter with type <code class="docutils literal notranslate"><span class="pre">MPI_Op</span></code>, which
+specifies which reduction operation to execute on the target process.
+This routine is <strong>elementwise atomic</strong>: accesses from multiple processes will
+be serialized in some order and no race conditions can thus occur.  You still
+need to exercise care though: reductions are only deterministic if the
+operation is <em>associative</em> and <em>commutative</em> for the given datatype.  For
+example, <code class="docutils literal notranslate"><span class="pre">MPI_SUM</span></code> and <code class="docutils literal notranslate"><span class="pre">MPI_PROD</span></code> are <em>neither</em> associative <em>nor</em>
+commutative for floating point numbers!</p>
+</div>
+<div class="admonition-using-term-mpi-accumulate exercise important admonition" id="exercise-3">
+<p class="admonition-title">Using <a class="reference internal" href="../quick-reference/index.html#term-MPI_Accumulate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Accumulate</code></span></a></p>
+<p>You can find a scaffold for the code in the
+<code class="docutils literal notranslate"><span class="pre">content/code/day-3/04_rma-accumulate</span></code> folder.
+Follow the prompts and complete the function calls to:</p>
+<ol class="arabic">
+<li><p>Create a window object from an allocated buffer:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">buffer</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Let each process accumulate its rank in the memory window of the process
+with rank 0. We want to obtain the sum of the accumulating values.</p></li>
+</ol>
+<p>With 2 processes, you should get the following output to screen:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">MPI</span> <span class="n">process</span> <span class="mi">0</span><span class="p">]</span> <span class="n">Value</span> <span class="ow">in</span> <span class="n">my</span> <span class="n">window_buffer</span> <span class="n">before</span> <span class="n">MPI_Accumulate</span><span class="p">:</span> <span class="mf">42.</span>
+<span class="p">[</span><span class="n">MPI</span> <span class="n">process</span> <span class="mi">1</span><span class="p">]</span> <span class="n">I</span> <span class="n">accumulate</span> <span class="n">data</span> <span class="mi">1</span> <span class="ow">in</span> <span class="n">MPI</span> <span class="n">process</span> <span class="mi">0</span> <span class="n">window</span> <span class="n">via</span> <span class="n">MPI_Accumulate</span><span class="o">.</span>
+<span class="p">[</span><span class="n">MPI</span> <span class="n">process</span> <span class="mi">0</span><span class="p">]</span> <span class="n">Value</span> <span class="ow">in</span> <span class="n">my</span> <span class="n">window_buffer</span> <span class="n">after</span> <span class="n">MPI_Accumulate</span><span class="p">:</span> <span class="mf">43.</span>
+</pre></div>
+</div>
+<p>A working solution is in the <code class="docutils literal notranslate"><span class="pre">solution</span></code> subfolder.</p>
+</div>
+<p>Other routines for RMA operations are:</p>
+<dl>
+<dt>Request-based variants</dt><dd><p>These routines return a handle of type <code class="docutils literal notranslate"><span class="pre">MPI_Request</span></code> and synchronization
+can be achieved with <code class="docutils literal notranslate"><span class="pre">MPI_Wait</span></code>.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Rget</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Rput</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Raccumulate</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Rget_accumulate</span></code></p></li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>Specialized accumulation variants</dt><dd><p>These functions perform specialized accumulations, but are conceptually
+similar to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Accumulate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Accumulate</code></span></a>.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Get_accumulate</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Fetch_and_op</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Compare_and_swap</span></code></p></li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+<div class="admonition-describe-the-sequence-mpi-calls-connecting-the-before-and-after-schemes exercise important admonition" id="exercise-4">
+<p class="admonition-title">Describe the sequence MPI calls connecting the before and after schemes.</p>
+<ol class="arabic">
+<li><figure class="align-default">
+<img alt="../_images/E02-win_allocate.svg" src="../_images/E02-win_allocate.svg" /></figure>
+<ol class="upperalpha simple">
+<li><p>Window creation with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_allocate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_allocate</code></span></a>.</p></li>
+<li><p>Window creation with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create</code></span></a> followed by <a class="reference internal" href="../quick-reference/index.html#term-MPI_Alloc_mem"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Alloc_mem</code></span></a>.</p></li>
+<li><p>Dynamic window creation with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create_dynamic"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create_dynamic</code></span></a>.</p></li>
+<li><p>Memory allocation with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Alloc_mem"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Alloc_mem</code></span></a> followed by window creation <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create</code></span></a>.</p></li>
+</ol>
+</li>
+<li><figure class="align-default">
+<img alt="../_images/E02-win_create_put.svg" src="../_images/E02-win_create_put.svg" /></figure>
+<ol class="upperalpha simple">
+<li><p>Window creation with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_allocate"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_allocate</code></span></a> and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a> from <em>origin process 2</em> to <em>target process 1</em>.</p></li>
+<li><p>Window creation with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create_dynamic"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create_dynamic</code></span></a> and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a> from <em>origin process 1</em> to <em>target process 2</em>.</p></li>
+<li><p>Window creation with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create</code></span></a> and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Get"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Get</code></span></a> from <em>origin process 1</em> to <em>target process 2</em>.</p></li>
+<li><p>Window creation with <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create</code></span></a> and <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a> from <em>origin process 2</em> to <em>target process 1</em>.</p></li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="admonition-solution solution important dropdown admonition" id="solution-0">
+<p class="admonition-title">Solution</p>
+<ol class="arabic simple">
+<li><p>Both options <strong>A</strong> and <strong>D</strong> are correct. With option <strong>A</strong>, we let MPI
+allocate memory on each process <em>and</em> create a <code class="docutils literal notranslate"><span class="pre">MPI_Win</span></code> window object.
+With option <strong>C</strong>, the memory allocation and window object creation are
+decoupled and managed by the programmer. If you have the choice, option <strong>A</strong>
+should be preferred: the MPI library might be able to better optimize window
+creation.</p></li>
+<li><p>Option <strong>D</strong> is correct. The memory is already allocated on each process,
+maybe through use of <a class="reference internal" href="../quick-reference/index.html#term-MPI_Alloc_mem"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Alloc_mem</code></span></a>, and the window can be created
+with a call to <a class="reference internal" href="../quick-reference/index.html#term-MPI_Win_create"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Win_create</code></span></a>. The subsequent data movement is a
+remote <em>store</em> operation. The call <a class="reference internal" href="../quick-reference/index.html#term-MPI_Put"><span class="xref std std-term"><code class="docutils literal notranslate">MPI_Put</code></span></a> is issued by process 2,
+the <em>origin</em> process, to store its <code class="docutils literal notranslate"><span class="pre">C</span></code> variable to the memory window of
+process 1, the <em>target</em> process.</p></li>
+</ol>
+</div>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>The lecture covering MPI RMA from EPCC is available
+<a class="reference external" href="http://www.archer.ac.uk/training/course-material/2020/01/advMPI-imperial/Slides/L07-Intro%20to%20RMA.pdf">here</a></p></li>
+<li><p>Chapter 3 of the <strong>Using Advanced MPI</strong> by William Gropp <em>et al.</em> <span id="id1">[<a class="reference internal" href="../zbibliography/#id2" title="William Gropp, Torsten Hoefler, Rajeev Thakur, and Ewing Lusk. Using Advanced MPI: Modern Features of the Message-Passing Interface. Scientific and Engineering Computation. MIT Press, November 2014. ISBN 9780262527637. URL: https://mitpress.mit.edu/books/using-advanced-mpi.">GHTL14</a>]</span></p></li>
+</ul>
+<div class="admonition-keypoints keypoints admonition" id="keypoints-0">
+<p class="admonition-title">Keypoints</p>
+<ul class="simple">
+<li><p>The MPI model for remote memory accesses.</p></li>
+<li><p>Window objects and memory windows.</p></li>
+<li><p>Timeline of RMA and the importance of synchronization.</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../one-sided-concepts/" class="btn btn-neutral float-left" title="One-sided communication: concepts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../one-sided-sync/" class="btn btn-neutral float-right" title="One-sided communication: synchronization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, EuroCC National Competence Centre Sweden.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

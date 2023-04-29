@@ -1,0 +1,415 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Instructor’s guide &mdash; Intermediate MPI</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/segment.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/menu.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/semantic-ui-2.4.1/tab.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_tabs/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sphinx_lesson.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/togglebutton.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="prev" title="Bibliography" href="../zbibliography/" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../" class="icon icon-home" alt="Documentation Home"> Intermediate MPI
+          
+
+          
+            
+            <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/">Setting up your system</a></li>
+</ul>
+<p class="caption"><span class="caption-text">The lesson</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../communicators-groups/">Communicators and groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../derived-datatypes/">Derived datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt1/">Simple collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt2/">Scatter and gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../collective-communication-pt3/">Generalized forms of gather</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt1/">Non-blocking point-to-point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../non-blocking-communication-pt2/">Non-blocking collective communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-concepts/">One-sided communication: concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-routines/">One-sided communications: functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../one-sided-sync/">One-sided communication: synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt1/">Introducing MPI and threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mpi-and-threads-pt2/">MPI and threads in practice</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zbibliography/">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Instructor’s guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#learning-outcomes">Learning outcomes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tips">Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#timing">Timing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#first-iteration-2020-12-08-11">First iteration: 2020-12-08/11</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Intermediate MPI</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Instructor’s guide</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/ENCCS/intermediate-mpi/blob/master/content/guide.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="instructor-s-guide">
+<h1>Instructor’s guide<a class="headerlink" href="#instructor-s-guide" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="learning-outcomes">
+<h2>Learning outcomes<a class="headerlink" href="#learning-outcomes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Communicators, groups, derived datatypes</p></li>
+<li><p>One-sided communication</p></li>
+<li><p>Collective communication, blocking and non-blocking</p></li>
+<li><p>MPI and threads</p></li>
+</ul>
+</div>
+<div class="section" id="tips">
+<h2>Tips<a class="headerlink" href="#tips" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Append <code class="docutils literal notranslate"><span class="pre">?plain=1</span></code> to collapse the sidebar while presenting.
+Suggestion from <a class="reference external" href="https://github.com/coderefinery/sphinx-lesson/issues/53#issuecomment-741676048">Richard Darst</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="timing">
+<h2>Timing<a class="headerlink" href="#timing" title="Permalink to this headline">¶</a></h2>
+<p>This training material covers intermediate-level aspects of MPI programming.</p>
+<div class="section" id="first-iteration-2020-12-08-11">
+<h3>First iteration: 2020-12-08/11<a class="headerlink" href="#first-iteration-2020-12-08-11" title="Permalink to this headline">¶</a></h3>
+<p>First iteration of this workshop was given as 4 x (almost) 4 hours, that is 4 half days.</p>
+<p>We had two main 30-minutes lectures each day. Each lecture included type-alongs
+and was followed by ample time for questions and live-coding demos.  Each day
+was concluded with exercises and a wrap-up.</p>
+<p><strong>Day 1 - Tuesday 8 December 2020 – Communicators, groups, derived datatypes</strong></p>
+<blockquote>
+<div><table class="colwidths-auto docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>9:00 -  9:10</p></td>
+<td><p>Welcome and introduction to the training course</p></td>
+</tr>
+<tr class="row-even"><td><p>9:10 - 10:30</p></td>
+<td><p><strong>Using communicators in applications and libraries</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>10:30 - 10:45</p></td>
+<td><p>Break</p></td>
+</tr>
+<tr class="row-even"><td><p>10:45 - 11:25</p></td>
+<td><p><strong>Handling derived datatypes</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>11:25 - 12:20</p></td>
+<td><p>Exercises</p></td>
+</tr>
+<tr class="row-even"><td><p>12:20 - 12:30</p></td>
+<td><p>Wrap-up</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p><strong>Day 2 - Wednesday 9 December 2020 - Collective communication (including nonblocking)</strong></p>
+<blockquote>
+<div><table class="colwidths-auto docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>9:00 -  9:10</p></td>
+<td><p>What did we cover yesterday?</p></td>
+</tr>
+<tr class="row-even"><td><p>9:10 - 09:45</p></td>
+<td><p><strong>Simple collective communication</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>9:45 - 09:50</p></td>
+<td><p>Break</p></td>
+</tr>
+<tr class="row-even"><td><p>9:50 - 10:25</p></td>
+<td><p><strong>Scatter and gather</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>10:30 - 10:35</p></td>
+<td><p>Break</p></td>
+</tr>
+<tr class="row-even"><td><p>10:35 - 11:10 : <strong>Generalized forms of gather</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>11:10 - 11:20</p></td>
+<td><p>Break</p></td>
+</tr>
+<tr class="row-even"><td><p>11:20 - 11:40</p></td>
+<td><p><strong>Non-blocking point-to-point communication</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>11:40 - 11:45</p></td>
+<td><p>Break</p></td>
+</tr>
+<tr class="row-even"><td><p>11:45 - 12:20</p></td>
+<td><p><strong>Non-blocking collective communication</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>12:20 - 12:30</p></td>
+<td><p>Wrap-up</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p><strong>Day 3 - Thursday 10 December 2020 – One-sided communication</strong></p>
+<blockquote>
+<div><table class="colwidths-auto docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>9:00 -  9:10</p></td>
+<td><p>What did we cover yesterday?</p></td>
+</tr>
+<tr class="row-even"><td><p>9:10 - 10:30</p></td>
+<td><p><strong>The whys and hows of remote memory access in MPI</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>10:30 - 10:45</p></td>
+<td><p>Break</p></td>
+</tr>
+<tr class="row-even"><td><p>10:45 - 11:25</p></td>
+<td><p><strong>RMA and synchronization</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>11:25 - 12:20</p></td>
+<td><p>Exercises</p></td>
+</tr>
+<tr class="row-even"><td><p>12:20 - 12:30</p></td>
+<td><p>Wrap-up</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p><strong>Day 4 - Friday 11 December 2020 - MPI and threads</strong></p>
+<blockquote>
+<div><table class="colwidths-auto docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>9:00 -  9:10</p></td>
+<td><p>What did we cover yesterday?</p></td>
+</tr>
+<tr class="row-even"><td><p>9:10 -  9:40</p></td>
+<td><p><strong>Why use MPI threading?</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>9:40 -  9:50</p></td>
+<td><p>Break</p></td>
+</tr>
+<tr class="row-even"><td><p>9:50 - 10:50</p></td>
+<td><p><strong>How does MPI support threading?</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>10:50 - 11:00</p></td>
+<td><p>Break</p></td>
+</tr>
+<tr class="row-even"><td><p>11:00 - 11:30</p></td>
+<td><p><strong>Using fork-join parallelism with MPI</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>11:30 - 11:40</p></td>
+<td><p>Break</p></td>
+</tr>
+<tr class="row-even"><td><p>11:40 - 12:10</p></td>
+<td><p><strong>Using tasking with MPI</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>12:10 - 12:20</p></td>
+<td><p><strong>Tips for hybrid MPI+OpenMP</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>12:20 - 12:30</p></td>
+<td><p>Wrap-up</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../zbibliography/" class="btn btn-neutral float-left" title="Bibliography" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, EuroCC National Competence Centre Sweden
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
